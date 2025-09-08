@@ -1,0 +1,25 @@
+<svg width="640" height="360" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration">
+  <rect width="640" height="360" rx="18" fill="#f8fafc"/>
+  <g transform="translate(80,60)">
+    <rect x="0" y="0" width="280" height="160" rx="12" fill="#fff" stroke="#e5e7eb"/>
+    <g transform="translate(20,20)">
+      <rect x="0" y="0" width="80" height="12" rx="6" fill="#14b8a6"/>
+      <rect x="0" y="26" width="240" height="10" rx="5" fill="#e2e8f0"/>
+      <rect x="0" y="46" width="240" height="10" rx="5" fill="#e2e8f0"/>
+      <rect x="0" y="66" width="180" height="10" rx="5" fill="#e2e8f0"/>
+      <rect x="0" y="96" width="90" height="36" rx="10" fill="#10b981"/>
+    </g>
+  </g>
+  <g transform="translate(380,60)">
+    <rect x="0" y="0" width="180" height="180" rx="16" fill="#fff" stroke="#e5e7eb"/>
+    <g transform="translate(32,24) scale(1.1)">
+      <circle cx="32" cy="32" r="28" fill="#e2e8f0" stroke="#111"/>
+      <rect x="72" y="8" width="48" height="48" fill="#e2e8f0" stroke="#111"/>
+      <polygon points="160,56 136,8 184,8" fill="#e2e8f0" stroke="#111"/>
+    </g>
+  </g>
+  <text x="80" y="300" font-family="Inter, Arial" font-size="18" fill="#475569">Faites le test et obtenez votre score en minutes.</text>
+  <rect x="466" y="292" width="96" height="36" rx="10" fill="#10b981"/>
+</svg>
+
+
