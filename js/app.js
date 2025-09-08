@@ -44,10 +44,10 @@
       { text: 'Brume', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Quelle forme a 3 côtés ?', media: svgTriangleRef(), options: [
-      { text: 'Triangle', icon: '', isCorrect: true, color: 'bg-answer' },
-      { text: 'Cercle', icon: '', isCorrect: false, color: 'bg-answer' },
-      { text: 'Carré', icon: '', isCorrect: false, color: 'bg-answer' },
-      { text: 'Pentagone', icon: '', isCorrect: false, color: 'bg-answer' }
+      { text: 'Triangle', icon: svgSmallTriangle(), isCorrect: true, color: 'bg-answer' },
+      { text: 'Cercle', icon: svgSmallCircle(), isCorrect: false, color: 'bg-answer' },
+      { text: 'Carré', icon: svgSmallSquare(), isCorrect: false, color: 'bg-answer' },
+      { text: 'Pentagone', icon: svgSmallPentagon(), isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Complétez: L, M, N, O, ...', media: svgLettersSeq(['L','M','N','O','?']), options: [
       { text: 'P', isCorrect: true, color: 'bg-answer' },
@@ -314,13 +314,7 @@
   // Helpers
   function successBadge(text) { return `<span class="badge bg-success-subtle text-success-emphasis">${text}</span>`; }
   function dangerBadge(text) { return `<span class="badge bg-danger-subtle text-danger-emphasis">${text}</span>`; }
-  function showToast(message) {
-    const toastEl = document.getElementById('toastProgress');
-    if (!toastEl) return;
-    toastEl.querySelector('.toast-body').textContent = message;
-    const t = bootstrap.Toast.getOrCreateInstance(toastEl, { delay: 2600 });
-    t.show();
-  }
+  function showToast(message) { /* removed to avoid duplicate popups */ }
 
   function svgGrid(cols, rows) {
     const size = 140; const cell = 18;
@@ -453,6 +447,12 @@
   }
   function svgSmallCross() {
     return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6 L18 18 M18 6 L6 18" stroke="#111" stroke-width="2"/></svg>`;
+  }
+  function svgSmallTriangle() {
+    return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="12,4 4,20 20,20" fill="#e2e8f0" stroke="#111"/></svg>`;
+  }
+  function svgSmallPentagon() {
+    return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="12,3 20,9 16,20 8,20 4,9" fill="#e2e8f0" stroke="#111"/></svg>`;
   }
 })();
 
