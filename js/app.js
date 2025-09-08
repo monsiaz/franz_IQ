@@ -9,6 +9,7 @@
     {
       prompt: 'Quel motif complète la série ?',
       media: svgMotifSequence(),
+      theme: 'logique',
       options: [
         { text: 'A', icon: svgSmallSquare(), isCorrect: false, color: 'bg-answer' },
         { text: 'B', icon: svgSmallSquare(true), isCorrect: true, color: 'bg-answer' },
@@ -19,77 +20,78 @@
     {
       prompt: 'Quelle figure complète la grille ?',
       media: svgPuzzle('grid-hole'),
+      theme: 'formes',
       options: [
         { text: 'Carré simple', isCorrect: false, color: 'bg-answer' },
         { text: 'Grille complète', isCorrect: true, color: 'bg-answer' },
         { text: 'Croix', isCorrect: false, color: 'bg-answer' }
       ]
     },
-    { prompt: 'Quel nombre suit: 2, 4, 8, 16, ... ?', media: svgBars([2,4,8,16]), options: [
+    { prompt: 'Quel nombre suit: 2, 4, 8, 16, ... ?', media: svgBars([2,4,8,16]), theme: 'numerique', options: [
       { text: '24', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: '30', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: '32', icon: '', isCorrect: true, color: 'bg-answer' },
       { text: '26', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Combien de côtés a un octogone ?', media: svgOctagonRef(), options: [
+    { prompt: 'Combien de côtés a un octogone ?', media: svgOctagonRef(), theme: 'formes', options: [
       { text: '6', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: '8', icon: '', isCorrect: true, color: 'bg-answer' },
       { text: '10', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: '12', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Quel mot est un synonyme de "rapide" ?', media: svgSpeedIcon(), options: [
+    { prompt: 'Quel mot est un synonyme de "rapide" ?', media: svgSpeedIcon(), theme: 'vocabulaire', options: [
       { text: 'Lent', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: 'Vite', icon: '', isCorrect: true, color: 'bg-answer' },
       { text: 'Immense', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: 'Brume', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Quelle forme a 3 côtés ?', media: svgTriangleRef(), options: [
+    { prompt: 'Quelle forme a 3 côtés ?', media: svgTriangleRef(), theme: 'formes', options: [
       { text: 'Triangle', icon: svgSmallTriangle(), isCorrect: true, color: 'bg-answer' },
       { text: 'Cercle', icon: svgSmallCircle(), isCorrect: false, color: 'bg-answer' },
       { text: 'Carré', icon: svgSmallSquare(), isCorrect: false, color: 'bg-answer' },
       { text: 'Pentagone', icon: svgSmallPentagon(), isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Complétez: L, M, N, O, ...', media: svgLettersSeq(['L','M','N','O','?']), options: [
+    { prompt: 'Complétez: L, M, N, O, ...', media: svgLettersSeq(['L','M','N','O','?']), theme: 'vocabulaire', options: [
       { text: 'P', isCorrect: true, color: 'bg-answer' },
       { text: 'Q', isCorrect: false, color: 'bg-answer' },
       { text: 'R', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Combien font 7 × 6 ?', media: svgDotsGrid(7, 6), options: [
+    { prompt: 'Combien font 7 × 6 ?', media: svgDotsGrid(7, 6), theme: 'numerique', options: [
       { text: '42', isCorrect: true, color: 'bg-answer' },
       { text: '36', isCorrect: false, color: 'bg-answer' },
       { text: '48', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Le contraire de "ouvert" est ...', media: svgDoorOpen(), options: [
+    { prompt: 'Le contraire de "ouvert" est ...', media: svgDoorOpen(), theme: 'vocabulaire', options: [
       { text: 'Fermé', isCorrect: true, color: 'bg-answer' },
       { text: 'Large', isCorrect: false, color: 'bg-answer' },
       { text: 'Vide', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Quel est le jour suivant lundi ?', media: svgCalendar('Lun'), options: [
+    { prompt: 'Quel est le jour suivant lundi ?', media: svgCalendar('Lun'), theme: 'logique', options: [
       { text: 'Mardi', isCorrect: true, color: 'bg-answer' },
       { text: 'Samedi', isCorrect: false, color: 'bg-answer' },
       { text: 'Dimanche', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Quel est le plus grand nombre ?', media: svgBars([99,100,101]), options: [
+    { prompt: 'Quel est le plus grand nombre ?', media: svgBars([99,100,101]), theme: 'numerique', options: [
       { text: '99', isCorrect: false, color: 'bg-answer' },
       { text: '100', isCorrect: false, color: 'bg-answer' },
       { text: '101', isCorrect: true, color: 'bg-answer' }
     ] },
-    { prompt: 'Quel est l’intrus ?', media: svgOddOneOut(), options: [
+    { prompt: 'Quel est l’intrus ?', media: svgOddOneOut(), theme: 'formes', options: [
       { text: 'Rouge', isCorrect: false, color: 'bg-answer' },
       { text: 'Bleu', isCorrect: false, color: 'bg-answer' },
       { text: 'Carré', isCorrect: true, color: 'bg-answer' }
     ] },
-    { prompt: 'Dans la suite 1, 1, 2, 3, 5, 8, ... ?', media: svgBars([1,1,2,3,5,8]), options: [
+    { prompt: 'Dans la suite 1, 1, 2, 3, 5, 8, ... ?', media: svgBars([1,1,2,3,5,8]), theme: 'numerique', options: [
       { text: '13', isCorrect: true, color: 'bg-answer' },
       { text: '14', isCorrect: false, color: 'bg-answer' },
       { text: '10', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Si un train part à 12h et met 2h, il arrive à ...', media: svgClockRange(12,14), options: [
+    { prompt: 'Si un train part à 12h et met 2h, il arrive à ...', media: svgClockRange(12,14), theme: 'logique', options: [
       { text: '13h', isCorrect: false, color: 'bg-answer' },
       { text: '14h', isCorrect: true, color: 'bg-answer' },
       { text: '15h', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Quelle forme est uniquement composée de lignes courbes ?', media: svgShapes(true), options: [
+    { prompt: 'Quelle forme est uniquement composée de lignes courbes ?', media: svgShapes(true), theme: 'formes', options: [
       { text: 'Cercle', isCorrect: true, color: 'bg-answer' },
       { text: 'Triangle', isCorrect: false, color: 'bg-answer' },
       { text: 'Rectangle', isCorrect: false, color: 'bg-answer' }
@@ -169,7 +171,12 @@
   function handleAnswerClick(optionEl, isCorrect) {
     if (state.completed[state.index]) return;
     state.completed[state.index] = true;
-    if (isCorrect) state.score += 1;
+    if (isCorrect) {
+      state.score += 1;
+      // theme score
+      const theme = QUESTIONS[state.index].theme || 'logique';
+      state.themeScores[theme] = (state.themeScores[theme] || 0) + 1;
+    }
     // Neutral UX: do not reveal correctness
     optionEl.classList.add('selected');
     Array.from(els.answers.children).forEach(c => c.disabled = true);
@@ -177,6 +184,7 @@
     renderProgress();
     renderPagination();
     maybeEncourage();
+    renderThemeSidebar();
     setTimeout(() => move(1), 420);
   }
 
@@ -210,6 +218,7 @@
       void bodyEl.offsetWidth;
       bodyEl.classList.add('fade-slide-in');
     }
+    renderThemeSidebar();
   }
 
   function renderProgress() {
@@ -237,6 +246,22 @@
       });
       els.pagination.appendChild(dot);
     }
+  }
+
+  function renderThemeSidebar() {
+    const el = document.getElementById('themeSidebar');
+    if (!el) return;
+    const totals = { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 };
+    QUESTIONS.forEach(q => totals[q.theme || 'logique']++);
+    const rows = Object.keys(totals).map(k => {
+      const done = state.themeScores[k] || 0;
+      const pct = Math.round((done / totals[k]) * 100);
+      return `<div class="mb-2">
+        <div class="d-flex justify-content-between"><span class="text-capitalize">${k}</span><span>${done}/${totals[k]}</span></div>
+        <div class="progress" style="height:8px"><div class="progress-bar bg-success" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+    el.innerHTML = rows;
   }
 
   const PRAISE_VARIANTS = [
