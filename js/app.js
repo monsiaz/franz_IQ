@@ -49,7 +49,7 @@
       { text: 'Q', isCorrect: false, color: 'bg-answer' },
       { text: 'R', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Combien font 7 × 6 ?', media: svgGrid(7, 4), options: [
+    { prompt: 'Combien font 7 × 6 ?', media: svgDotsGrid(7, 6), options: [
       { text: '42', isCorrect: true, color: 'bg-answer' },
       { text: '36', isCorrect: false, color: 'bg-answer' },
       { text: '48', isCorrect: false, color: 'bg-answer' }
@@ -79,7 +79,7 @@
       { text: '14', isCorrect: false, color: 'bg-answer' },
       { text: '10', isCorrect: false, color: 'bg-answer' }
     ] },
-    { prompt: 'Si un train part à 12h et met 2h, il arrive à ...', media: svgClock(12), options: [
+    { prompt: 'Si un train part à 12h et met 2h, il arrive à ...', media: svgClockRange(12,14), options: [
       { text: '13h', isCorrect: false, color: 'bg-answer' },
       { text: '14h', isCorrect: true, color: 'bg-answer' },
       { text: '15h', isCorrect: false, color: 'bg-answer' }
@@ -157,6 +157,7 @@
 
     state.index = nextIndex;
     render();
+    renderPagination();
   }
 
   function handleAnswerClick(optionEl, isCorrect) {
@@ -232,6 +233,12 @@
     const completedCount = state.completed.filter(Boolean).length;
     if (completedCount > 0 && completedCount % 3 === 0 && completedCount < TOTAL_QUESTIONS) {
       showToast("Vous êtes dans le top 10% des participants aujourd'hui ! ⚡");
+      // Big popup
+      const modal = new bootstrap.Modal(document.getElementById('praiseModal'));
+      document.getElementById('praiseTitle').textContent = 'Super rythme ⚡';
+      document.getElementById('praiseMsg').textContent = 'Vous êtes dans le top 10% des participants !';
+      modal.show();
+      setTimeout(() => modal.hide(), 1600);
     }
   }
 
@@ -355,6 +362,19 @@
     const cx = 40, cy = 40, r = 28;
     const x = cx + r * Math.cos(rad), y = cy + r * Math.sin(rad);
     return `<div class="d-flex justify-content-center"><svg width="100" height="100" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="${cx}" cy="${cy}" r="${r}" fill="#fff" stroke="#111"/><line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#14b8a6" stroke-width="3" stroke-linecap="round"/></svg></div>`;
+  }
+  function svgClockRange(startHour, endHour) {
+    const base = svgClock(startHour);
+    // overlay second needle faintly pointing to endHour
+    const angle = (endHour % 12) * 30; const rad = (angle - 90) * Math.PI/180;
+    const cx = 40, cy = 40, r = 28; const x = cx + r*Math.cos(rad), y = cy + r*Math.sin(rad);
+    return base.replace('</svg></div>', `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3 3" opacity="0.6"/></svg></div>`);
+  }
+
+  function svgDotsGrid(cols, rows) {
+    const size = 12; const gap = 10; let s = '';
+    for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) s += `<circle cx="${c*gap+6}" cy="${r*gap+6}" r="3" fill="#111"/>`;
+    return `<div class="d-flex justify-content-center"><svg width="${cols*gap+6}" height="${rows*gap+6}" xmlns="http://www.w3.org/2000/svg">${s}</svg></div>`;
   }
   function enableKeyboard() {
     document.addEventListener('keydown', (e) => {
