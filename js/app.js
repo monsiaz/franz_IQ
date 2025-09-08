@@ -10,9 +10,10 @@
       prompt: 'Quel motif complète la série ?',
       media: svgMotifSequence(),
       options: [
-        { text: 'Motif A', isCorrect: false, color: 'bg-answer' },
-        { text: 'Motif B', isCorrect: true, color: 'bg-answer' },
-        { text: 'Motif C', isCorrect: false, color: 'bg-answer' }
+        { text: 'A', icon: svgSmallSquare(), isCorrect: false, color: 'bg-answer' },
+        { text: 'B', icon: svgSmallSquare(true), isCorrect: true, color: 'bg-answer' },
+        { text: 'C', icon: svgSmallCross(), isCorrect: false, color: 'bg-answer' },
+        { text: 'D', icon: svgSmallCircle(), isCorrect: false, color: 'bg-answer' }
       ]
     },
     {
@@ -25,24 +26,28 @@
       ]
     },
     { prompt: 'Quel nombre suit: 2, 4, 8, 16, ... ?', media: svgBars([2,4,8,16]), options: [
-      { text: '24', isCorrect: false, color: 'bg-answer' },
-      { text: '30', isCorrect: false, color: 'bg-answer' },
-      { text: '32', isCorrect: true, color: 'bg-answer' }
+      { text: '24', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '30', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '32', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: '26', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Combien de côtés a un octogone ?', media: svgOctagonRef(), options: [
-      { text: '6', isCorrect: false, color: 'bg-answer' },
-      { text: '8', isCorrect: true, color: 'bg-answer' },
-      { text: '10', isCorrect: false, color: 'bg-answer' }
+      { text: '6', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '8', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: '10', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '12', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Quel mot est un synonyme de "rapide" ?', media: svgSpeedIcon(), options: [
-      { text: 'Lent', isCorrect: false, color: 'bg-answer' },
-      { text: 'Vite', isCorrect: true, color: 'bg-answer' },
-      { text: 'Immense', isCorrect: false, color: 'bg-answer' }
+      { text: 'Lent', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Vite', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: 'Immense', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Brume', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Quelle forme a 3 côtés ?', media: svgTriangleRef(), options: [
-      { text: 'Triangle', isCorrect: true, color: 'bg-answer' },
-      { text: 'Cercle', isCorrect: false, color: 'bg-answer' },
-      { text: 'Carré', isCorrect: false, color: 'bg-answer' }
+      { text: 'Triangle', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: 'Cercle', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Carré', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Pentagone', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Complétez: L, M, N, O, ...', media: svgLettersSeq(['L','M','N','O','?']), options: [
       { text: 'P', isCorrect: true, color: 'bg-answer' },
@@ -95,6 +100,7 @@
     index: 0,
     score: 0,
     completed: Array(TOTAL_QUESTIONS).fill(false),
+    themeScores: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 },
     subscribed: false
   };
 
@@ -182,10 +188,14 @@
     els.questionMedia.innerHTML = q.media || '';
     els.feedback.innerHTML = '';
     els.answers.innerHTML = '';
-    q.options.forEach((opt, i) => {
+    els.answers.classList.add('d-grid');
+    q.options.forEach((opt) => {
       const btn = document.createElement('button');
-      btn.className = `answer btn w-100 text-start ${opt.color}`;
-      btn.innerHTML = `<div class="d-flex justify-content-between align-items-center"><span>${opt.text}</span><span class="bi"></span></div>`;
+      btn.className = `answer btn text-start ${opt.color}`;
+      btn.innerHTML = `<div class="d-flex align-items-center gap-3">
+        ${opt.icon ? `<span>${opt.icon}</span>` : ''}
+        <span class="fw-semibold">${opt.text}</span>
+      </div>`;
       btn.addEventListener('click', () => handleAnswerClick(btn, !!opt.isCorrect));
       els.answers.appendChild(btn);
     });
@@ -229,16 +239,39 @@
     }
   }
 
+  const PRAISE_VARIANTS = [
+    { title: 'Super rythme ⚡', msg: 'Vous gardez une avance nette !' },
+    { title: 'Bravo 👏', msg: 'Top 10% sur la vitesse aujourd\'hui.' },
+    { title: 'Continuez 🚀', msg: 'Exécution fluide, c\'est excellent.' }
+  ];
+
   function maybeEncourage() {
     const completedCount = state.completed.filter(Boolean).length;
     if (completedCount > 0 && completedCount % 3 === 0 && completedCount < TOTAL_QUESTIONS) {
-      showToast("Vous êtes dans le top 10% des participants aujourd'hui ! ⚡");
-      // Big popup
+      const v = PRAISE_VARIANTS[(completedCount/3)%PRAISE_VARIANTS.length | 0];
+      // Big popup only (remove toast to avoid duplicate)
       const modal = new bootstrap.Modal(document.getElementById('praiseModal'));
-      document.getElementById('praiseTitle').textContent = 'Super rythme ⚡';
-      document.getElementById('praiseMsg').textContent = 'Vous êtes dans le top 10% des participants !';
+      document.getElementById('praiseTitle').textContent = v.title;
+      document.getElementById('praiseMsg').textContent = v.msg;
       modal.show();
-      setTimeout(() => modal.hide(), 1600);
+      makeConfetti(document.querySelector('#praiseModal .modal-content'));
+      setTimeout(() => modal.hide(), 1700);
+    }
+  }
+
+  function makeConfetti(target) {
+    if (!target) return;
+    for (let i = 0; i < 22; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      c.style.background = ['#14b8a6','#0ea5e9','#f59e0b','#ef4444'][i%4];
+      c.style.left = '50%'; c.style.top = '48%'; c.style.position = 'absolute';
+      const dx = (Math.random()*180-90) + 'px';
+      const dy = (Math.random()*140-70) + 'px';
+      c.style.setProperty('--dx', dx); c.style.setProperty('--dy', dy);
+      c.style.animation = 'burst 900ms ease-out forwards';
+      target.appendChild(c);
+      setTimeout(() => c.remove(), 1000);
     }
   }
 
@@ -409,6 +442,17 @@
     ];
     const items = curvyOnly ? s[0] : s.join('');
     return `<div class="d-flex justify-content-center"><svg width="220" height="72" viewBox="0 0 200 64" xmlns="http://www.w3.org/2000/svg">${items}</svg></div>`;
+  }
+
+  // Small icons for options
+  function svgSmallSquare(filled=false) {
+    return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="4" ${filled? 'fill="#14b8a6" stroke="#14b8a6"' : 'fill="#e2e8f0" stroke="#111"'}/></svg>`;
+  }
+  function svgSmallCircle() {
+    return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" fill="#e2e8f0" stroke="#111"/></svg>`;
+  }
+  function svgSmallCross() {
+    return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 6 L18 18 M18 6 L6 18" stroke="#111" stroke-width="2"/></svg>`;
   }
 })();
 
