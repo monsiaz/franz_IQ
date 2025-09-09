@@ -7,6 +7,42 @@
   --soft-yellow: #fff5cc;
   --soft-red: #ffd7d7;
   --soft-pink: #ffc7c7;
+  
+  /* Light theme (default) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --border-color: rgba(148,163,184,.25);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --bg-primary: #1e293b;
+  --bg-secondary: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --border-color: rgba(148,163,184,.2);
+}
+
+[data-theme="dark"] body {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .card {
+  background-color: var(--bg-primary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .navbar {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .bg-light {
+  background-color: var(--bg-secondary) !important;
 }
 
 html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
@@ -53,6 +89,30 @@ html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, H
   }
   .theme-chart, .live-ticker { font-size: 0.875rem; }
   .radar svg { max-width: 200px; height: 160px; }
+  
+  /* Sidebar auto-collapse on mobile after answer */
+  .col-lg-4.sidebar-collapsed {
+    display: none;
+  }
+  
+  .sidebar-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: none;
+  }
+  
+  @media (max-width: 768px) {
+    .sidebar-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }
 
 .bg-soft-green { background-color: var(--soft-green) !important; }

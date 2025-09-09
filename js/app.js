@@ -269,6 +269,26 @@
   document.getElementById('year').textContent = new Date().getFullYear();
   document.getElementById('btnStartHero').addEventListener('click', startQuiz);
   document.getElementById('btnStartTop').addEventListener('click', startQuiz);
+  
+  // Theme toggle functionality
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = document.querySelector('.theme-icon');
+  let isDark = localStorage.getItem('theme') === 'dark';
+  
+  function applyTheme(dark) {
+    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+    if (themeIcon) themeIcon.textContent = dark ? '☀️' : '🌙';
+    localStorage.setItem('theme', dark ? 'dark' : 'light');
+  }
+  
+  applyTheme(isDark);
+  
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      isDark = !isDark;
+      applyTheme(isDark);
+    });
+  }
   document.getElementById('btnRestart')?.addEventListener('click', () => {
     state = initialState();
     state.subscribed = true; // keep access if already paid during session
@@ -330,7 +350,7 @@
     // Neutral UX: do not reveal correctness
     optionEl.classList.add('selected');
     Array.from(els.answers.children).forEach(c => c.disabled = true);
-    els.feedback.innerHTML = successBadge('Réponse enregistrée ✅');
+    els.feedback.innerHTML = getContextualFeedback(themeNow, isCorrect);
     renderProgress();
     renderPagination();
     maybeEncourageIntelligent(isCorrect, elapsedMs);
@@ -427,8 +447,29 @@
     const completedCount = state.completed.filter(Boolean).length;
     const pct = Math.round((completedCount / TOTAL_QUESTIONS) * 100);
     if (els.progressBar) els.progressBar.style.width = `${pct}%`;
+    
+    // Enhanced progress indicators
     const stepLabel = document.getElementById('stepLabel');
     if (stepLabel) stepLabel.textContent = `Étape ${Math.min(completedCount+1, TOTAL_QUESTIONS)}/${TOTAL_QUESTIONS}`;
+    
+    // Estimated time remaining
+    const avgTimePerQ = 15; // seconds
+    const remaining = Math.max(0, TOTAL_QUESTIONS - completedCount);
+    const timeLeft = Math.round(remaining * avgTimePerQ / 60); // minutes
+    const timeEl = document.querySelector('.time-estimate');
+    if (timeEl) {
+      if (timeLeft > 1) {
+        timeEl.textContent = `≈ ${timeLeft} min restantes`;
+      } else if (timeLeft === 1) {
+        timeEl.textContent = `≈ 1 min restante`;
+      } else {
+        timeEl.textContent = `Presque fini !`;
+      }
+    }
+    
+    // Progress percentage
+    const pctEl = document.getElementById('progressPercent');
+    if (pctEl) pctEl.textContent = `${pct}%`;
   }
 
   function renderPagination() {
@@ -644,6 +685,21 @@
       if (media.type === 'flow-diagram') return svgFlowDiagram(media.values||[]);
       if (media.type === 'sequence-numbers') return svgNumberSequence(media.values||[]);
       if (media.type === 'word-visual') return svgWordVisual(media.concept||'');
+      if (media.type === 'proportion') return svgProportion(media.values||[]);
+      if (media.type === 'equation-visual') return svgEquationVisual(media.values||[]);
+      if (media.type === 'percentage-visual') return svgPercentageVisual(media.values||[]);
+      if (media.type === 'symmetry') return svgSymmetry(media.variant||'');
+      if (media.type === 'transformation') return svgTransformation(media.variant||'');
+      if (media.type === 'paper-folding') return svgPaperFolding(media.variant||'');
+      if (media.type === 'isometric') return svgIsometric(media.variant||'');
+      if (media.type === '3d-assembly') return svg3DAssembly(media.variant||'');
+      if (media.type === 'analogy') return svgAnalogy(media.variant||'');
+      if (media.type === 'logic-grid') return svgLogicGrid(media.variant||'');
+      if (media.type === 'analogy-words') return svgAnalogyWords(media.values||[]);
+      if (media.type === 'word-group') return svgWordGroup(media.values||[]);
+      if (media.type === 'context-clues') return svgContextClues(media.context||'');
+      if (media.type === 'register-comparison') return svgRegisterComparison(media.values||[]);
+      if (media.type === 'etymology') return svgEtymology(media.concept||'');
       if (media.type === 'puzzle') return svgPuzzle(media.kind||'');
       return '';
     } catch { return ''; }
@@ -925,10 +981,86 @@
       'concept-clear': '<circle cx="16" cy="16" r="10" fill="#fff" stroke="#22c55e" stroke-width="2"/>',
       'concept-opaque': '<rect x="6" y="6" width="20" height="20" fill="#64748b" rx="4"/>',
       'concept-dark': '<rect x="6" y="6" width="20" height="20" fill="#1f2937" rx="4"/>',
-      'concept-blur': '<circle cx="16" cy="16" r="8" fill="#94a3b8" opacity="0.5" filter="blur(2px)"/>'
+      'concept-blur': '<circle cx="16" cy="16" r="8" fill="#94a3b8" opacity="0.5" filter="blur(2px)"/>',
+      'concept-insight': '<circle cx="16" cy="16" r="8" fill="#fbbf24"/><path d="M16 10 L16 22 M10 16 L22 16" stroke="#fff" stroke-width="2"/>',
+      'concept-music': '<path d="M8 20 L8 8 L18 6 L18 18" stroke="#22c55e" stroke-width="2" fill="none"/><circle cx="8" cy="20" r="2" fill="#22c55e"/>',
+      'concept-speech': '<path d="M6 10 L20 10 L20 18 L12 18 L8 22 L8 18 L6 18 Z" fill="#3b82f6" opacity="0.8"/>',
+      'concept-wisdom': '<circle cx="16" cy="12" r="6" fill="#f59e0b"/><rect x="14" y="18" width="4" height="8" fill="#64748b"/>'
     };
     const iconSvg = icons[token] || '<rect x="8" y="8" width="16" height="16" fill="#e2e8f0"/>';
     return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">${iconSvg}</svg>`;
+  }
+  
+  // Advanced visual functions for complex questions
+  function svgProportion(values) {
+    const [a, b, c, d] = values;
+    return `<div class="d-flex justify-content-center align-items-center gap-3">
+      <div class="text-center"><div class="h5">${a}</div><div class="small text-muted">est à</div></div>
+      <div class="text-center"><div class="h5 text-primary">${b}</div></div>
+      <div class="text-center"><div class="small text-muted">ce que</div></div>
+      <div class="text-center"><div class="h5">${c}</div><div class="small text-muted">est à</div></div>
+      <div class="text-center"><div class="h5 text-warning">${d}</div></div>
+    </div>`;
+  }
+  
+  function svgEquationVisual(values) {
+    return `<div class="d-flex justify-content-center">
+      <svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="30,20 20,40 40,40" fill="#22c55e"/>
+        <text x="50" y="35" font-size="14">=3</text>
+        <rect x="80" y="20" width="20" height="20" fill="#3b82f6"/>
+        <text x="110" y="35" font-size="14">=5</text>
+        <text x="30" y="65" font-size="12">△+□+○=12</text>
+        <text x="130" y="65" font-size="12">○=?</text>
+      </svg>
+    </div>`;
+  }
+  
+  function svgPercentageVisual(values) {
+    const [total, pct1, pct2] = values;
+    return `<div class="text-center">
+      <div class="h4 mb-2">${pct2} de ${pct1} de ${total}</div>
+      <svg width="180" height="60" viewBox="0 0 180 60" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="20" width="160" height="20" fill="#e2e8f0" stroke="#111"/>
+        <rect x="10" y="20" width="128" height="20" fill="#3b82f6" opacity="0.6"/>
+        <rect x="10" y="20" width="19" height="20" fill="#ef4444" opacity="0.8"/>
+        <text x="90" y="55" text-anchor="middle" font-size="12">${total} → ${pct1} → ${pct2}</text>
+      </svg>
+    </div>`;
+  }
+  
+  function svgSymmetry(variant) {
+    return `<div class="d-flex justify-content-center">
+      <svg width="120" height="80" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="30,20 20,50 40,50" fill="#22c55e"/>
+        <line x1="60" y1="10" x2="60" y2="70" stroke="#94a3b8" stroke-width="2" stroke-dasharray="3,3"/>
+        <text x="60" y="85" text-anchor="middle" font-size="10">axe</text>
+        <polygon points="90,20 80,50 100,50" fill="#22c55e" opacity="0.3"/>
+      </svg>
+    </div>`;
+  }
+  
+  // Placeholder functions for complex question types
+  function svgTransformation(variant) { return svgSymmetry(variant); }
+  function svgPaperFolding(variant) { return svgPuzzle('grid-hole'); }
+  function svgIsometric(variant) { return svgFlatCube('blue-red-green'); }
+  function svg3DAssembly(variant) { return svgTetraPattern('striped-dotted-grid'); }
+  function svgAnalogy(variant) { return svgMatrixMain(); }
+  function svgLogicGrid(variant) { return svgMatrixMain(); }
+  function svgAnalogyWords(values) { 
+    return `<div class="text-center"><div class="h5">${values[0] || 'livre→lire'}</div><div class="h5 text-primary">${values[1] || 'piano→?'}</div></div>`;
+  }
+  function svgWordGroup(values) {
+    return `<div class="d-flex justify-content-center gap-2 flex-wrap">${values.map(w => `<span class="badge bg-light text-dark">${w}</span>`).join('')}</div>`;
+  }
+  function svgContextClues(context) {
+    return `<div class="text-center"><div class="small text-muted">Contexte: ${context}</div></div>`;
+  }
+  function svgRegisterComparison(values) {
+    return `<div class="d-flex justify-content-center gap-2 flex-wrap">${values.map(w => `<span class="badge bg-secondary">${w}</span>`).join('')}</div>`;
+  }
+  function svgEtymology(concept) {
+    return `<div class="text-center"><div class="h5 text-primary">${concept}</div><div class="small text-muted">(grec: amour)</div></div>`;
   }
 
   // Media & icon renderers + theme normalization
@@ -1076,6 +1208,18 @@
   }
   
   function capitalize(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''; }
+  
+  function getContextualFeedback(theme, isCorrect) {
+    const feedbacks = {
+      logique: ['🧩 Logique parfaite !', '🎯 Bon raisonnement !', '⚡ Analyse rapide !'],
+      formes: ['👁️ Vision spatiale !', '🔄 Rotation maîtrisée !', '📐 Géométrie claire !'],
+      numerique: ['🔢 Calcul précis !', '📊 Suite comprise !', '🎲 Bon en maths !'],
+      vocabulaire: ['📚 Vocabulaire riche !', '🗣️ Nuance saisie !', '✍️ Mot juste !']
+    };
+    const options = feedbacks[theme] || ['✅ Réponse notée !'];
+    const msg = options[Math.floor(Math.random() * options.length)];
+    return successBadge(msg);
+  }
   
   function showPaywallWithReassurance() {
     // Add reassurance elements to paywall modal
