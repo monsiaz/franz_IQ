@@ -1,11 +1,23 @@
 (() => {
-  const TOTAL_QUESTIONS = 15;
+  let TOTAL_QUESTIONS = 15;
 
   /**
    * Simple set of fun, easy questions with optional inline SVG visuals.
    * Each question contains options with a boolean 'isCorrect'.
    */
   const QUESTIONS = [
+    // 3x3 matrix logic: third cell follows rotation rule
+    {
+      prompt: 'Complétez la matrice 3×3',
+      media: svgMatrixMain(),
+      theme: 'logique',
+      options: [
+        { text: '', icon: svgMatrixOption('A'), isCorrect: false, color: 'bg-answer' },
+        { text: '', icon: svgMatrixOption('B'), isCorrect: true,  color: 'bg-answer' },
+        { text: '', icon: svgMatrixOption('C'), isCorrect: false, color: 'bg-answer' },
+        { text: '', icon: svgMatrixOption('D'), isCorrect: false, color: 'bg-answer' }
+      ]
+    },
     {
       prompt: 'Quel motif complète la série ?',
       media: svgMotifSequence(),
@@ -427,6 +439,32 @@
     const size = 12; const gap = 10; let s = '';
     for (let r=0;r<rows;r++) for (let c=0;c<cols;c++) s += `<circle cx="${c*gap+6}" cy="${r*gap+6}" r="3" fill="#111"/>`;
     return `<div class="d-flex justify-content-center"><svg width="${cols*gap+6}" height="${rows*gap+6}" xmlns="http://www.w3.org/2000/svg">${s}</svg></div>`;
+  }
+
+  // Advanced visual puzzles (matrix)
+  function svgMatrixMain() {
+    // simple: show two rotations and missing third
+    let s = '';
+    const cell = 44; const gap = 6; const startX = 6; const startY = 6;
+    const drawTri = (x,y,rot=0) => `<g transform="translate(${x},${y}) rotate(${rot} 22 22)"><polygon points="22,6 6,38 38,38" fill="#e2e8f0" stroke="#111"/></g>`;
+    s += drawTri(startX, startY, 0); // row1 col1
+    s += drawTri(startX + cell + gap, startY, 90);
+    s += `<rect x="${startX + 2*(cell+gap)}" y="${startY}" width="${cell}" height="${cell}" rx="6" fill="#dbeafe" stroke="#3b82f6"/>`;
+    s += drawTri(startX, startY + cell + gap, 180);
+    s += drawTri(startX + cell + gap, startY + cell + gap, 270);
+    s += drawTri(startX + 2*(cell+gap), startY + cell + gap, 0);
+    s += drawTri(startX, startY + 2*(cell + gap), 90);
+    s += drawTri(startX + cell + gap, startY + 2*(cell+gap), 180);
+    // last missing cell highlighted already above
+    return `<div class="d-flex justify-content-center"><svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">${s}</svg></div>`;
+  }
+
+  function svgMatrixOption(letter) {
+    const cell = 44; const x = 0, y = 0;
+    const rotMap = { A: 180, B: 270, C: 0, D: 45 };
+    const rot = rotMap[letter] ?? 0;
+    const tri = `<g transform="translate(${x},${y}) rotate(${rot} 22 22)"><polygon points="22,6 6,38 38,38" fill="#e2e8f0" stroke="#111"/></g>`;
+    return `<svg width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">${tri}</svg>`;
   }
   function enableKeyboard() {
     document.addEventListener('keydown', (e) => {
