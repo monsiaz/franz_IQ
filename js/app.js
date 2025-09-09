@@ -446,6 +446,19 @@
       const y = cy + rr * Math.sin(angle);
       return `${x.toFixed(1)},${y.toFixed(1)}`;
     }).join(' ');
+    // grid
+    let grid = '';
+    for (let g = 1; g <= 3; g++) {
+      const rr = (r * g) / 3;
+      let ring = '';
+      for (let i = 0; i < values.length; i++) {
+        const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
+        const x = cx + rr * Math.cos(angle);
+        const y = cy + rr * Math.sin(angle);
+        ring += `${x.toFixed(1)},${y.toFixed(1)} `;
+      }
+      grid += `<polygon points="${ring}" fill="none" stroke="#e5e7eb"/>`;
+    }
     let axes = '';
     keys.forEach((k, i) => {
       const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
@@ -455,7 +468,7 @@
       axes += `<text x="${x}" y="${y}" font-size="10" fill="#334155" text-anchor="middle">${k}</text>`;
     });
     const poly = `<polygon points="${points}" fill="rgba(34,197,94,0.25)" stroke="#22c55e"/>`;
-    el.innerHTML = `<div class="d-flex justify-content-center"><svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">${axes}${poly}</svg></div>`;
+    el.innerHTML = `<div class=\"d-flex justify-content-center\"><svg width=\"260\" height=\"220\" viewBox=\"0 0 260 220\" xmlns=\"http://www.w3.org/2000/svg\">${grid}${axes}${poly}</svg></div>`;
     const iqScore = 80 + Math.round((state.score / TOTAL_QUESTIONS) * 40);
     const blurLabel = document.getElementById('radarScoreBlur'); if (blurLabel) blurLabel.textContent = `IQ ${iqScore}`;
   }
