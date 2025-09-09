@@ -164,7 +164,7 @@
   // Load external questions.json if present
   fetch('./js/questions.json').then(r=>r.ok?r.json():Promise.reject()).then(json=>{
     if (Array.isArray(json) && json.length) {
-      QUESTIONS = json;
+      QUESTIONS = ensureEightPerTheme(json);
       TOTAL_QUESTIONS = QUESTIONS.length;
       // reset state if quiz already visible
       if (!document.getElementById('hero').classList.contains('d-none')) return;
@@ -424,6 +424,7 @@
     // Render radar live while passing the quiz
     renderRadar();
     renderTicker();
+    renderReviewTicker();
   }
 
   function renderRadar() {
