@@ -341,11 +341,21 @@
     els.stepNow.textContent = String(state.index + 1);
     els.questionText.textContent = q.prompt;
     els.themeBadge.innerHTML = q.theme ? `<span class="theme-pill">${capitalize(q.theme)}</span>` : '';
-    els.questionMedia.innerHTML = renderMedia(q.media);
+    try {
+      els.questionMedia.innerHTML = renderMedia(q.media);
+    } catch (e) {
+      els.questionMedia.innerHTML = '';
+    }
     els.feedback.innerHTML = '';
     els.answers.innerHTML = '';
     els.answers.classList.add('d-grid');
-    q.options.forEach((opt) => {
+    const opts = Array.isArray(q.options) && q.options.length ? q.options : [
+      { text: 'Option 1', icon: '', isCorrect: false },
+      { text: 'Option 2', icon: '', isCorrect: false },
+      { text: 'Option 3', icon: '', isCorrect: false },
+      { text: 'Option 4', icon: '', isCorrect: false }
+    ];
+    opts.forEach((opt) => {
       const btn = document.createElement('button');
       btn.className = `answer btn text-start ${opt.color || ''}`.trim();
       let iconHtml = '';
@@ -371,7 +381,9 @@
   function renderProgress() {
     const completedCount = state.completed.filter(Boolean).length;
     const pct = Math.round((completedCount / TOTAL_QUESTIONS) * 100);
-    els.progressBar.style.width = `${pct}%`;
+    if (els.progressBar) els.progressBar.style.width = `${pct}%`;
+    const stepLabel = document.getElementById('stepLabel');
+    if (stepLabel) stepLabel.textContent = `Étape ${Math.min(completedCount+1, TOTAL_QUESTIONS)}/${TOTAL_QUESTIONS}`;
   }
 
   function renderPagination() {
@@ -519,128 +531,69 @@
   function showToast(message) { /* removed to avoid duplicate popups */ }
 
   function renderMedia(media) {
-    if (!media) return '';
-    if (typeof media === 'string') {
-      if (media.startsWith('<svg')) return media;
-      return `<div class="d-flex justify-content-center"><img src="${media}" alt="Question Media" class="img-fluid"></div>`;
-    }
-    if (Array.isArray(media)) {
-      return svgBars(media);
-    }
-    if (media.type === 'grid-hole') {
-      return svgPuzzle('grid-hole');
-    }
-    if (media.type === 'sequence') {
-      return svgMotifSequence();
-    }
-    if (media.type === 'speed') {
-      return svgSpeedIcon();
-    }
-    if (media.type === 'triangle') {
-      return svgTriangleRef();
-    }
-    if (media.type === 'letters') {
-      return svgLettersSeq(media.sequence);
-    }
-    if (media.type === 'door') {
-      return svgDoorOpen();
-    }
-    if (media.type === 'calendar') {
-      return svgCalendar(media.label);
-    }
-    if (media.type === 'odd-one-out') {
-      return svgOddOneOut();
-    }
-    if (media.type === 'clock') {
-      return svgClock(media.hour);
-    }
-    if (media.type === 'clock-range') {
-      return svgClockRange(media.startHour, media.endHour);
-    }
-    if (media.type === 'dots-grid') {
-      return svgDotsGrid(media.cols, media.rows);
-    }
-    if (media.type === 'matrix') {
-      return svgMatrixMain();
-    }
-    if (media.type === 'shapes') {
-      return svgShapes(media.curvyOnly);
-    }
-    if (media.type === 'mirror') {
-      return svgMirrorPrompt();
-    }
-    if (media.type === 'bars-prompt') {
-      return svgBarsPrompt(media.arr);
-    }
-    if (media.type === 'dots-count-prompt') {
-      return svgDotsCountPrompt(media.n);
-    }
-    if (media.type === 'puzzle') {
-      return svgPuzzle(media.kind);
-    }
-    return '';
+    try {
+      if (!media) return '';
+      if (typeof media === 'string') {
+        if (media.startsWith('<svg')) return media;
+        return `<div class="d-flex justify-content-center"><img src="${media}" alt="Question Media" class="img-fluid"></div>`;
+      }
+      if (Array.isArray(media)) {
+        return svgBars(media);
+      }
+      if (media.type === 'grid-hole') return svgPuzzle('grid-hole');
+      if (media.type === 'sequence') return svgMotifSequence();
+      if (media.type === 'speed') return svgSpeedIcon();
+      if (media.type === 'triangle') return svgTriangleRef();
+      if (media.type === 'letters') return svgLettersSeq(media.sequence||[]);
+      if (media.type === 'door') return svgDoorOpen();
+      if (media.type === 'calendar') return svgCalendar(media.label||'');
+      if (media.type === 'odd-one-out') return svgOddOneOut();
+      if (media.type === 'clock') return svgClock(media.hour||0);
+      if (media.type === 'clock-range') return svgClockRange(media.startHour||0, media.endHour||0);
+      if (media.type === 'dots-grid') return svgDotsGrid(media.cols||3, media.rows||3);
+      if (media.type === 'matrix') return svgMatrixMain();
+      if (media.type === 'shapes') return svgShapes(!!media.curvyOnly);
+      if (media.type === 'mirror') return svgMirrorPrompt();
+      if (media.type === 'bars-prompt') return svgBarsPrompt(media.arr||[]);
+      if (media.type === 'dots-count-prompt') return svgDotsCountPrompt(media.n||6);
+      if (media.type === 'bars') return svgBars(media.values||[]);
+      if (media.type === 'tetrahedron-pattern') return svgTetraPattern(media.variant||'');
+      if (media.type === 'flow-diagram') return svgFlowDiagram(media.values||[]);
+      if (media.type === 'puzzle') return svgPuzzle(media.kind||'');
+      return '';
+    } catch { return ''; }
   }
 
   function renderIcon(icon) {
-    if (typeof icon === 'string') {
-      if (icon.startsWith('<svg')) return icon;
-      return `<div class="d-flex justify-content-center"><img src="${icon}" alt="Option Icon" class="img-fluid" style="max-width: 24px;"></div>`;
-    }
-    if (Array.isArray(icon)) {
-      return svgBars(icon);
-    }
-    if (icon.type === 'grid-hole') {
-      return svgPuzzle('grid-hole');
-    }
-    if (icon.type === 'sequence') {
-      return svgMotifSequence();
-    }
-    if (icon.type === 'speed') {
-      return svgSpeedIcon();
-    }
-    if (icon.type === 'triangle') {
-      return svgTriangleRef();
-    }
-    if (icon.type === 'letters') {
-      return svgLettersSeq(icon.sequence);
-    }
-    if (icon.type === 'door') {
-      return svgDoorOpen();
-    }
-    if (icon.type === 'calendar') {
-      return svgCalendar(icon.label);
-    }
-    if (icon.type === 'odd-one-out') {
-      return svgOddOneOut();
-    }
-    if (icon.type === 'clock') {
-      return svgClock(icon.hour);
-    }
-    if (icon.type === 'clock-range') {
-      return svgClockRange(icon.startHour, icon.endHour);
-    }
-    if (icon.type === 'dots-grid') {
-      return svgDotsGrid(icon.cols, icon.rows);
-    }
-    if (icon.type === 'matrix') {
-      return svgMatrixMain();
-    }
-    if (icon.type === 'shapes') {
-      return svgShapes(icon.curvyOnly);
-    }
-    if (icon.type === 'mirror') {
-      return svgMirrorPrompt();
-    }
-    if (icon.type === 'bars-prompt') {
-      return svgBarsPrompt(icon.arr);
-    }
-    if (icon.type === 'dots-count-prompt') {
-      return svgDotsCountPrompt(icon.n);
-    }
-    if (icon.type === 'puzzle') {
-      return svgPuzzle(icon.kind);
-    }
-    return '';
+    try {
+      if (!icon) return '';
+      if (typeof icon === 'string') {
+        if (icon.startsWith('<svg')) return icon;
+        return `<div class="d-flex justify-content-center"><img src="${icon}" alt="Option Icon" class="img-fluid" style="max-width: 24px;"></div>`;
+      }
+      if (Array.isArray(icon)) return svgBars(icon);
+      if (icon.type === 'grid-hole') return svgPuzzle('grid-hole');
+      if (icon.type === 'sequence') return svgMotifSequence();
+      if (icon.type === 'speed') return svgSpeedIcon();
+      if (icon.type === 'triangle') return svgTriangleRef();
+      if (icon.type === 'letters') return svgLettersSeq(icon.sequence||[]);
+      if (icon.type === 'door') return svgDoorOpen();
+      if (icon.type === 'calendar') return svgCalendar(icon.label||'');
+      if (icon.type === 'odd-one-out') return svgOddOneOut();
+      if (icon.type === 'clock') return svgClock(icon.hour||0);
+      if (icon.type === 'clock-range') return svgClockRange(icon.startHour||0, icon.endHour||0);
+      if (icon.type === 'dots-grid') return svgDotsGrid(icon.cols||3, icon.rows||3);
+      if (icon.type === 'matrix') return svgMatrixMain();
+      if (icon.type === 'shapes') return svgShapes(!!icon.curvyOnly);
+      if (icon.type === 'mirror') return svgMirrorPrompt();
+      if (icon.type === 'bars-prompt') return svgBarsPrompt(icon.arr||[]);
+      if (icon.type === 'dots-count-prompt') return svgDotsCountPrompt(icon.n||6);
+      if (icon.type === 'bars') return svgBars(icon.values||[]);
+      if (icon.type === 'tetrahedron-pattern') return svgTetraPattern(icon.variant||'');
+      if (icon.type === 'flow-diagram') return svgFlowDiagram(icon.values||[]);
+      if (icon.type === 'puzzle') return svgPuzzle(icon.kind||'');
+      return '';
+    } catch { return ''; }
   }
 
   function normalizeTheme(theme) {
