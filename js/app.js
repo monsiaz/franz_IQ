@@ -286,9 +286,9 @@
     els.answers.innerHTML = '';
     els.answers.classList.add('d-grid');
     q.options.forEach((opt) => {
-      const btn = document.createElement('button');
-      btn.className = `answer btn text-start ${opt.color}`;
-      const iconHtml = opt.icon ? renderIcon(opt.icon) : '';
+      const btn = document.createElement('button');      btn.className = `answer btn text-start ${opt.color || ''}`.trim();
+      let iconHtml = '';
+      try { iconHtml = opt.icon ? renderIcon(opt.icon) : ''; } catch { iconHtml = ''; }
       const label = opt.text || '';
       btn.innerHTML = `<div class="d-flex align-items-center gap-3">${iconHtml}<span class="fw-semibold">${label}</span></div>`;
       btn.addEventListener('click', () => handleAnswerClick(btn, !!opt.isCorrect));
@@ -411,13 +411,17 @@
 
   function renderTicker(){
     const el = document.getElementById('liveTicker'); if(!el) return;
-    const now = Date.now();
+    const firstNames = ['Paul','Camille','Nora','Alex','Marc','Yanis','Lina','Hugo'];
+    const cities = ['Paris, FR','Lyon, FR','Marseille, FR','Lille, FR','Bordeaux, FR','Nantes, FR'];
     const samples = Array.from({length: 6}).map((_,i)=>{
       const minutesAgo = Math.floor(Math.random()*55)+1; // 1..55
       const score = 80 + Math.floor(Math.random()*41);   // 80..120
-      return { when: minutesAgo < 60 ? `${minutesAgo} min` : `${Math.floor(minutesAgo/60)} h`, iq: score };
+      const name = firstNames[Math.floor(Math.random()*firstNames.length)] + ' ' + String.fromCharCode(65+Math.floor(Math.random()*26)) + '.';
+      const city = cities[Math.floor(Math.random()*cities.length)];
+      const when = minutesAgo < 60 ? `${minutesAgo} min` : `${Math.floor(minutesAgo/60)} h`;
+      return { iq: score, who: `${name} (${city})`, when };
     });
-    el.innerHTML = samples.map(s=>`<div class="item"><span>IQ ${s.iq}</span><span class="time">il y a ${s.when}</span></div>`).join('');
+    el.innerHTML = samples.map(s=>`<div class="item"><span>IQ ${s.iq} — ${s.who}</span><span class="time">il y a ${s.when}</span></div>`).join('');
   }
 
   // Intercept next on last to show paywall/results
