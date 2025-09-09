@@ -1,0 +1,19 @@
+<svg width="540" height="28" viewBox="0 0 540 28" xmlns="http://www.w3.org/2000/svg" aria-label="Media logos">
+  <!-- THE GLOBE AND MAIL wordmark (simplified) -->
+  <rect x="0" y="4" width="160" height="20" rx="4" fill="#111827"/>
+  <text x="8" y="19" font-family="Georgia, serif" font-size="12" fill="#ffffff">THE GLOBE AND MAIL</text>
+
+  <!-- BENZINGA -->
+  <rect x="170" y="4" width="110" height="20" rx="4" fill="#0f172a"/>
+  <text x="178" y="19" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="12" fill="#ffffff">BENZINGA</text>
+
+  <!-- Yahoo! -->
+  <rect x="290" y="4" width="90" height="20" rx="4" fill="#5b21b6"/>
+  <text x="303" y="19" font-family="Verdana, Geneva, sans-serif" font-weight="700" font-size="12" fill="#ffffff">Yahoo!</text>
+
+  <!-- barchart -->
+  <rect x="390" y="4" width="130" height="20" rx="4" fill="#111827"/>
+  <text x="398" y="19" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="12" fill="#ffffff">barchart</text>
+</svg>
+
+
