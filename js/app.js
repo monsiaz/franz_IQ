@@ -165,7 +165,8 @@
       index: 0,
       score: 0,
       completed: Array(TOTAL_QUESTIONS).fill(false),
-      themeScores: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 },
+      themeScores: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 }, // correct answers by theme
+      themeAttempts: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 }, // answered by theme
       subscribed: false
     };
   }
@@ -242,11 +243,11 @@
   function handleAnswerClick(optionEl, isCorrect) {
     if (state.completed[state.index]) return;
     state.completed[state.index] = true;
+    const themeNow = QUESTIONS[state.index].theme || 'logique';
+    state.themeAttempts[themeNow] = (state.themeAttempts[themeNow] || 0) + 1;
     if (isCorrect) {
       state.score += 1;
-      // theme score
-      const theme = QUESTIONS[state.index].theme || 'logique';
-      state.themeScores[theme] = (state.themeScores[theme] || 0) + 1;
+      state.themeScores[themeNow] = (state.themeScores[themeNow] || 0) + 1;
     }
     // Neutral UX: do not reveal correctness
     optionEl.classList.add('selected');
@@ -326,13 +327,13 @@
     const totals = { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 };
     QUESTIONS.forEach(q => totals[q.theme || 'logique']++);
     const rows = Object.keys(totals).map(k => {
-      const done = state.themeScores[k] || 0;
-      const pct = Math.round((done / totals[k]) * 100);
+      const attempts = state.themeAttempts[k] || 0;
+      const pct = Math.round((attempts / totals[k]) * 100);
       return `<div class="row align-items-center">
         <div class="col-5 text-capitalize">${k}</div>
         <div class="col-7">
           <div class="bar"><span style="width:${pct}%"></span></div>
-          <div class="text-end small text-muted">${done}/${totals[k]}</div>
+          <div class="text-end small text-muted">${attempts}/${totals[k]}</div>
         </div>
       </div>`;
     }).join('');
@@ -437,11 +438,11 @@
     const totals = { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 };
     QUESTIONS.forEach(q => totals[q.theme || 'logique']++);
     const keys = Object.keys(totals);
-    const values = keys.map(k => (state.themeScores[k] || 0) / (totals[k] || 1)); // 0..1
+    const values = keys.map(k => (state.themeAttempts[k] || 0) / (totals[k] || 1)); // progress 0..1
     const cx = 130, cy = 110, r = 90;
     const points = values.map((v, i) => {
       const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
-      const rr = r * v;
+      const rr = Math.max(10, r * v); // minimal radius to visualize early progress
       const x = cx + rr * Math.cos(angle);
       const y = cy + rr * Math.sin(angle);
       return `${x.toFixed(1)},${y.toFixed(1)}`;
