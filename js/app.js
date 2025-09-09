@@ -163,17 +163,21 @@
 
   // Load external questions.json if present
   fetch('./js/questions.json').then(r=>r.ok?r.json():Promise.reject()).then(json=>{
+    console.log('Questions loaded:', json.length);
     if (Array.isArray(json) && json.length) {
       QUESTIONS = ensureEightPerTheme(json);
       TOTAL_QUESTIONS = QUESTIONS.length;
-      // reset state if quiz already visible
-      if (!document.getElementById('hero').classList.contains('d-none')) return;
+      console.log('Total questions after processing:', TOTAL_QUESTIONS);
+      // Always reset state when new questions are loaded
       state = initialState();
-      renderPagination();
-      render();
-      renderThemeSidebar();
+      // Force re-render if quiz is already visible
+      if (!document.getElementById('hero').classList.contains('d-none')) {
+        renderPagination();
+        render();
+        renderThemeSidebar();
+      }
     }
-  }).catch(()=>{});
+  }).catch(e=>{console.error('Failed to load questions:', e);});
 
   // ===== Helpers to scale to 8 items per theme when needed =====
   function ensureEightPerTheme(items){
@@ -335,39 +339,59 @@
   }
 
   function render() {
+    console.log('Rendering question', state.index, 'of', TOTAL_QUESTIONS);
     const q = QUESTIONS[state.index];
+    console.log('Current question:', q);
     state.qStart = performance.now();
-    els.stepTotal.textContent = String(TOTAL_QUESTIONS);
-    els.stepNow.textContent = String(state.index + 1);
-    els.questionText.textContent = q.prompt;
-    els.themeBadge.innerHTML = q.theme ? `<span class="theme-pill">${capitalize(q.theme)}</span>` : '';
+    
+    if (els.stepTotal) els.stepTotal.textContent = String(TOTAL_QUESTIONS);
+    if (els.stepNow) els.stepNow.textContent = String(state.index + 1);
+    if (els.questionText) els.questionText.textContent = q.prompt || 'Question manquante';
+    if (els.themeBadge) els.themeBadge.innerHTML = q.theme ? `<span class="theme-pill">${capitalize(q.theme)}</span>` : '';
+    
+    // Render media with debugging
     try {
-      els.questionMedia.innerHTML = renderMedia(q.media);
+      const mediaHtml = renderMedia(q.media);
+      console.log('Media HTML generated:', mediaHtml ? 'YES' : 'NO', q.media);
+      if (els.questionMedia) els.questionMedia.innerHTML = mediaHtml;
     } catch (e) {
-      els.questionMedia.innerHTML = '';
+      console.error('Media render error:', e);
+      if (els.questionMedia) els.questionMedia.innerHTML = '';
     }
-    els.feedback.innerHTML = '';
-    els.answers.innerHTML = '';
-    els.answers.classList.add('d-grid');
+    
+    if (els.feedback) els.feedback.innerHTML = '';
+    if (els.answers) {
+      els.answers.innerHTML = '';
+      els.answers.classList.add('d-grid');
+    }
+    
     const opts = Array.isArray(q.options) && q.options.length ? q.options : [
       { text: 'Option 1', icon: '', isCorrect: false },
       { text: 'Option 2', icon: '', isCorrect: false },
       { text: 'Option 3', icon: '', isCorrect: false },
       { text: 'Option 4', icon: '', isCorrect: false }
     ];
-    opts.forEach((opt) => {
+    console.log('Options:', opts.length);
+    
+    opts.forEach((opt, i) => {
       const btn = document.createElement('button');
-      btn.className = `answer btn text-start ${opt.color || ''}`.trim();
+      btn.className = `answer btn text-start ${opt.color || 'bg-answer'}`.trim();
       let iconHtml = '';
-      try { iconHtml = opt.icon ? renderIcon(opt.icon) : ''; } catch { iconHtml = ''; }
-      const label = opt.text || '';
+      try { 
+        iconHtml = opt.icon ? renderIcon(opt.icon) : ''; 
+        console.log(`Option ${i} icon:`, opt.icon, '→', iconHtml ? 'rendered' : 'empty');
+      } catch (e) { 
+        console.error(`Icon render error for option ${i}:`, e);
+        iconHtml = ''; 
+      }
+      const label = opt.text || `Option ${i+1}`;
       btn.innerHTML = `<div class="d-flex align-items-center gap-3">${iconHtml}<span class="fw-semibold">${label}</span></div>`;
       btn.addEventListener('click', () => handleAnswerClick(btn, !!opt.isCorrect));
-      els.answers.appendChild(btn);
+      if (els.answers) els.answers.appendChild(btn);
     });
 
-    els.btnPrev.disabled = state.index === 0;
-    els.btnNext.textContent = state.index === TOTAL_QUESTIONS - 1 ? 'Terminer' : 'Suivant';
+    if (els.btnPrev) els.btnPrev.disabled = state.index === 0;
+    if (els.btnNext) els.btnNext.textContent = state.index === TOTAL_QUESTIONS - 1 ? 'Terminer' : 'Suivant';
     renderProgress();
     const bodyEl = document.querySelector('#quizSection .card-body');
     if (bodyEl) {
@@ -810,6 +834,14 @@
 
   function renderIcon(token){
     if (!token) return '';
+    console.log('Rendering icon token:', token);
+    
+    // Handle simple shape names
+    if (token === 'circle') return svgSmallCircle();
+    if (token === 'triangle') return svgSmallTriangle();
+    if (token === 'square') return svgSmallSquare();
+    if (token === 'pentagon') return svgSmallPentagon();
+    
     if (token.startsWith('bar-')) return svgBarChoice(parseInt(token.split('-')[1],10));
     const parts = token.split('-');
     const shape = parts[0];
@@ -838,6 +870,7 @@
     if (shape.startsWith('circle')) {
       return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="${size/2}" fill="${color}" stroke="#111"/>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
     }
+    console.warn('Unknown icon token:', token);
     return '';
   }
 
@@ -873,6 +906,33 @@
     </svg></div>`;
   }
 
+  // Add missing PRAISE_VARIANTS and other functions
+  const PRAISE_VARIANTS = [
+    { title: 'Bon rythme ! 👍', msg: 'Vous progressez bien dans le test.' },
+    { title: 'Excellent ! ⭐', msg: 'Vos réponses montrent une bonne logique.' },
+    { title: 'Très bien ! 🎯', msg: 'Continuez sur cette lancée.' },
+    { title: 'Parfait ! 🔥', msg: 'Vous maîtrisez bien ces questions.' }
+  ];
+  
+  function makeConfetti(container) {
+    if (!container) return;
+    for (let i = 0; i < 25; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.position = 'absolute';
+      confetti.style.left = Math.random() * 100 + '%';
+      confetti.style.top = Math.random() * 100 + '%';
+      confetti.style.backgroundColor = ['#22c55e', '#f59e0b', '#ef4444', '#0ea5e9'][Math.floor(Math.random() * 4)];
+      confetti.style.setProperty('--dx', (Math.random() - 0.5) * 200 + 'px');
+      confetti.style.setProperty('--dy', (Math.random() - 0.5) * 200 + 'px');
+      confetti.style.animation = 'burst 0.8s ease-out forwards';
+      container.appendChild(confetti);
+      setTimeout(() => confetti.remove(), 800);
+    }
+  }
+  
+  function capitalize(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''; }
+  
   function maybeEncourageIntelligent(isCorrect, elapsedMs){
     const completedCount = state.completed.filter(Boolean).length;
     let variant = null;
