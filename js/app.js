@@ -175,13 +175,68 @@
     }
   }).catch(()=>{});
 
+  // ===== Helpers to scale to 8 items per theme when needed =====
+  function ensureEightPerTheme(items){
+    const perTheme = { logique: [], formes: [], numerique: [], vocabulaire: [] };
+    items.forEach(q=>{ (perTheme[normalizeTheme(q.theme)]).push(q); });
+    const out = [];
+    Object.keys(perTheme).forEach(theme=>{
+      let arr = perTheme[theme];
+      while (arr.length < 8) {
+        if (theme === 'logique') arr.push(genLogicVariant(arr.length));
+        else if (theme === 'formes') arr.push(genFormesVariant(arr.length));
+        else if (theme === 'numerique') arr.push(genNumeriqueVariant(arr.length));
+        else arr.push(genVocabVariant(arr.length));
+      }
+      out.push(...arr);
+    });
+    return out;
+  }
+  function genLogicVariant(i){
+    const start = 2 + (i%3);
+    const vals = [start, start*2, start*3];
+    return { theme:'logique', prompt:'Quelle barre complète la progression ?', media:{ type:'bars', values: vals }, options:[
+      { text:'', icon:'bar-'+(vals[1]), isCorrect:false },
+      { text:'', icon:'bar-'+(vals[2]), isCorrect:true },
+      { text:'', icon:'bar-'+(vals[2]+2), isCorrect:false },
+      { text:'', icon:'bar-'+(vals[2]+4), isCorrect:false }
+    ] };
+  }
+  function genFormesVariant(i){
+    const correctIdx = i%4;
+    return { theme:'formes', prompt:'Identifiez la forme demandée', media:{ type:'shapes', variant:'mix'}, options:[
+      { text:'', icon:'triangle', isCorrect: correctIdx===0 },
+      { text:'', icon:'circle', isCorrect: correctIdx===1 },
+      { text:'', icon:'square', isCorrect: correctIdx===2 },
+      { text:'', icon:'pentagon', isCorrect: correctIdx===3 }
+    ] };
+  }
+  function genNumeriqueVariant(i){
+    const a = 3 + (i%4); const seq = [a, a*2, a*4, a*8];
+    return { theme:'numerique', prompt:'Quel nombre suit: '+seq.slice(0,3).join(', ')+', '+seq[3]+', ... ?', media:{ type:'bars', values: seq }, options:[
+      { text:String(seq[3]*2), isCorrect:true },
+      { text:String(seq[3]+6), isCorrect:false },
+      { text:String(seq[3]+10), isCorrect:false },
+      { text:String(seq[3]-4), isCorrect:false }
+    ] };
+  }
+  function genVocabVariant(i){
+    const pairs = [ ['rapide','vite'], ['grand','immense'], ['clair','évident'], ['heureux','joyeux'] ];
+    const p = pairs[i%pairs.length];
+    return { theme:'vocabulaire', prompt:'Quel est le synonyme de "'+p[0]+'" ?', media:{}, options:[
+      { text:p[1], isCorrect:true }, { text:'lent', isCorrect:false }, { text:'opaque', isCorrect:false }, { text:'terne', isCorrect:false }
+    ] };
+  }
+
   function initialState() {
     return {
       index: 0,
       score: 0,
       completed: Array(TOTAL_QUESTIONS).fill(false),
-      themeScores: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 }, // correct answers by theme
-      themeAttempts: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 }, // answered by theme
+      themeScores: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 },
+      themeAttempts: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 },
+      streak: 0,
+      qStart: performance.now(),
       subscribed: false
     };
   }
@@ -263,20 +318,25 @@
     if (isCorrect) {
       state.score += 1;
       state.themeScores[themeNow] = (state.themeScores[themeNow] || 0) + 1;
+      state.streak += 1;
+    } else {
+      state.streak = 0;
     }
+    const elapsedMs = performance.now() - (state.qStart||performance.now());
     // Neutral UX: do not reveal correctness
     optionEl.classList.add('selected');
     Array.from(els.answers.children).forEach(c => c.disabled = true);
     els.feedback.innerHTML = successBadge('Réponse enregistrée ✅');
     renderProgress();
     renderPagination();
-    maybeEncourage();
+    maybeEncourageIntelligent(isCorrect, elapsedMs);
     renderThemeSidebar();
     setTimeout(() => move(1), 420);
   }
 
   function render() {
     const q = QUESTIONS[state.index];
+    state.qStart = performance.now();
     els.stepTotal.textContent = String(TOTAL_QUESTIONS);
     els.stepNow.textContent = String(state.index + 1);
     els.questionText.textContent = q.prompt;
@@ -286,7 +346,8 @@
     els.answers.innerHTML = '';
     els.answers.classList.add('d-grid');
     q.options.forEach((opt) => {
-      const btn = document.createElement('button');      btn.className = `answer btn text-start ${opt.color || ''}`.trim();
+      const btn = document.createElement('button');
+      btn.className = `answer btn text-start ${opt.color || ''}`.trim();
       let iconHtml = '';
       try { iconHtml = opt.icon ? renderIcon(opt.icon) : ''; } catch { iconHtml = ''; }
       const label = opt.text || '';
@@ -298,7 +359,6 @@
     els.btnPrev.disabled = state.index === 0;
     els.btnNext.textContent = state.index === TOTAL_QUESTIONS - 1 ? 'Terminer' : 'Suivant';
     renderProgress();
-    // Animate the card body
     const bodyEl = document.querySelector('#quizSection .card-body');
     if (bodyEl) {
       bodyEl.classList.remove('fade-slide-in');
@@ -857,6 +917,26 @@
       <polygon points="220,40 240,60 220,80" fill="#fff" stroke="#0f172a"/>
       <defs><marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/></marker></defs>
     </svg></div>`;
+  }
+
+  function maybeEncourageIntelligent(isCorrect, elapsedMs){
+    const completedCount = state.completed.filter(Boolean).length;
+    let variant = null;
+    if (isCorrect && state.streak === 3) variant = { title:'Série de 3 ✅', msg:'Belle régularité, continuez !' };
+    if (isCorrect && state.streak === 5) variant = { title:'Streak x5 🔥', msg:'Vous êtes dans une excellente dynamique.' };
+    const fast = elapsedMs < 7000;
+    if (isCorrect && fast) variant = { title:'Rapide et juste ⚡', msg:'Plus rapide que 80% des utilisateurs sur cet item.' };
+    if (!variant && completedCount % 3 === 0) {
+      const v = PRAISE_VARIANTS[(completedCount/3)%PRAISE_VARIANTS.length | 0];
+      variant = v;
+    }
+    if (!variant) return;
+    const modal = new bootstrap.Modal(document.getElementById('praiseModal'));
+    document.getElementById('praiseTitle').textContent = variant.title;
+    document.getElementById('praiseMsg').textContent = variant.msg;
+    modal.show();
+    makeConfetti(document.querySelector('#praiseModal .modal-content'));
+    setTimeout(() => modal.hide(), 1700);
   }
 })();
 
