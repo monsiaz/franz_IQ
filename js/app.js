@@ -337,6 +337,14 @@
       </div>`;
     }).join('');
     el.innerHTML = rows;
+
+    // Global gauge (overall completion)
+    const globalEl = document.getElementById('globalSidebarScore');
+    if (globalEl) {
+      const completedCount = state.completed.filter(Boolean).length;
+      const pctAll = Math.round((completedCount / TOTAL_QUESTIONS) * 100);
+      globalEl.innerHTML = `<div class="global-gauge"><span style="width:${pctAll}%"></span></div><div class="text-end small text-muted mt-1">${completedCount}/${TOTAL_QUESTIONS}</div>`;
+    }
   }
 
   function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
