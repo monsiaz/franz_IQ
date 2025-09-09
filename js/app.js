@@ -724,6 +724,8 @@
       if (media.type === 'transformation-sequence') return svgTransformationSequence(media.variant||'');
       if (media.type === 'word-nuance') return svgWordNuance(media.context||'');
       if (media.type === 'shape-sides') return svgShapeSides(media.values||[]);
+      if (media.type === 'logic-deduction') return svgLogicDeduction(media.values||[]);
+      if (media.type === 'shape-sequence') return svgShapeSequence(media.variant||'');
       if (media.type === 'puzzle') return svgPuzzle(media.kind||'');
       return '';
     } catch { return ''; }
@@ -1159,6 +1161,32 @@
         </svg>
         <div class="small mt-1">? côtés</div>
       </div>
+    </div>`;
+  }
+  
+  function svgLogicDeduction(values) {
+    return `<div class="d-flex justify-content-center align-items-center gap-3">
+      <div class="text-center p-2 border rounded">A > B</div>
+      <span class="fw-bold">ET</span>
+      <div class="text-center p-2 border rounded">B > C</div>
+      <span class="h5">→</span>
+      <div class="text-center p-2 border rounded bg-warning-subtle">A ? C</div>
+    </div>`;
+  }
+  
+  function svgShapeSequence(variant) {
+    return `<div class="d-flex justify-content-center align-items-center gap-3">
+      <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
+        <rect x="5" y="5" width="20" height="20" fill="#3b82f6" opacity="0.8"/>
+      </svg>
+      <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="15,3 3,27 27,27" fill="#22c55e" opacity="0.8"/>
+      </svg>
+      <svg width="30" height="30" viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="15" cy="15" r="12" fill="#ef4444" opacity="0.8"/>
+      </svg>
+      <span class="h5">→</span>
+      <span class="text-warning fw-bold">?</span>
     </div>`;
   }
 
