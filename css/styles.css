@@ -41,6 +41,7 @@ html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, H
 }
 #pagination .page-dot.active { background: var(--teal-500); color: #fff; border-color: var(--teal-500); }
 #pagination .page-dot.completed { background: #e8f7f4; color: var(--teal-600); border-color: #d5f0ea; }
+.theme-pill { display:inline-block; padding:4px 10px; border-radius:999px; background:#f1f5f9; }
 
 /* Big praise modal animation */
 .praise-modal .modal-content { border-radius: 18px; box-shadow: 0 24px 60px rgba(20,184,166,.25); }

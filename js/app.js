@@ -133,7 +133,8 @@
     stepNow: document.getElementById('stepNow'),
     stepTotal: document.getElementById('stepTotal'),
     scoreText: document.getElementById('scoreText'),
-    percentile: document.getElementById('percentile')
+    percentile: document.getElementById('percentile'),
+    themeBadge: document.getElementById('themeBadge')
   };
 
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -205,6 +206,7 @@
     els.stepTotal.textContent = String(TOTAL_QUESTIONS);
     els.stepNow.textContent = String(state.index + 1);
     els.questionText.textContent = q.prompt;
+    els.themeBadge.innerHTML = q.theme ? `<span class="theme-pill">${capitalize(q.theme)}</span>` : '';
     els.questionMedia.innerHTML = q.media || '';
     els.feedback.innerHTML = '';
     els.answers.innerHTML = '';
@@ -275,6 +277,8 @@
     }).join('');
     el.innerHTML = rows;
   }
+
+  function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
 
   const PRAISE_VARIANTS = [
     { title: 'Super rythme ⚡', msg: 'Vous gardez une avance nette !' },
