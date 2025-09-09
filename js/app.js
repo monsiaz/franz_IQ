@@ -583,6 +583,8 @@
       if (media.type === 'bars') return svgBars(media.values||[]);
       if (media.type === 'tetrahedron-pattern') return svgTetraPattern(media.variant||'');
       if (media.type === 'flow-diagram') return svgFlowDiagram(media.values||[]);
+      if (media.type === 'sequence-numbers') return svgNumberSequence(media.values||[]);
+      if (media.type === 'word-visual') return svgWordVisual(media.concept||'');
       if (media.type === 'puzzle') return svgPuzzle(media.kind||'');
       return '';
     } catch { return ''; }
@@ -817,6 +819,58 @@
   function svgSmallPentagon() {
     return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="12,3 20,9 16,20 8,20 4,9" fill="#e2e8f0" stroke="#111"/></svg>`;
   }
+  
+  // New visual functions for better interactivity
+  function svgNumberSequence(values) {
+    const cellW = 48, cellH = 36, gap = 8;
+    let svg = '';
+    values.forEach((val, i) => {
+      const x = i * (cellW + gap);
+      const isQuestion = val === '?';
+      const bgColor = isQuestion ? '#fbbf24' : '#e2e8f0';
+      const textColor = isQuestion ? '#fff' : '#0f172a';
+      svg += `<rect x="${x}" y="0" width="${cellW}" height="${cellH}" rx="8" fill="${bgColor}" stroke="#111"/>`;
+      svg += `<text x="${x + cellW/2}" y="${cellH/2 + 6}" text-anchor="middle" font-family="Inter" font-size="16" font-weight="600" fill="${textColor}">${val}</text>`;
+    });
+    const totalW = values.length * (cellW + gap) - gap;
+    return `<div class="d-flex justify-content-center"><svg width="${totalW}" height="${cellH}" viewBox="0 0 ${totalW} ${cellH}" xmlns="http://www.w3.org/2000/svg">${svg}</svg></div>`;
+  }
+  
+  function svgWordVisual(concept) {
+    const concepts = {
+      'speed': '<path d="M10 20 L50 20" stroke="#94a3b8" stroke-width="4"/><path d="M20 15 L80 15" stroke="#22c55e" stroke-width="6"/><circle cx="90" cy="15" r="4" fill="#22c55e"/>',
+      'big-small': '<rect x="10" y="10" width="30" height="30" fill="#ef4444" opacity="0.8"/><rect x="50" y="20" width="15" height="15" fill="#22c55e" opacity="0.8"/>',
+      'clarity': '<circle cx="40" cy="25" r="20" fill="#fff" stroke="#22c55e" stroke-width="3"/><circle cx="40" cy="25" r="8" fill="#22c55e"/>'
+    };
+    const visual = concepts[concept] || '<rect x="20" y="20" width="40" height="20" fill="#e2e8f0"/>';
+    return `<div class="d-flex justify-content-center"><svg width="120" height="50" viewBox="0 0 100 50" xmlns="http://www.w3.org/2000/svg">${visual}</svg></div>`;
+  }
+  
+  function svgNumberIcon(num) {
+    return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="4" width="24" height="24" rx="6" fill="#f1f5f9" stroke="#334155"/>
+      <text x="16" y="20" text-anchor="middle" font-family="Inter" font-size="12" font-weight="600" fill="#0f172a">${num}</text>
+    </svg>`;
+  }
+  
+  function svgConceptIcon(token) {
+    const icons = {
+      'concept-speed': '<path d="M6 16 L20 16" stroke="#22c55e" stroke-width="3" stroke-linecap="round"/><path d="M16 12 L20 16 L16 20" stroke="#22c55e" stroke-width="2" fill="none"/>',
+      'concept-slow': '<path d="M6 16 L20 16" stroke="#94a3b8" stroke-width="3" stroke-linecap="round"/>',
+      'concept-heavy': '<rect x="8" y="12" width="16" height="8" fill="#64748b"/>',
+      'concept-light': '<circle cx="16" cy="16" r="6" fill="#fbbf24" opacity="0.6"/>',
+      'size-big': '<rect x="4" y="4" width="24" height="24" fill="#ef4444" opacity="0.8" rx="4"/>',
+      'size-small': '<rect x="10" y="10" width="12" height="12" fill="#22c55e" opacity="0.8" rx="2"/>',
+      'size-narrow': '<rect x="14" y="4" width="4" height="24" fill="#f59e0b" opacity="0.8"/>',
+      'size-wide': '<rect x="4" y="14" width="24" height="4" fill="#3b82f6" opacity="0.8"/>',
+      'concept-clear': '<circle cx="16" cy="16" r="10" fill="#fff" stroke="#22c55e" stroke-width="2"/>',
+      'concept-opaque': '<rect x="6" y="6" width="20" height="20" fill="#64748b" rx="4"/>',
+      'concept-dark': '<rect x="6" y="6" width="20" height="20" fill="#1f2937" rx="4"/>',
+      'concept-blur': '<circle cx="16" cy="16" r="8" fill="#94a3b8" opacity="0.5" filter="blur(2px)"/>'
+    };
+    const iconSvg = icons[token] || '<rect x="8" y="8" width="16" height="16" fill="#e2e8f0"/>';
+    return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">${iconSvg}</svg>`;
+  }
 
   // Media & icon renderers + theme normalization
   function normalizeTheme(t){ return t === 'spatial' ? 'formes' : (t || 'logique'); }
@@ -841,6 +895,17 @@
     if (token === 'triangle') return svgSmallTriangle();
     if (token === 'square') return svgSmallSquare();
     if (token === 'pentagon') return svgSmallPentagon();
+    
+    // Handle number icons
+    if (token.startsWith('number-')) {
+      const num = token.split('-')[1];
+      return svgNumberIcon(num);
+    }
+    
+    // Handle concept icons
+    if (token.startsWith('concept-') || token.startsWith('size-')) {
+      return svgConceptIcon(token);
+    }
     
     if (token.startsWith('bar-')) return svgBarChoice(parseInt(token.split('-')[1],10));
     const parts = token.split('-');

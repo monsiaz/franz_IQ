@@ -25,15 +25,35 @@ html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, H
 .btn-success { box-shadow: 0 6px 24px rgba(16,185,129,.25); }
 .navbar { backdrop-filter: saturate(180%) blur(6px); }
 
-#answers { grid-template-columns: repeat(2, minmax(0,1fr)); }
+#answers { 
+  grid-template-columns: repeat(2, minmax(0,1fr)); 
+  gap: 12px;
+}
 #answers .answer {
   border-radius: 16px;
   padding: 18px 16px;
   border: 1px solid rgba(16, 24, 40, .08);
   transition: transform .08s ease, box-shadow .14s ease;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
 }
 #answers .answer:hover { transform: translateY(-2px); box-shadow: 0 10px 22px rgba(16, 24, 40, .08); }
 #answers .answer.selected { outline: 2px solid var(--teal-500); background: #f0fbf9; }
+
+/* Mobile responsive improvements */
+@media (max-width: 768px) {
+  #answers { 
+    grid-template-columns: 1fr; 
+    gap: 10px;
+  }
+  #answers .answer {
+    padding: 16px 14px;
+    min-height: 56px;
+  }
+  .theme-chart, .live-ticker { font-size: 0.875rem; }
+  .radar svg { max-width: 200px; height: 160px; }
+}
 
 .bg-soft-green { background-color: var(--soft-green) !important; }
 .bg-soft-yellow { background-color: var(--soft-yellow) !important; }
@@ -73,8 +93,41 @@ html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, H
 .live-ticker .time { color:#64748b; }
 .gauss svg { max-width: 520px; width: 100%; height: 120px; }
 
+/* Enhanced mobile responsiveness */
 @media (max-width: 576px) {
   .display-6 { font-size: 1.75rem; }
+  .container { padding-left: 16px; padding-right: 16px; }
+  
+  /* Sidebar adjustments for mobile */
+  #themeSidebar { 
+    font-size: 0.8rem; 
+    max-height: 200px; 
+    overflow-y: auto;
+  }
+  
+  /* Pagination dots smaller on mobile */
+  #pagination .page-dot { 
+    width: 28px; 
+    height: 28px; 
+    font-size: 0.75rem;
+    margin: 2px;
+  }
+  
+  /* Quiz section spacing */
+  .card-body { padding: 1rem; }
+  
+  /* Progress bar responsive */
+  .progress { height: 6px; }
+  
+  /* Radar chart mobile optimization */
+  .radar svg { 
+    max-width: 180px; 
+    height: 140px; 
+  }
+  
+  /* Theme sidebar compact */
+  .theme-chart .bar { height: 8px; }
+  .global-gauge { height: 10px; }
 }
 
 /* Animations for question transitions */
