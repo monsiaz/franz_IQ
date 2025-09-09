@@ -66,55 +66,55 @@
       { text: 'Pentagone', icon: svgSmallPentagon(), isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Complétez: L, M, N, O, ...', media: svgLettersSeq(['L','M','N','O','?']), theme: 'vocabulaire', options: [
-      { text: 'P', isCorrect: true, color: 'bg-answer' },
-      { text: 'Q', isCorrect: false, color: 'bg-answer' },
-      { text: 'R', isCorrect: false, color: 'bg-answer' }
+      { text: 'P', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: 'Q', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'R', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Combien font 7 × 6 ?', media: svgDotsGrid(7, 6), theme: 'numerique', options: [
-      { text: '42', isCorrect: true, color: 'bg-answer' },
-      { text: '36', isCorrect: false, color: 'bg-answer' },
-      { text: '48', isCorrect: false, color: 'bg-answer' },
-      { text: '40', isCorrect: false, color: 'bg-answer' }
+      { text: '42', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: '36', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '48', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '40', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Le contraire de "ouvert" est ...', media: svgDoorOpen(), theme: 'vocabulaire', options: [
-      { text: 'Fermé', isCorrect: true, color: 'bg-answer' },
-      { text: 'Large', isCorrect: false, color: 'bg-answer' },
-      { text: 'Vide', isCorrect: false, color: 'bg-answer' },
-      { text: 'Transparent', isCorrect: false, color: 'bg-answer' }
+      { text: 'Fermé', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: 'Large', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Vide', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Transparent', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Quel est le jour suivant lundi ?', media: svgCalendar('Lun'), theme: 'logique', options: [
-      { text: 'Mardi', isCorrect: true, color: 'bg-answer' },
-      { text: 'Samedi', isCorrect: false, color: 'bg-answer' },
-      { text: 'Dimanche', isCorrect: false, color: 'bg-answer' },
-      { text: 'Jeudi', isCorrect: false, color: 'bg-answer' }
+      { text: 'Mardi', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: 'Samedi', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Dimanche', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Jeudi', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Quel est le plus grand nombre ?', media: svgBars([99,100,101]), theme: 'numerique', options: [
-      { text: '99', isCorrect: false, color: 'bg-answer' },
-      { text: '100', isCorrect: false, color: 'bg-answer' },
-      { text: '101', isCorrect: true, color: 'bg-answer' }
+      { text: '99', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '100', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '101', icon: '', isCorrect: true, color: 'bg-answer' }
     ] },
     { prompt: 'Quel est l’intrus ?', media: svgOddOneOut(), theme: 'formes', options: [
-      { text: 'Rouge', isCorrect: false, color: 'bg-answer' },
-      { text: 'Bleu', isCorrect: false, color: 'bg-answer' },
-      { text: 'Carré', isCorrect: true, color: 'bg-answer' },
-      { text: 'Vert', isCorrect: false, color: 'bg-answer' }
+      { text: 'Rouge', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Bleu', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Carré', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: 'Vert', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Dans la suite 1, 1, 2, 3, 5, 8, ... ?', media: svgBars([1,1,2,3,5,8]), theme: 'numerique', options: [
-      { text: '13', isCorrect: true, color: 'bg-answer' },
-      { text: '14', isCorrect: false, color: 'bg-answer' },
-      { text: '10', isCorrect: false, color: 'bg-answer' },
-      { text: '12', isCorrect: false, color: 'bg-answer' }
+      { text: '13', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: '14', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '10', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '12', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Si un train part à 12h et met 2h, il arrive à ...', media: svgClockRange(12,14), theme: 'logique', options: [
-      { text: '13h', isCorrect: false, color: 'bg-answer' },
-      { text: '14h', isCorrect: true, color: 'bg-answer' },
-      { text: '15h', isCorrect: false, color: 'bg-answer' }
+      { text: '13h', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '14h', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: '15h', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Quelle forme est uniquement composée de lignes courbes ?', media: svgShapes(true), theme: 'formes', options: [
-      { text: 'Cercle', isCorrect: true, color: 'bg-answer' },
-      { text: 'Triangle', isCorrect: false, color: 'bg-answer' },
-      { text: 'Rectangle', isCorrect: false, color: 'bg-answer' },
-      { text: 'Carré', isCorrect: false, color: 'bg-answer' }
+      { text: 'Cercle', icon: svgSmallCircle(), isCorrect: true, color: 'bg-answer' },
+      { text: 'Triangle', icon: svgSmallTriangle(), isCorrect: false, color: 'bg-answer' },
+      { text: 'Rectangle', icon: svgSmallSquare(), isCorrect: false, color: 'bg-answer' },
+      { text: 'Carré', icon: svgSmallSquare(), isCorrect: false, color: 'bg-answer' }
     ] },
 
     // Symétrie: choisir l'image miroir
@@ -135,26 +135,26 @@
 
     // Comptage: combien de points ?
     { prompt: 'Combien de points voyez-vous ?', media: svgDotsCountPrompt(12), theme: 'numerique', options: [
-      { text: '10', isCorrect: false, color: 'bg-answer' },
-      { text: '12', isCorrect: true, color: 'bg-answer' },
-      { text: '14', isCorrect: false, color: 'bg-answer' },
-      { text: '16', isCorrect: false, color: 'bg-answer' }
+      { text: '10', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '12', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: '14', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '16', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
 
     // Vocabulaire
     { prompt: 'Quel est le synonyme de "début" ?', media: '', theme: 'vocabulaire', options: [
-      { text: 'Commencement', isCorrect: true, color: 'bg-answer' },
-      { text: 'Fin', isCorrect: false, color: 'bg-answer' },
-      { text: 'Arrêt', isCorrect: false, color: 'bg-answer' },
-      { text: 'Barrage', isCorrect: false, color: 'bg-answer' }
+      { text: 'Commencement', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: 'Fin', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Arrêt', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: 'Barrage', icon: '', isCorrect: false, color: 'bg-answer' }
     ] },
 
     // Logique temporelle
     { prompt: 'Après 21h vient ...', media: '', theme: 'logique', options: [
-      { text: '22h', isCorrect: true, color: 'bg-answer' },
-      { text: '20h', isCorrect: false, color: 'bg-answer' },
-      { text: '23h', isCorrect: false, color: 'bg-answer' },
-      { text: '19h', isCorrect: false, color: 'bg-answer' }
+      { text: '22h', icon: '', isCorrect: true, color: 'bg-answer' },
+      { text: '20h', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '23h', icon: '', isCorrect: false, color: 'bg-answer' },
+      { text: '19h', icon: '', isCorrect: false, color: 'bg-answer' }
     ] }
   ];
 
@@ -258,7 +258,7 @@
   function handleAnswerClick(optionEl, isCorrect) {
     if (state.completed[state.index]) return;
     state.completed[state.index] = true;
-    const themeNow = QUESTIONS[state.index].theme || 'logique';
+    const themeNow = normalizeTheme(QUESTIONS[state.index].theme);
     state.themeAttempts[themeNow] = (state.themeAttempts[themeNow] || 0) + 1;
     if (isCorrect) {
       state.score += 1;
@@ -281,17 +281,16 @@
     els.stepNow.textContent = String(state.index + 1);
     els.questionText.textContent = q.prompt;
     els.themeBadge.innerHTML = q.theme ? `<span class="theme-pill">${capitalize(q.theme)}</span>` : '';
-    els.questionMedia.innerHTML = q.media || '';
+    els.questionMedia.innerHTML = renderMedia(q.media);
     els.feedback.innerHTML = '';
     els.answers.innerHTML = '';
     els.answers.classList.add('d-grid');
     q.options.forEach((opt) => {
       const btn = document.createElement('button');
       btn.className = `answer btn text-start ${opt.color}`;
-      btn.innerHTML = `<div class="d-flex align-items-center gap-3">
-        ${opt.icon ? `<span>${opt.icon}</span>` : ''}
-        <span class="fw-semibold">${opt.text}</span>
-      </div>`;
+      const iconHtml = opt.icon ? renderIcon(opt.icon) : '';
+      const label = opt.text || '';
+      btn.innerHTML = `<div class="d-flex align-items-center gap-3">${iconHtml}<span class="fw-semibold">${label}</span></div>`;
       btn.addEventListener('click', () => handleAnswerClick(btn, !!opt.isCorrect));
       els.answers.appendChild(btn);
     });
@@ -340,7 +339,7 @@
     const el = document.getElementById('themeSidebar');
     if (!el) return;
     const totals = { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 };
-    QUESTIONS.forEach(q => totals[q.theme || 'logique']++);
+    QUESTIONS.forEach(q => totals[normalizeTheme(q.theme)]++);
     const rows = Object.keys(totals).map(k => {
       const attempts = state.themeAttempts[k] || 0;
       const pct = Math.round((attempts / totals[k]) * 100);
@@ -367,92 +366,10 @@
     renderTicker();
   }
 
-  function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
-
-  const PRAISE_VARIANTS = [
-    { title: 'Super rythme ⚡', msg: 'Vous gardez une avance nette !' },
-    { title: 'Bravo 👏', msg: 'Top 10% sur la vitesse aujourd\'hui.' },
-    { title: 'Continuez 🚀', msg: 'Exécution fluide, c\'est excellent.' }
-  ];
-
-  function maybeEncourage() {
-    const completedCount = state.completed.filter(Boolean).length;
-    if (completedCount > 0 && completedCount % 3 === 0 && completedCount < TOTAL_QUESTIONS) {
-      const v = PRAISE_VARIANTS[(completedCount/3)%PRAISE_VARIANTS.length | 0];
-      // Big popup only (remove toast to avoid duplicate)
-      const modal = new bootstrap.Modal(document.getElementById('praiseModal'));
-      document.getElementById('praiseTitle').textContent = v.title;
-      document.getElementById('praiseMsg').textContent = v.msg;
-      modal.show();
-      makeConfetti(document.querySelector('#praiseModal .modal-content'));
-      setTimeout(() => modal.hide(), 1700);
-    }
-  }
-
-  function makeConfetti(target) {
-    if (!target) return;
-    for (let i = 0; i < 22; i++) {
-      const c = document.createElement('div');
-      c.className = 'confetti';
-      c.style.background = ['#14b8a6','#0ea5e9','#f59e0b','#ef4444'][i%4];
-      c.style.left = '50%'; c.style.top = '48%'; c.style.position = 'absolute';
-      const dx = (Math.random()*180-90) + 'px';
-      const dy = (Math.random()*140-70) + 'px';
-      c.style.setProperty('--dx', dx); c.style.setProperty('--dy', dy);
-      c.style.animation = 'burst 900ms ease-out forwards';
-      target.appendChild(c);
-      setTimeout(() => c.remove(), 1000);
-    }
-  }
-
-  function showResults() {
-    const iqScore = 80 + Math.round((state.score / TOTAL_QUESTIONS) * 40); // 80-120 simple scale
-    const percentile = Math.max(1, Math.min(99, Math.round((state.score / TOTAL_QUESTIONS) * 100)));
-    els.scoreText.textContent = `IQ ${iqScore}`;
-    document.getElementById('percentile').textContent = `${percentile}%`;
-    renderResultsThemeChart();
-    renderRadar();
-    showSection('results');
-  }
-
-  function renderResultsThemeChart(){
-    const el = document.getElementById('resultsThemeChart'); if(!el) return;
-    const totals = { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 };
-    QUESTIONS.forEach(q => totals[q.theme || 'logique']++);
-    const rows = Object.keys(totals).map(k => {
-      const done = state.themeScores[k] || 0;
-      const pct = Math.round((done / totals[k]) * 100);
-      return `<div class="row align-items-center">
-        <div class="col-5 text-capitalize">${k}</div>
-        <div class="col-7">
-          <div class="bar"><span style="width:${pct}%"></span></div>
-          <div class="text-end small text-muted">${done}/${totals[k]}</div>
-        </div>
-      </div>`;
-    }).join('');
-    el.innerHTML = rows;
-  }
-
-  function renderGauss(percentile){
-    const container = document.getElementById('gaussChart'); if(!container) return;
-    const bins = [1,3,7,12,18,22,18,12,7,3,1];
-    const max = Math.max(...bins);
-    const w = 260, h = 110, bw = Math.floor(w / bins.length) - 2;
-    let s = '';
-    bins.forEach((v,i)=>{
-      const bh = Math.round((v/max) * (h-20));
-      s += `<rect x="${i*(bw+2)}" y="${h-bh}" width="${bw}" height="${bh}" fill="#fde68a"/>`;
-    });
-    // marker based on percentile (~map 0-100 to 0-w)
-    const x = Math.max(0, Math.min(w, Math.round((percentile/100) * w)));
-    s += `<line x1="${x}" y1="0" x2="${x}" y2="${h}" stroke="#3b82f6" stroke-width="3"/>`;
-    container.innerHTML = `<div class="gauss d-flex justify-content-center"><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${s}</svg></div>`;
-  }
-
   function renderRadar() {
     const el = document.getElementById('radarChart'); if (!el) return;
     const totals = { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 };
-    QUESTIONS.forEach(q => totals[q.theme || 'logique']++);
+    QUESTIONS.forEach(q => totals[normalizeTheme(q.theme)]++);
     const keys = Object.keys(totals);
     const values = keys.map(k => (state.themeAttempts[k] || 0) / (totals[k] || 1)); // progress 0..1
     const cx = 130, cy = 110, r = 90;
@@ -535,6 +452,139 @@
   function successBadge(text) { return `<span class="badge bg-success-subtle text-success-emphasis">${text}</span>`; }
   function dangerBadge(text) { return `<span class="badge bg-danger-subtle text-danger-emphasis">${text}</span>`; }
   function showToast(message) { /* removed to avoid duplicate popups */ }
+
+  function renderMedia(media) {
+    if (!media) return '';
+    if (typeof media === 'string') {
+      if (media.startsWith('<svg')) return media;
+      return `<div class="d-flex justify-content-center"><img src="${media}" alt="Question Media" class="img-fluid"></div>`;
+    }
+    if (Array.isArray(media)) {
+      return svgBars(media);
+    }
+    if (media.type === 'grid-hole') {
+      return svgPuzzle('grid-hole');
+    }
+    if (media.type === 'sequence') {
+      return svgMotifSequence();
+    }
+    if (media.type === 'speed') {
+      return svgSpeedIcon();
+    }
+    if (media.type === 'triangle') {
+      return svgTriangleRef();
+    }
+    if (media.type === 'letters') {
+      return svgLettersSeq(media.sequence);
+    }
+    if (media.type === 'door') {
+      return svgDoorOpen();
+    }
+    if (media.type === 'calendar') {
+      return svgCalendar(media.label);
+    }
+    if (media.type === 'odd-one-out') {
+      return svgOddOneOut();
+    }
+    if (media.type === 'clock') {
+      return svgClock(media.hour);
+    }
+    if (media.type === 'clock-range') {
+      return svgClockRange(media.startHour, media.endHour);
+    }
+    if (media.type === 'dots-grid') {
+      return svgDotsGrid(media.cols, media.rows);
+    }
+    if (media.type === 'matrix') {
+      return svgMatrixMain();
+    }
+    if (media.type === 'shapes') {
+      return svgShapes(media.curvyOnly);
+    }
+    if (media.type === 'mirror') {
+      return svgMirrorPrompt();
+    }
+    if (media.type === 'bars-prompt') {
+      return svgBarsPrompt(media.arr);
+    }
+    if (media.type === 'dots-count-prompt') {
+      return svgDotsCountPrompt(media.n);
+    }
+    if (media.type === 'puzzle') {
+      return svgPuzzle(media.kind);
+    }
+    return '';
+  }
+
+  function renderIcon(icon) {
+    if (typeof icon === 'string') {
+      if (icon.startsWith('<svg')) return icon;
+      return `<div class="d-flex justify-content-center"><img src="${icon}" alt="Option Icon" class="img-fluid" style="max-width: 24px;"></div>`;
+    }
+    if (Array.isArray(icon)) {
+      return svgBars(icon);
+    }
+    if (icon.type === 'grid-hole') {
+      return svgPuzzle('grid-hole');
+    }
+    if (icon.type === 'sequence') {
+      return svgMotifSequence();
+    }
+    if (icon.type === 'speed') {
+      return svgSpeedIcon();
+    }
+    if (icon.type === 'triangle') {
+      return svgTriangleRef();
+    }
+    if (icon.type === 'letters') {
+      return svgLettersSeq(icon.sequence);
+    }
+    if (icon.type === 'door') {
+      return svgDoorOpen();
+    }
+    if (icon.type === 'calendar') {
+      return svgCalendar(icon.label);
+    }
+    if (icon.type === 'odd-one-out') {
+      return svgOddOneOut();
+    }
+    if (icon.type === 'clock') {
+      return svgClock(icon.hour);
+    }
+    if (icon.type === 'clock-range') {
+      return svgClockRange(icon.startHour, icon.endHour);
+    }
+    if (icon.type === 'dots-grid') {
+      return svgDotsGrid(icon.cols, icon.rows);
+    }
+    if (icon.type === 'matrix') {
+      return svgMatrixMain();
+    }
+    if (icon.type === 'shapes') {
+      return svgShapes(icon.curvyOnly);
+    }
+    if (icon.type === 'mirror') {
+      return svgMirrorPrompt();
+    }
+    if (icon.type === 'bars-prompt') {
+      return svgBarsPrompt(icon.arr);
+    }
+    if (icon.type === 'dots-count-prompt') {
+      return svgDotsCountPrompt(icon.n);
+    }
+    if (icon.type === 'puzzle') {
+      return svgPuzzle(icon.kind);
+    }
+    return '';
+  }
+
+  function normalizeTheme(theme) {
+    if (theme === 'logique') return 'logique';
+    if (theme === 'vocabulaire') return 'vocabulaire';
+    if (theme === 'numerique') return 'numerique';
+    if (theme === 'formes') return 'formes';
+    return 'logique'; // Default theme
+  }
 
   function svgGrid(cols, rows) {
     const size = 140; const cell = 18;
@@ -724,6 +774,85 @@
   }
   function svgSmallPentagon() {
     return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="12,3 20,9 16,20 8,20 4,9" fill="#e2e8f0" stroke="#111"/></svg>`;
+  }
+
+  // Media & icon renderers + theme normalization
+  function normalizeTheme(t){ return t === 'spatial' ? 'formes' : (t || 'logique'); }
+
+  function renderMedia(media){
+    if (!media) return '';
+    if (typeof media === 'string') return media;
+    if (media.type === 'matrix') return svgMatrixMain();
+    if (media.type === '3d-cube') return svgFlatCube(media.variant);
+    if (media.type === 'bars') return svgBars(media.values||[]);
+    if (media.type === 'tetrahedron-pattern') return svgTetraPattern(media.variant);
+    if (media.type === 'flow-diagram') return svgFlowDiagram(media.values||[]);
+    return '';
+  }
+
+  function renderIcon(token){
+    if (!token) return '';
+    if (token.startsWith('bar-')) return svgBarChoice(parseInt(token.split('-')[1],10));
+    const parts = token.split('-');
+    const shape = parts[0];
+    const mapSize = { small:16, medium:22, large:28 };
+    let size = mapSize.medium, rot = 0, color = '#e2e8f0', stroke = '#111', number = '';
+    parts.slice(1).forEach(p=>{
+      if (mapSize[p]) size = mapSize[p];
+      else if (p.endsWith('deg')) rot = parseInt(p,10);
+      else if (/^\d+$/.test(p)) number = p;
+      else {
+        const colors = { blue:'#0ea5e9', red:'#ef4444', green:'#22c55e', yellow:'#f59e0b', orange:'#fb923c' };
+        if (colors[p]) color = colors[p];
+      }
+    });
+    if (shape.startsWith('square')) {
+      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 16 16)"><rect x="${16-size/2}" y="${16-size/2}" width="${size}" height="${size}" rx="4" fill="${color}" stroke="${stroke}"/></g>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
+    }
+    if (shape.startsWith('triangle')) {
+      const fill = color;
+      let deco = '';
+      if (token.includes('grid')) deco = '<path d="M8 14 L24 14 M16 6 L16 22" stroke="#0f172a" stroke-width="0.6" opacity=".4"/>';
+      if (token.includes('dotted')) deco = '<circle cx="16" cy="14" r="1" fill="#0f172a" opacity=".5"/><circle cx="12" cy="18" r="1" fill="#0f172a" opacity=".5"/><circle cx="20" cy="18" r="1" fill="#0f172a" opacity=".5"/>';
+      if (token.includes('striped')) deco = '<path d="M10 20 L22 8" stroke="#0f172a" stroke-width="1" opacity=".5"/>';
+      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 16 16)"><polygon points="16,6 6,26 26,26" fill="${fill}" stroke="#111"/>${deco}</g>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
+    }
+    if (shape.startsWith('circle')) {
+      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="${size/2}" fill="${color}" stroke="#111"/>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
+    }
+    return '';
+  }
+
+  function svgFlatCube(variant){
+    const colors = { blue:'#0ea5e9', red:'#ef4444', green:'#22c55e' };
+    return `<div class="d-flex justify-content-center"><svg width="140" height="120" viewBox="0 0 140 120" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="70,10 110,30 70,50 30,30" fill="${colors.blue}" opacity=".8" stroke="#0f172a"/>
+      <polygon points="110,30 110,70 70,90 70,50" fill="${colors.red}" opacity=".8" stroke="#0f172a"/>
+      <polygon points="30,30 70,50 70,90 30,70" fill="${colors.green}" opacity=".8" stroke="#0f172a"/>
+    </svg></div>`;
+  }
+
+  function svgTetraPattern(variant){
+    const tri = (tx, ty, deco='') => `<g transform="translate(${tx},${ty})"><polygon points="40,0 0,70 80,70" fill="#e2e8f0" stroke="#111"/>${deco}</g>`;
+    const striped = '<path d="M10 60 L70 10" stroke="#0f172a" stroke-width="2" opacity=".4"/>';
+    const dotted = '<circle cx="40" cy="40" r="2" fill="#0f172a" opacity=".5"/><circle cx="25" cy="55" r="2" fill="#0f172a" opacity=".5"/><circle cx="55" cy="55" r="2" fill="#0f172a" opacity=".5"/>';
+    const grid = '<path d="M20 70 L20 20 M40 70 L40 20 M60 70 L60 20 M0 50 L80 50 M0 30 L80 30" stroke="#0f172a" stroke-width="1" opacity=".2"/>';
+    return `<div class="d-flex justify-content-center"><svg width="220" height="160" viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
+      ${tri(70,0,striped)}${tri(0,70,dotted)}${tri(70,70,grid)}${tri(140,70,'')}
+    </svg></div>`;
+  }
+
+  function svgFlowDiagram(values){
+    return `<div class="d-flex justify-content-center"><svg width="260" height="120" viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg">
+      <rect x="20" y="40" width="40" height="40" rx="6" fill="#e2e8f0" stroke="#0f172a"/>
+      <text x="40" y="65" font-size="12" text-anchor="middle">${values[0]||2}</text>
+      <line x1="60" y1="60" x2="110" y2="60" stroke="#94a3b8" marker-end="url(#arrow)"/>
+      <circle cx="130" cy="60" r="20" fill="#e2e8f0" stroke="#0f172a"/>
+      <text x="130" y="65" font-size="12" text-anchor="middle">${values[1]||4}</text>
+      <line x1="150" y1="60" x2="200" y2="60" stroke="#94a3b8" marker-end="url(#arrow)"/>
+      <polygon points="220,40 240,60 220,80" fill="#fff" stroke="#0f172a"/>
+      <defs><marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/></marker></defs>
+    </svg></div>`;
   }
 })();
 
