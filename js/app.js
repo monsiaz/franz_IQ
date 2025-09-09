@@ -723,6 +723,7 @@
       if (media.type === 'pattern-grid') return svgPatternGrid(media.variant||'');
       if (media.type === 'transformation-sequence') return svgTransformationSequence(media.variant||'');
       if (media.type === 'word-nuance') return svgWordNuance(media.context||'');
+      if (media.type === 'shape-sides') return svgShapeSides(media.values||[]);
       if (media.type === 'puzzle') return svgPuzzle(media.kind||'');
       return '';
     } catch { return ''; }
@@ -1036,13 +1037,22 @@
   
   function svgEquationVisual(values) {
     return `<div class="d-flex justify-content-center">
-      <svg width="200" height="80" viewBox="0 0 200 80" xmlns="http://www.w3.org/2000/svg">
+      <svg width="240" height="100" viewBox="0 0 240 100" xmlns="http://www.w3.org/2000/svg">
         <polygon points="30,20 20,40 40,40" fill="#22c55e"/>
-        <text x="50" y="35" font-size="14">=3</text>
+        <text x="50" y="35" font-size="14" fill="#0f172a">=3</text>
+        
         <rect x="80" y="20" width="20" height="20" fill="#3b82f6"/>
-        <text x="110" y="35" font-size="14">=5</text>
-        <text x="30" y="65" font-size="12">△+□+○=12</text>
-        <text x="130" y="65" font-size="12">○=?</text>
+        <text x="110" y="35" font-size="14" fill="#0f172a">=5</text>
+        
+        <polygon points="30,60 20,80 40,80" fill="#22c55e"/>
+        <text x="45" y="75" font-size="12" fill="#0f172a">+</text>
+        <rect x="55" y="60" width="15" height="15" fill="#3b82f6"/>
+        <text x="75" y="75" font-size="12" fill="#0f172a">+</text>
+        <circle cx="90" cy="67" r="8" fill="#ef4444"/>
+        <text x="105" y="75" font-size="14" fill="#0f172a">=12</text>
+        
+        <circle cx="160" cy="67" r="8" fill="#ef4444"/>
+        <text x="175" y="75" font-size="14" fill="#0f172a">=?</text>
       </svg>
     </div>`;
   }
@@ -1131,6 +1141,24 @@
     return `<div class="text-center">
       <div class="small text-muted mb-2">Nuance entre :</div>
       <div class="h6 text-primary">${context}</div>
+    </div>`;
+  }
+  
+  function svgShapeSides(values) {
+    return `<div class="d-flex justify-content-center align-items-center gap-4">
+      <div class="text-center">
+        <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="20,5 5,35 35,35" fill="#22c55e" opacity="0.8"/>
+        </svg>
+        <div class="small mt-1">3 côtés</div>
+      </div>
+      <span class="h5">→</span>
+      <div class="text-center">
+        <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+          <rect x="10" y="10" width="20" height="20" fill="#3b82f6" opacity="0.8"/>
+        </svg>
+        <div class="small mt-1">? côtés</div>
+      </div>
     </div>`;
   }
 
