@@ -345,6 +345,9 @@
       const pctAll = Math.round((completedCount / TOTAL_QUESTIONS) * 100);
       globalEl.innerHTML = `<div class="global-gauge"><span style="width:${pctAll}%"></span></div><div class="text-end small text-muted mt-1">${completedCount}/${TOTAL_QUESTIONS}</div>`;
     }
+
+    // Render radar live while passing the quiz
+    renderRadar();
   }
 
   function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
