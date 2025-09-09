@@ -20,6 +20,11 @@ html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, H
   background: linear-gradient(135deg, rgba(45, 212, 191, .18), rgba(14, 165, 233, .18));
 }
 
+/* Elevated card look */
+.card { border: 1px solid rgba(148,163,184,.25); }
+.btn-success { box-shadow: 0 6px 24px rgba(16,185,129,.25); }
+.navbar { backdrop-filter: saturate(180%) blur(6px); }
+
 #answers { grid-template-columns: repeat(2, minmax(0,1fr)); }
 #answers .answer {
   border-radius: 16px;
