@@ -335,7 +335,28 @@
     renderPagination();
     maybeEncourageIntelligent(isCorrect, elapsedMs);
     renderThemeSidebar();
-    setTimeout(() => move(1), 420);
+    
+    // Smooth transition to next question (except last question)
+    setTimeout(() => {
+      if (state.index === TOTAL_QUESTIONS - 1) {
+        // Last question: show paywall with reassurance
+        showPaywallWithReassurance();
+      } else {
+        // Auto-advance with smooth animation
+        const cardBody = document.querySelector('#quizSection .card-body');
+        if (cardBody) {
+          cardBody.style.transform = 'translateX(-20px)';
+          cardBody.style.opacity = '0.7';
+          setTimeout(() => {
+            move(1);
+            cardBody.style.transform = 'translateX(0)';
+            cardBody.style.opacity = '1';
+          }, 150);
+        } else {
+          move(1);
+        }
+      }
+    }, 800);
   }
 
   function render() {
@@ -460,7 +481,7 @@
     // Render radar live while passing the quiz
     renderRadar();
     renderTicker();
-    renderReviewTicker();
+    renderVerticalReviews();
   }
 
   function renderRadar() {
@@ -508,7 +529,7 @@
 
   function renderTicker(){
     const el = document.getElementById('liveTicker'); if(!el) return;
-    const firstNames = ['Paul','Camille','Nora','Alex','Marc','Yanis','Lina','Hugo'];
+    const firstNames = ['Paul','Camille','Nora','Alex','Marc','Yanis','Lina','Hugo','Emma','Sophie'];
     const cities = ['Paris, FR','Lyon, FR','Marseille, FR','Lille, FR','Bordeaux, FR','Nantes, FR'];
     const samples = Array.from({length: 6}).map((_,i)=>{
       const minutesAgo = Math.floor(Math.random()*55)+1; // 1..55
@@ -516,9 +537,47 @@
       const name = firstNames[Math.floor(Math.random()*firstNames.length)] + ' ' + String.fromCharCode(65+Math.floor(Math.random()*26)) + '.';
       const city = cities[Math.floor(Math.random()*cities.length)];
       const when = minutesAgo < 60 ? `${minutesAgo} min` : `${Math.floor(minutesAgo/60)} h`;
-      return { iq: score, who: `${name} (${city})`, when };
+      return { iq: score, who: `${name} (${city})`, when, minutesAgo };
     });
+    
+    // Sort by most recent first (smallest minutesAgo)
+    samples.sort((a, b) => a.minutesAgo - b.minutesAgo);
+    
     el.innerHTML = samples.map(s=>`<div class="item"><span>IQ ${s.iq} — ${s.who}</span><span class="time">il y a ${s.when}</span></div>`).join('');
+  }
+  
+  function renderVerticalReviews() {
+    const el = document.getElementById('verticalReviews');
+    if (!el) return;
+    const reviews = [
+      { name: 'Sophie L.', platform: 'App Store', rating: 5, text: 'Interface claire et résultats précis. J\'ai adoré la fluidité du test !' },
+      { name: 'Marc D.', platform: 'Google Play', rating: 5, text: 'Test rapide mais complet. Les visuels sont top !' },
+      { name: 'Emma R.', platform: 'Web', rating: 5, text: 'Très bon outil d\'évaluation. Recommande fortement.' },
+      { name: 'Alex K.', platform: 'App Store', rating: 4, text: 'Analyse détaillée par thème, c\'est génial.' },
+      { name: 'Nora P.', platform: 'Web', rating: 5, text: 'Design moderne et questions pertinentes.' }
+    ];
+    
+    // Add review-slider wrapper class
+    el.className = 'review-slider';
+    
+    const html = reviews.map(r => `
+      <div class="review-item">
+        <div class="d-flex align-items-start mb-3">
+          <div class="avatar me-3">${r.name[0]}</div>
+          <div class="flex-grow-1">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <div>
+                <div class="fw-semibold text-dark">${r.name}</div>
+                <span class="review-platform">${r.platform}</span>
+              </div>
+              <div class="review-stars">${'⭐'.repeat(r.rating)}</div>
+            </div>
+            <div class="review-text">"${r.text}"</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    el.innerHTML = html;
   }
 
   // Intercept next on last to show paywall/results
@@ -997,6 +1056,32 @@
   }
   
   function capitalize(str) { return str ? str.charAt(0).toUpperCase() + str.slice(1) : ''; }
+  
+  function showPaywallWithReassurance() {
+    // Add reassurance elements to paywall modal
+    const modal = document.getElementById('paywallModal');
+    if (modal) {
+      // Add reassurance text if not already present
+      let reassuranceEl = modal.querySelector('.paywall-reassurance');
+      if (!reassuranceEl) {
+        reassuranceEl = document.createElement('div');
+        reassuranceEl.className = 'paywall-reassurance text-center mb-3';
+        reassuranceEl.innerHTML = `
+          <div class="d-flex justify-content-center align-items-center gap-2 mb-2">
+            <span class="badge bg-success-subtle text-success-emphasis">✓ Sécurisé</span>
+            <span class="badge bg-info-subtle text-info-emphasis">✓ Sans engagement</span>
+            <span class="badge bg-warning-subtle text-warning-emphasis">✓ Annulation libre</span>
+          </div>
+          <small class="text-muted">Plus de 20 000 utilisateurs nous font confiance • Paiement 100% sécurisé</small>
+        `;
+        const modalBody = modal.querySelector('.modal-body');
+        if (modalBody) modalBody.insertBefore(reassuranceEl, modalBody.firstChild);
+      }
+    }
+    
+    const bootstrapModal = new bootstrap.Modal(modal);
+    bootstrapModal.show();
+  }
   
   function maybeEncourageIntelligent(isCorrect, elapsedMs){
     const completedCount = state.completed.filter(Boolean).length;
