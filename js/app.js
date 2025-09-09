@@ -391,6 +391,7 @@
     els.scoreText.textContent = `IQ ${iqScore}`;
     document.getElementById('percentile').textContent = `${percentile}%`;
     renderResultsThemeChart();
+    renderRadar();
     showSection('results');
   }
 
@@ -426,6 +427,34 @@
     const x = Math.max(0, Math.min(w, Math.round((percentile/100) * w)));
     s += `<line x1="${x}" y1="0" x2="${x}" y2="${h}" stroke="#3b82f6" stroke-width="3"/>`;
     container.innerHTML = `<div class="gauss d-flex justify-content-center"><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${s}</svg></div>`;
+  }
+
+  function renderRadar() {
+    const el = document.getElementById('radarChart'); if (!el) return;
+    const totals = { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 };
+    QUESTIONS.forEach(q => totals[q.theme || 'logique']++);
+    const keys = Object.keys(totals);
+    const values = keys.map(k => (state.themeScores[k] || 0) / (totals[k] || 1)); // 0..1
+    const cx = 130, cy = 110, r = 90;
+    const points = values.map((v, i) => {
+      const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
+      const rr = r * v;
+      const x = cx + rr * Math.cos(angle);
+      const y = cy + rr * Math.sin(angle);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    let axes = '';
+    keys.forEach((k, i) => {
+      const angle = (Math.PI * 2 * i) / values.length - Math.PI / 2;
+      const x = cx + r * Math.cos(angle);
+      const y = cy + r * Math.sin(angle);
+      axes += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#e5e7eb"/>`;
+      axes += `<text x="${x}" y="${y}" font-size="10" fill="#334155" text-anchor="middle">${k}</text>`;
+    });
+    const poly = `<polygon points="${points}" fill="rgba(34,197,94,0.25)" stroke="#22c55e"/>`;
+    el.innerHTML = `<div class="d-flex justify-content-center"><svg viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">${axes}${poly}</svg></div>`;
+    const iqScore = 80 + Math.round((state.score / TOTAL_QUESTIONS) * 40);
+    const blurLabel = document.getElementById('radarScoreBlur'); if (blurLabel) blurLabel.textContent = `IQ ${iqScore}`;
   }
 
   // Intercept next on last to show paywall/results

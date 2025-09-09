@@ -62,6 +62,7 @@ html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, H
 .theme-chart .row { margin-bottom: 10px; }
 .global-gauge { height: 14px; border-radius: 999px; background: #e5e7eb; overflow: hidden; }
 .global-gauge > span { display:block; height:100%; background: linear-gradient(90deg,#22c55e,#ef4444); }
+.radar svg { width: 100%; max-width: 260px; height: 220px; }
 .gauss svg { max-width: 520px; width: 100%; height: 120px; }
 
 @media (max-width: 576px) {
