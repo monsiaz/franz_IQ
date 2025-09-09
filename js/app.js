@@ -980,19 +980,29 @@
         if (colors[p]) color = colors[p];
       }
     });
-    if (shape.startsWith('square')) {
-      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 16 16)"><rect x="${16-size/2}" y="${16-size/2}" width="${size}" height="${size}" rx="4" fill="${color}" stroke="${stroke}"/></g>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
-    }
     if (shape.startsWith('triangle')) {
-      const fill = color;
+      let fill = color;
+      // Handle special triangle tokens with color and number
+      if (token.includes('-green-')) fill = '#22c55e';
+      if (token.includes('-blue-')) fill = '#0ea5e9';
+      if (token.includes('-red-')) fill = '#ef4444';
+      if (token.includes('-orange-')) fill = '#fb923c';
+      
       let deco = '';
       if (token.includes('grid')) deco = '<path d="M8 14 L24 14 M16 6 L16 22" stroke="#0f172a" stroke-width="0.6" opacity=".4"/>';
       if (token.includes('dotted')) deco = '<circle cx="16" cy="14" r="1" fill="#0f172a" opacity=".5"/><circle cx="12" cy="18" r="1" fill="#0f172a" opacity=".5"/><circle cx="20" cy="18" r="1" fill="#0f172a" opacity=".5"/>';
       if (token.includes('striped')) deco = '<path d="M10 20 L22 8" stroke="#0f172a" stroke-width="1" opacity=".5"/>';
-      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 16 16)"><polygon points="16,6 6,26 26,26" fill="${fill}" stroke="#111"/>${deco}</g>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
+      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 16 16)"><polygon points="16,6 6,26 26,26" fill="${fill}" stroke="#111" opacity="0.8"/>${deco}</g>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
     }
     if (shape.startsWith('circle')) {
-      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="${size/2}" fill="${color}" stroke="#111"/>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
+      let fill = color;
+      if (token.includes('-blue-')) fill = '#0ea5e9';
+      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="${size/2}" fill="${fill}" stroke="#111" opacity="0.8"/>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
+    }
+    if (shape.startsWith('square')) {
+      let fill = color;
+      if (token.includes('-orange-')) fill = '#fb923c';
+      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 16 16)"><rect x="${16-size/2}" y="${16-size/2}" width="${size}" height="${size}" rx="4" fill="${fill}" stroke="${stroke}" opacity="0.8"/></g>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
     }
     console.warn('Unknown icon token:', token);
     return '';
@@ -1018,6 +1028,16 @@
   }
 
   function svgFlowDiagram(values){
+    // Extract color from third value if it's a string like "triangle-green"
+    const thirdVal = values[2] || "triangle-green";
+    const colorMatch = thirdVal.toString().match(/(green|blue|red|orange)/);
+    const shapeColor = colorMatch ? {
+      'green': '#22c55e',
+      'blue': '#0ea5e9', 
+      'red': '#ef4444',
+      'orange': '#fb923c'
+    }[colorMatch[1]] : '#22c55e';
+    
     return `<div class="d-flex justify-content-center"><svg width="260" height="120" viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg">
       <rect x="20" y="40" width="40" height="40" rx="6" fill="#e2e8f0" stroke="#0f172a"/>
       <text x="40" y="65" font-size="12" text-anchor="middle">${values[0]||2}</text>
@@ -1025,7 +1045,7 @@
       <circle cx="130" cy="60" r="20" fill="#e2e8f0" stroke="#0f172a"/>
       <text x="130" y="65" font-size="12" text-anchor="middle">${values[1]||4}</text>
       <line x1="150" y1="60" x2="200" y2="60" stroke="#94a3b8" marker-end="url(#arrow)"/>
-      <polygon points="220,40 240,60 220,80" fill="#fff" stroke="#0f172a"/>
+      <polygon points="220,40 240,60 220,80" fill="${shapeColor}" stroke="#0f172a" opacity="0.8"/>
       <defs><marker id="arrow" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/></marker></defs>
     </svg></div>`;
   }
