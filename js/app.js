@@ -36,7 +36,8 @@
       options: [
         { text: 'Carré simple', isCorrect: false, color: 'bg-answer' },
         { text: 'Grille complète', isCorrect: true, color: 'bg-answer' },
-        { text: 'Croix', isCorrect: false, color: 'bg-answer' }
+        { text: 'Croix', isCorrect: false, color: 'bg-answer' },
+        { text: 'Triangle', isCorrect: false, color: 'bg-answer' }
       ]
     },
     { prompt: 'Quel nombre suit: 2, 4, 8, 16, ... ?', media: svgBars([2,4,8,16]), theme: 'numerique', options: [
@@ -71,17 +72,20 @@
     { prompt: 'Combien font 7 × 6 ?', media: svgDotsGrid(7, 6), theme: 'numerique', options: [
       { text: '42', isCorrect: true, color: 'bg-answer' },
       { text: '36', isCorrect: false, color: 'bg-answer' },
-      { text: '48', isCorrect: false, color: 'bg-answer' }
+      { text: '48', isCorrect: false, color: 'bg-answer' },
+      { text: '40', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Le contraire de "ouvert" est ...', media: svgDoorOpen(), theme: 'vocabulaire', options: [
       { text: 'Fermé', isCorrect: true, color: 'bg-answer' },
       { text: 'Large', isCorrect: false, color: 'bg-answer' },
-      { text: 'Vide', isCorrect: false, color: 'bg-answer' }
+      { text: 'Vide', isCorrect: false, color: 'bg-answer' },
+      { text: 'Transparent', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Quel est le jour suivant lundi ?', media: svgCalendar('Lun'), theme: 'logique', options: [
       { text: 'Mardi', isCorrect: true, color: 'bg-answer' },
       { text: 'Samedi', isCorrect: false, color: 'bg-answer' },
-      { text: 'Dimanche', isCorrect: false, color: 'bg-answer' }
+      { text: 'Dimanche', isCorrect: false, color: 'bg-answer' },
+      { text: 'Jeudi', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Quel est le plus grand nombre ?', media: svgBars([99,100,101]), theme: 'numerique', options: [
       { text: '99', isCorrect: false, color: 'bg-answer' },
@@ -91,12 +95,14 @@
     { prompt: 'Quel est l’intrus ?', media: svgOddOneOut(), theme: 'formes', options: [
       { text: 'Rouge', isCorrect: false, color: 'bg-answer' },
       { text: 'Bleu', isCorrect: false, color: 'bg-answer' },
-      { text: 'Carré', isCorrect: true, color: 'bg-answer' }
+      { text: 'Carré', isCorrect: true, color: 'bg-answer' },
+      { text: 'Vert', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Dans la suite 1, 1, 2, 3, 5, 8, ... ?', media: svgBars([1,1,2,3,5,8]), theme: 'numerique', options: [
       { text: '13', isCorrect: true, color: 'bg-answer' },
       { text: '14', isCorrect: false, color: 'bg-answer' },
-      { text: '10', isCorrect: false, color: 'bg-answer' }
+      { text: '10', isCorrect: false, color: 'bg-answer' },
+      { text: '12', isCorrect: false, color: 'bg-answer' }
     ] },
     { prompt: 'Si un train part à 12h et met 2h, il arrive à ...', media: svgClockRange(12,14), theme: 'logique', options: [
       { text: '13h', isCorrect: false, color: 'bg-answer' },
@@ -106,9 +112,53 @@
     { prompt: 'Quelle forme est uniquement composée de lignes courbes ?', media: svgShapes(true), theme: 'formes', options: [
       { text: 'Cercle', isCorrect: true, color: 'bg-answer' },
       { text: 'Triangle', isCorrect: false, color: 'bg-answer' },
-      { text: 'Rectangle', isCorrect: false, color: 'bg-answer' }
+      { text: 'Rectangle', isCorrect: false, color: 'bg-answer' },
+      { text: 'Carré', isCorrect: false, color: 'bg-answer' }
+    ] },
+
+    // Symétrie: choisir l'image miroir
+    { prompt: 'Quelle image est la symétrie horizontale ?', media: svgMirrorPrompt(), theme: 'formes', options: [
+      { text: '', icon: svgMirrorOption('A'), isCorrect: false, color: 'bg-answer' },
+      { text: '', icon: svgMirrorOption('B'), isCorrect: true, color: 'bg-answer' },
+      { text: '', icon: svgMirrorOption('C'), isCorrect: false, color: 'bg-answer' },
+      { text: '', icon: svgMirrorOption('D'), isCorrect: false, color: 'bg-answer' }
+    ] },
+
+    // Suite visuelle: barres croissantes
+    { prompt: 'Quelle barre complète la progression ?', media: svgBarsPrompt([2,4,6]), theme: 'logique', options: [
+      { text: '', icon: svgBarChoice(6), isCorrect: false, color: 'bg-answer' },
+      { text: '', icon: svgBarChoice(8), isCorrect: true, color: 'bg-answer' },
+      { text: '', icon: svgBarChoice(10), isCorrect: false, color: 'bg-answer' },
+      { text: '', icon: svgBarChoice(12), isCorrect: false, color: 'bg-answer' }
+    ] },
+
+    // Comptage: combien de points ?
+    { prompt: 'Combien de points voyez-vous ?', media: svgDotsCountPrompt(12), theme: 'numerique', options: [
+      { text: '10', isCorrect: false, color: 'bg-answer' },
+      { text: '12', isCorrect: true, color: 'bg-answer' },
+      { text: '14', isCorrect: false, color: 'bg-answer' },
+      { text: '16', isCorrect: false, color: 'bg-answer' }
+    ] },
+
+    // Vocabulaire
+    { prompt: 'Quel est le synonyme de "début" ?', media: '', theme: 'vocabulaire', options: [
+      { text: 'Commencement', isCorrect: true, color: 'bg-answer' },
+      { text: 'Fin', isCorrect: false, color: 'bg-answer' },
+      { text: 'Arrêt', isCorrect: false, color: 'bg-answer' },
+      { text: 'Barrage', isCorrect: false, color: 'bg-answer' }
+    ] },
+
+    // Logique temporelle
+    { prompt: 'Après 21h vient ...', media: '', theme: 'logique', options: [
+      { text: '22h', isCorrect: true, color: 'bg-answer' },
+      { text: '20h', isCorrect: false, color: 'bg-answer' },
+      { text: '23h', isCorrect: false, color: 'bg-answer' },
+      { text: '19h', isCorrect: false, color: 'bg-answer' }
     ] }
   ];
+
+  // Total basé sur la longueur réelle
+  TOTAL_QUESTIONS = QUESTIONS.length;
 
   let state = {
     index: 0,
@@ -384,6 +434,31 @@
       s += `<rect x="${i*(w+gap)}" y="${h-bh}" width="${w}" height="${bh}" rx="3" fill="#14b8a6"/>`;
     });
     return `<div class="d-flex justify-content-center"><svg width="${values.length*(w+gap)}" height="${h}" viewBox="0 0 ${values.length*(w+gap)} ${h}" xmlns="http://www.w3.org/2000/svg">${s}</svg></div>`;
+  }
+
+  function svgMirrorPrompt() {
+    // base shape to mirror
+    const poly = '<polygon points="10,30 26,10 42,30 26,34" fill="#e2e8f0" stroke="#111"/>';
+    const base = `<svg width="80" height="48" viewBox="0 0 52 38" xmlns="http://www.w3.org/2000/svg">${poly}</svg>`;
+    return `<div class="text-center">${base}</div>`;
+  }
+  function svgMirrorOption(letter){
+    const flip = {A:'', B:' scale(-1,1) translate(-52,0)', C:' rotate(90 26 19)', D:' rotate(180 26 19)'}[letter]||'';
+    const poly = `<g transform="${flip}"><polygon points="10,30 26,10 42,30 26,34" fill="#e2e8f0" stroke="#111"/></g>`;
+    return `<svg width="52" height="38" viewBox="0 0 52 38" xmlns="http://www.w3.org/2000/svg">${poly}</svg>`;
+  }
+
+  function svgBarsPrompt(arr){
+    const max = Math.max(...arr, 12); const w=10,g=6,h=40; let s='';
+    arr.forEach((v,i)=>{ const bh=Math.round((v/max)*h); s+=`<rect x="${i*(w+g)}" y="${h-bh}" width="${w}" height="${bh}" rx="3" fill="#94a3b8"/>`; });
+    return `<div class="d-flex justify-content-center"><svg width="${arr.length*(w+g)}" height="${h}" xmlns="http://www.w3.org/2000/svg">${s}</svg></div>`;
+  }
+  function svgBarChoice(v){ const max=12,w=10,h=40; const bh=Math.round((v/max)*h); return `<svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="${h-bh}" width="${w}" height="${bh}" rx="3" fill="#14b8a6"/></svg>`; }
+
+  function svgDotsCountPrompt(n){
+    const cols = Math.ceil(Math.sqrt(n)); const gap=12; let s=''; let r=0,c=0;
+    for(let i=0;i<n;i++){ s+=`<circle cx="${c*gap+6}" cy="${r*gap+6}" r="4" fill="#111"/>`; c++; if(c>=cols){c=0;r++;} }
+    return `<div class="d-flex justify-content-center"><svg width="${cols*gap}" height="${(r+1)*gap}" xmlns="http://www.w3.org/2000/svg">${s}</svg></div>`;
   }
 
   function svgOctagonRef() {
