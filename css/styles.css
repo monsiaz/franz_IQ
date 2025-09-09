@@ -68,6 +68,9 @@ html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, H
 .global-gauge { height: 14px; border-radius: 999px; background: #e5e7eb; overflow: hidden; }
 .global-gauge > span { display:block; height:100%; background: linear-gradient(90deg,#22c55e,#ef4444); }
 .radar svg { width: 100%; max-width: 260px; height: 220px; }
+.live-ticker { max-height: 140px; overflow: hidden; border-left: 3px solid #e5e7eb; padding-left: 10px; }
+.live-ticker .item { display:flex; justify-content:space-between; font-size:12px; padding:4px 0; border-bottom:1px dashed rgba(0,0,0,.06); }
+.live-ticker .time { color:#64748b; }
 .gauss svg { max-width: 520px; width: 100%; height: 120px; }
 
 @media (max-width: 576px) {

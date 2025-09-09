@@ -349,6 +349,7 @@
 
     // Render radar live while passing the quiz
     renderRadar();
+    renderTicker();
   }
 
   function capitalize(s){ return s ? s.charAt(0).toUpperCase()+s.slice(1) : s; }
@@ -474,6 +475,17 @@
     const blurLabel = document.getElementById('radarScoreBlur'); if (blurLabel) blurLabel.textContent = `IQ ${iqScore}`;
     const top = Math.max(1, Math.min(99, 100 - Math.round((state.score / TOTAL_QUESTIONS) * 100)));
     const topEl = document.getElementById('radarTopPercent'); if (topEl) topEl.textContent = `TOP ${top}%`;
+  }
+
+  function renderTicker(){
+    const el = document.getElementById('liveTicker'); if(!el) return;
+    const now = Date.now();
+    const samples = Array.from({length: 6}).map((_,i)=>{
+      const minutesAgo = Math.floor(Math.random()*55)+1; // 1..55
+      const score = 80 + Math.floor(Math.random()*41);   // 80..120
+      return { when: minutesAgo < 60 ? `${minutesAgo} min` : `${Math.floor(minutesAgo/60)} h`, iq: score };
+    });
+    el.innerHTML = samples.map(s=>`<div class="item"><span>IQ ${s.iq}</span><span class="time">il y a ${s.when}</span></div>`).join('');
   }
 
   // Intercept next on last to show paywall/results
