@@ -1,25 +1,44 @@
-<svg width="640" height="360" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration">
-  <rect width="640" height="360" rx="18" fill="#f8fafc"/>
-  <g transform="translate(80,60)">
-    <rect x="0" y="0" width="280" height="160" rx="12" fill="#fff" stroke="#e5e7eb"/>
-    <g transform="translate(20,20)">
-      <rect x="0" y="0" width="80" height="12" rx="6" fill="#14b8a6"/>
-      <rect x="0" y="26" width="240" height="10" rx="5" fill="#e2e8f0"/>
-      <rect x="0" y="46" width="240" height="10" rx="5" fill="#e2e8f0"/>
-      <rect x="0" y="66" width="180" height="10" rx="5" fill="#e2e8f0"/>
-      <rect x="0" y="96" width="90" height="36" rx="10" fill="#10b981"/>
+<svg width="640" height="360" viewBox="0 0 640 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration FranzIQ minimal">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ecfeff"/>
+      <stop offset="100%" stop-color="#f0f9ff"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2dd4bf"/>
+      <stop offset="100%" stop-color="#0ea5e9"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" rx="18" fill="url(#bg)"/>
+
+  <!-- Device frame -->
+  <g transform="translate(380,44)">
+    <rect x="0" y="0" width="200" height="272" rx="18" fill="#fff" stroke="#e5e7eb"/>
+    <rect x="60" y="10" width="80" height="6" rx="3" fill="#e5e7eb"/>
+
+    <!-- Question visual: 3 shapes row -->
+    <g transform="translate(24,44)">
+      <circle cx="24" cy="24" r="18" fill="#e2e8f0" stroke="#0f172a" stroke-width="1"/>
+      <rect x="64" y="6" width="36" height="36" rx="6" fill="#e2e8f0" stroke="#0f172a" stroke-width="1"/>
+      <polygon points="144,42 126,6 162,6" fill="#e2e8f0" stroke="#0f172a" stroke-width="1"/>
     </g>
-  </g>
-  <g transform="translate(380,60)">
-    <rect x="0" y="0" width="180" height="180" rx="16" fill="#fff" stroke="#e5e7eb"/>
-    <g transform="translate(32,24) scale(1.1)">
-      <circle cx="32" cy="32" r="28" fill="#e2e8f0" stroke="#111"/>
-      <rect x="72" y="8" width="48" height="48" fill="#e2e8f0" stroke="#111"/>
-      <polygon points="160,56 136,8 184,8" fill="#e2e8f0" stroke="#111"/>
+
+    <!-- Options: four rounded buttons -->
+    <g transform="translate(20,112)">
+      <rect x="0" y="0" width="160" height="30" rx="8" fill="#f1f5f9"/>
+      <rect x="0" y="40" width="160" height="30" rx="8" fill="#f1f5f9"/>
+      <rect x="0" y="80" width="160" height="30" rx="8" fill="#f1f5f9"/>
+      <rect x="0" y="120" width="160" height="30" rx="8" fill="#f1f5f9"/>
     </g>
+
+    <!-- CTA bar -->
+    <rect x="20" y="232" width="160" height="28" rx="8" fill="url(#accent)" opacity="0.85"/>
   </g>
-  <text x="80" y="300" font-family="Inter, Arial" font-size="18" fill="#475569">Faites le test et obtenez votre score en minutes.</text>
-  <rect x="466" y="292" width="96" height="36" rx="10" fill="#10b981"/>
+
+  <!-- Accent dots to balance composition -->
+  <circle cx="88" cy="86" r="6" fill="url(#accent)" opacity="0.35"/>
+  <circle cx="120" cy="64" r="4" fill="url(#accent)" opacity="0.25"/>
+  <circle cx="148" cy="92" r="3" fill="url(#accent)" opacity="0.25"/>
 </svg>
 
 

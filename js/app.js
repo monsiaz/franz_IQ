@@ -160,13 +160,17 @@
   // Total basé sur la longueur réelle
   TOTAL_QUESTIONS = QUESTIONS.length;
 
-  let state = {
-    index: 0,
-    score: 0,
-    completed: Array(TOTAL_QUESTIONS).fill(false),
-    themeScores: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 },
-    subscribed: false
-  };
+  function initialState() {
+    return {
+      index: 0,
+      score: 0,
+      completed: Array(TOTAL_QUESTIONS).fill(false),
+      themeScores: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 },
+      subscribed: false
+    };
+  }
+
+  let state = initialState();
 
   const els = {
     hero: document.getElementById('hero'),
@@ -191,18 +195,22 @@
   document.getElementById('btnStartHero').addEventListener('click', startQuiz);
   document.getElementById('btnStartTop').addEventListener('click', startQuiz);
   document.getElementById('btnRestart')?.addEventListener('click', () => {
-    state = { index: 0, score: 0, completed: Array(TOTAL_QUESTIONS).fill(false), subscribed: state.subscribed };
+    state = initialState();
+    state.subscribed = true; // keep access if already paid during session
     showSection('quiz');
     render();
+    renderThemeSidebar();
   });
 
   els.btnPrev.addEventListener('click', () => move(-1));
   els.btnNext.addEventListener('click', () => move(1));
 
   function startQuiz() {
+    state = initialState();
     showSection('quiz');
     renderPagination();
     render();
+    renderThemeSidebar();
     enableKeyboard();
   }
 
@@ -394,6 +402,22 @@
       </div>`;
     }).join('');
     el.innerHTML = rows;
+  }
+
+  function renderGauss(percentile){
+    const container = document.getElementById('gaussChart'); if(!container) return;
+    const bins = [1,3,7,12,18,22,18,12,7,3,1];
+    const max = Math.max(...bins);
+    const w = 260, h = 110, bw = Math.floor(w / bins.length) - 2;
+    let s = '';
+    bins.forEach((v,i)=>{
+      const bh = Math.round((v/max) * (h-20));
+      s += `<rect x="${i*(bw+2)}" y="${h-bh}" width="${bw}" height="${bh}" fill="#fde68a"/>`;
+    });
+    // marker based on percentile (~map 0-100 to 0-w)
+    const x = Math.max(0, Math.min(w, Math.round((percentile/100) * w)));
+    s += `<line x1="${x}" y1="0" x2="${x}" y2="${h}" stroke="#3b82f6" stroke-width="3"/>`;
+    container.innerHTML = `<div class="gauss d-flex justify-content-center"><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${s}</svg></div>`;
   }
 
   // Intercept next on last to show paywall/results
