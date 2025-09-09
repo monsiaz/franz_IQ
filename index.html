@@ -81,7 +81,7 @@
               <div class="card shadow-sm h-100">
                 <div class="card-body">
                   <h3 class="h6 fw-bold">Scores par thème</h3>
-                  <div id="themeSidebar" class="small"></div>
+                  <div id="themeSidebar" class="small theme-chart"></div>
                 </div>
               </div>
             </div>
@@ -99,6 +99,20 @@
                   <h2 class="fw-bold mb-2">Bravo 🎉</h2>
                   <p class="text-secondary">Vous allez vite et juste. Voici votre estimation:</p>
                   <div class="display-5 fw-extrabold text-success" id="scoreText">IQ 100</div>
+                  <div class="mt-3 mb-3">
+                    <div class="theme-chart" id="resultsThemeChart"></div>
+                  </div>
+                  <div class="card mx-auto mb-3" style="max-width:520px">
+                    <div class="card-body">
+                      <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                          <div class="small text-secondary">Votre score détaillé</div>
+                          <div class="h3 mb-0 blurred" id="finalBlur">123</div>
+                        </div>
+                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#paywallModal">Débloquer pour 1€</button>
+                      </div>
+                    </div>
+                  </div>
                   <p class="mt-3">Vous progressez plus vite que <span class="fw-semibold" id="percentile">50%</span> des participants aujourd'hui.</p>
                   <div class="d-flex justify-content-center gap-2 flex-wrap mt-3">
                     <a href="#pay" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#paywallModal">Obtenir le rapport complet</a>

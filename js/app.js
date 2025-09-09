@@ -320,9 +320,12 @@
     const rows = Object.keys(totals).map(k => {
       const done = state.themeScores[k] || 0;
       const pct = Math.round((done / totals[k]) * 100);
-      return `<div class="mb-2">
-        <div class="d-flex justify-content-between"><span class="text-capitalize">${k}</span><span>${done}/${totals[k]}</span></div>
-        <div class="progress" style="height:8px"><div class="progress-bar bg-success" style="width:${pct}%"></div></div>
+      return `<div class="row align-items-center">
+        <div class="col-5 text-capitalize">${k}</div>
+        <div class="col-7">
+          <div class="bar"><span style="width:${pct}%"></span></div>
+          <div class="text-end small text-muted">${done}/${totals[k]}</div>
+        </div>
       </div>`;
     }).join('');
     el.innerHTML = rows;
@@ -371,7 +374,26 @@
     const percentile = Math.max(1, Math.min(99, Math.round((state.score / TOTAL_QUESTIONS) * 100)));
     els.scoreText.textContent = `IQ ${iqScore}`;
     document.getElementById('percentile').textContent = `${percentile}%`;
+    renderResultsThemeChart();
     showSection('results');
+  }
+
+  function renderResultsThemeChart(){
+    const el = document.getElementById('resultsThemeChart'); if(!el) return;
+    const totals = { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 };
+    QUESTIONS.forEach(q => totals[q.theme || 'logique']++);
+    const rows = Object.keys(totals).map(k => {
+      const done = state.themeScores[k] || 0;
+      const pct = Math.round((done / totals[k]) * 100);
+      return `<div class="row align-items-center">
+        <div class="col-5 text-capitalize">${k}</div>
+        <div class="col-7">
+          <div class="bar"><span style="width:${pct}%"></span></div>
+          <div class="text-end small text-muted">${done}/${totals[k]}</div>
+        </div>
+      </div>`;
+    }).join('');
+    el.innerHTML = rows;
   }
 
   // Intercept next on last to show paywall/results
