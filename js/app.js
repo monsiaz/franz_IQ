@@ -5,7 +5,8 @@
    * Simple set of fun, easy questions with optional inline SVG visuals.
    * Each question contains options with a boolean 'isCorrect'.
    */
-  const QUESTIONS = [
+  // Fallback starter questions (will be replaced when loading JSON succeeds)
+  let QUESTIONS = [
     // 3x3 matrix logic: third cell follows rotation rule
     {
       prompt: 'Complétez la matrice 3×3',
@@ -159,6 +160,20 @@
 
   // Total basé sur la longueur réelle
   TOTAL_QUESTIONS = QUESTIONS.length;
+
+  // Load external questions.json if present
+  fetch('./js/questions.json').then(r=>r.ok?r.json():Promise.reject()).then(json=>{
+    if (Array.isArray(json) && json.length) {
+      QUESTIONS = json;
+      TOTAL_QUESTIONS = QUESTIONS.length;
+      // reset state if quiz already visible
+      if (!document.getElementById('hero').classList.contains('d-none')) return;
+      state = initialState();
+      renderPagination();
+      render();
+      renderThemeSidebar();
+    }
+  }).catch(()=>{});
 
   function initialState() {
     return {

@@ -1,0 +1,59 @@
+[
+  {
+    "theme": "logique",
+    "prompt": "Complétez la matrice 3×3",
+    "media": { "type": "matrix", "variant": "triangles-rotation" },
+    "options": [
+      { "text": "", "icon": "square-empty", "isCorrect": false },
+      { "text": "", "icon": "square-filled", "isCorrect": true },
+      { "text": "", "icon": "cross", "isCorrect": false },
+      { "text": "", "icon": "circle", "isCorrect": false }
+    ]
+  },
+  {
+    "theme": "formes",
+    "prompt": "Quelle forme a 3 côtés ?",
+    "media": { "type": "shapes", "variant": "triangle-ref" },
+    "options": [
+      { "text": "Triangle", "icon": "triangle", "isCorrect": true },
+      { "text": "Cercle", "icon": "circle", "isCorrect": false },
+      { "text": "Carré", "icon": "square", "isCorrect": false },
+      { "text": "Pentagone", "icon": "pentagon", "isCorrect": false }
+    ]
+  },
+  {
+    "theme": "numerique",
+    "prompt": "Quel nombre suit: 2, 4, 8, 16, ... ?",
+    "media": { "type": "bars", "values": [2,4,8,16] },
+    "options": [
+      { "text": "24", "isCorrect": false },
+      { "text": "30", "isCorrect": false },
+      { "text": "32", "isCorrect": true },
+      { "text": "26", "isCorrect": false }
+    ]
+  },
+  {
+    "theme": "vocabulaire",
+    "prompt": "Quel est le synonyme de \"rapide\" ?",
+    "media": { "type": "icon", "name": "speed" },
+    "options": [
+      { "text": "Lent", "isCorrect": false },
+      { "text": "Vite", "isCorrect": true },
+      { "text": "Immense", "isCorrect": false },
+      { "text": "Brume", "isCorrect": false }
+    ]
+  },
+  {
+    "theme": "logique",
+    "prompt": "Quelle barre complète la progression ?",
+    "media": { "type": "bars-progress", "values": [2,4,6] },
+    "options": [
+      { "text": "", "icon": "bar-6", "isCorrect": false },
+      { "text": "", "icon": "bar-8", "isCorrect": true },
+      { "text": "", "icon": "bar-10", "isCorrect": false },
+      { "text": "", "icon": "bar-12", "isCorrect": false }
+    ]
+  }
+]
+
+
