@@ -161,13 +161,22 @@
   // Total basé sur la longueur réelle
   TOTAL_QUESTIONS = QUESTIONS.length;
 
-  // Load external questions.json if present
-  fetch('./js/questions.json').then(r=>r.ok?r.json():Promise.reject()).then(json=>{
-    console.log('Questions loaded:', json.length);
-    if (Array.isArray(json) && json.length) {
-      QUESTIONS = ensureEightPerTheme(json);
+  // Load external questions.json with random version selection
+  fetch('./js/questions.json').then(r=>r.ok?r.json():Promise.reject()).then(data=>{
+    console.log('Question data loaded:', data);
+    
+    // Select random version (A, B, or C)
+    const versions = ['version_a', 'version_b', 'version_c'];
+    const randomVersion = versions[Math.floor(Math.random() * versions.length)];
+    const selectedQuestions = data[randomVersion];
+    
+    console.log(`Selected ${randomVersion} with ${selectedQuestions?.length || 0} questions`);
+    
+    if (Array.isArray(selectedQuestions) && selectedQuestions.length) {
+      QUESTIONS = selectedQuestions; // Use selected version directly (already 20 questions)
       TOTAL_QUESTIONS = QUESTIONS.length;
-      console.log('Total questions after processing:', TOTAL_QUESTIONS);
+      console.log('Total questions loaded:', TOTAL_QUESTIONS);
+      
       // Always reset state when new questions are loaded
       state = initialState();
       // Force re-render if quiz is already visible
@@ -241,7 +250,9 @@
       themeAttempts: { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 },
       streak: 0,
       qStart: performance.now(),
-      subscribed: false
+      subscribed: false,
+      popupsShown: 0, // Track popup count for intelligent distribution
+      lastPopupAt: -1 // Track last popup question index
     };
   }
 
@@ -425,8 +436,14 @@
         console.error(`Icon render error for option ${i}:`, e);
         iconHtml = ''; 
       }
-      const label = opt.text || `Option ${i+1}`;
-      btn.innerHTML = `<div class="d-flex align-items-center gap-3">${iconHtml}<span class="fw-semibold">${label}</span></div>`;
+      const label = opt.text || '';
+      // If no text and there's an icon, show only the icon (visual questions)
+      if (!label && iconHtml) {
+        btn.innerHTML = `<div class="d-flex justify-content-center">${iconHtml}</div>`;
+      } else {
+        // Show both icon and text, or just text if no icon
+        btn.innerHTML = `<div class="d-flex align-items-center gap-3">${iconHtml}<span class="fw-semibold">${label}</span></div>`;
+      }
       btn.addEventListener('click', () => handleAnswerClick(btn, !!opt.isCorrect));
       if (els.answers) els.answers.appendChild(btn);
     });
@@ -564,8 +581,11 @@
     el.innerHTML = `<div class=\"d-flex justify-content-center\"><svg width=\"260\" height=\"220\" viewBox=\"0 0 260 220\" xmlns=\"http://www.w3.org/2000/svg\">${grid}${axes}${poly}</svg></div>`;
     const iqScore = 80 + Math.round((state.score / TOTAL_QUESTIONS) * 40);
     const blurLabel = document.getElementById('radarScoreBlur'); if (blurLabel) blurLabel.textContent = `IQ ${iqScore}`;
-    const top = Math.max(1, Math.min(99, 100 - Math.round((state.score / TOTAL_QUESTIONS) * 100)));
-    const topEl = document.getElementById('radarTopPercent'); if (topEl) topEl.textContent = `TOP ${top}%`;
+    
+    // Attractive percentile: always show TOP 1-9% (encouraging)
+    const scoreRatio = state.score / TOTAL_QUESTIONS; // 0 to 1
+    const topPercent = Math.max(1, Math.min(9, Math.round(1 + (1 - scoreRatio) * 8))); // 1-9%
+    const topEl = document.getElementById('radarTopPercent'); if (topEl) topEl.textContent = `TOP ${topPercent}%`;
   }
 
   function renderTicker(){
@@ -700,6 +720,9 @@
       if (media.type === 'context-clues') return svgContextClues(media.context||'');
       if (media.type === 'register-comparison') return svgRegisterComparison(media.values||[]);
       if (media.type === 'etymology') return svgEtymology(media.concept||'');
+      if (media.type === 'pattern-grid') return svgPatternGrid(media.variant||'');
+      if (media.type === 'transformation-sequence') return svgTransformationSequence(media.variant||'');
+      if (media.type === 'word-nuance') return svgWordNuance(media.context||'');
       if (media.type === 'puzzle') return svgPuzzle(media.kind||'');
       return '';
     } catch { return ''; }
@@ -985,7 +1008,15 @@
       'concept-insight': '<circle cx="16" cy="16" r="8" fill="#fbbf24"/><path d="M16 10 L16 22 M10 16 L22 16" stroke="#fff" stroke-width="2"/>',
       'concept-music': '<path d="M8 20 L8 8 L18 6 L18 18" stroke="#22c55e" stroke-width="2" fill="none"/><circle cx="8" cy="20" r="2" fill="#22c55e"/>',
       'concept-speech': '<path d="M6 10 L20 10 L20 18 L12 18 L8 22 L8 18 L6 18 Z" fill="#3b82f6" opacity="0.8"/>',
-      'concept-wisdom': '<circle cx="16" cy="12" r="6" fill="#f59e0b"/><rect x="14" y="18" width="4" height="8" fill="#64748b"/>'
+      'concept-wisdom': '<circle cx="16" cy="12" r="6" fill="#f59e0b"/><rect x="14" y="18" width="4" height="8" fill="#64748b"/>',
+      'pattern-cross': '<path d="M16 6 L16 26 M6 16 L26 16" stroke="#ef4444" stroke-width="3"/>',
+      'pattern-dot': '<circle cx="16" cy="16" r="4" fill="#22c55e"/>',
+      'pattern-line': '<path d="M6 16 L26 16" stroke="#3b82f6" stroke-width="3"/>',
+      'pattern-star': '<path d="M16 6 L18 12 L24 12 L19 16 L21 22 L16 19 L11 22 L13 16 L8 12 L14 12 Z" fill="#fbbf24"/>',
+      'concept-study': '<rect x="8" y="8" width="16" height="12" fill="#f1f5f9" stroke="#64748b"/><path d="M10 12 L22 12 M10 16 L18 16" stroke="#64748b"/>',
+      'concept-worship': '<path d="M16 6 L20 14 L12 14 Z M8 18 L24 18" stroke="#f59e0b" stroke-width="2" fill="none"/>',
+      'concept-accept': '<circle cx="16" cy="16" r="8" fill="#22c55e" opacity="0.6"/><path d="M12 16 L15 19 L20 13" stroke="#fff" stroke-width="2" fill="none"/>',
+      'concept-disdain': '<path d="M10 20 L22 12 M10 12 L22 20" stroke="#ef4444" stroke-width="2"/>'
     };
     const iconSvg = icons[token] || '<rect x="8" y="8" width="16" height="16" fill="#e2e8f0"/>';
     return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">${iconSvg}</svg>`;
@@ -1061,6 +1092,46 @@
   }
   function svgEtymology(concept) {
     return `<div class="text-center"><div class="h5 text-primary">${concept}</div><div class="small text-muted">(grec: amour)</div></div>`;
+  }
+  
+  // Additional visual functions for new question types
+  function svgPatternGrid(variant) {
+    return `<div class="d-flex justify-content-center">
+      <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <rect x="20" y="20" width="20" height="20" fill="#e2e8f0" stroke="#111"/>
+        <rect x="50" y="20" width="20" height="20" fill="#e2e8f0" stroke="#111"/>
+        <rect x="80" y="20" width="20" height="20" fill="#e2e8f0" stroke="#111"/>
+        <rect x="20" y="50" width="20" height="20" fill="#e2e8f0" stroke="#111"/>
+        <rect x="50" y="50" width="20" height="20" fill="#fbbf24" stroke="#111"/>
+        <rect x="80" y="50" width="20" height="20" fill="#e2e8f0" stroke="#111"/>
+        <rect x="20" y="80" width="20" height="20" fill="#e2e8f0" stroke="#111"/>
+        <rect x="50" y="80" width="20" height="20" fill="#e2e8f0" stroke="#111"/>
+        <rect x="80" y="80" width="20" height="20" fill="#dbeafe" stroke="#3b82f6"/>
+      </svg>
+    </div>`;
+  }
+  
+  function svgTransformationSequence(variant) {
+    return `<div class="d-flex justify-content-center align-items-center gap-3">
+      <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="20,8 10,32 30,32" fill="#22c55e" opacity="0.6"/>
+      </svg>
+      <span class="h5">→</span>
+      <svg width="50" height="50" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+        <g transform="rotate(90 25 25)">
+          <polygon points="25,10 12,40 38,40" fill="#22c55e"/>
+        </g>
+      </svg>
+      <span class="h5">→</span>
+      <span class="text-warning fw-bold">?</span>
+    </div>`;
+  }
+  
+  function svgWordNuance(context) {
+    return `<div class="text-center">
+      <div class="small text-muted mb-2">Nuance entre :</div>
+      <div class="h6 text-primary">${context}</div>
+    </div>`;
   }
 
   // Media & icon renderers + theme normalization
@@ -1221,6 +1292,61 @@
     return successBadge(msg);
   }
   
+  function showResults() {
+    const iqScore = 80 + Math.round((state.score / TOTAL_QUESTIONS) * 40);
+    // Attractive percentile: always TOP 1-9% (encouraging)
+    const scoreRatio = state.score / TOTAL_QUESTIONS;
+    const topPercent = Math.max(1, Math.min(9, Math.round(1 + (1 - scoreRatio) * 8)));
+    
+    if (els.scoreText) els.scoreText.textContent = `IQ ${iqScore}`;
+    if (els.percentile) els.percentile.textContent = `TOP ${topPercent}%`;
+    
+    // Update final blur with attractive percentile
+    const finalBlur = document.getElementById('finalBlur');
+    if (finalBlur) finalBlur.textContent = `IQ ${iqScore}`;
+    
+    renderResultsThemeChart();
+    renderRadar();
+    renderGauss();
+    
+    showSection('results');
+  }
+  
+  function renderResultsThemeChart() {
+    const el = document.getElementById('resultsThemeChart');
+    if (!el) return;
+    const totals = { logique: 0, vocabulaire: 0, numerique: 0, formes: 0 };
+    QUESTIONS.forEach(q => totals[normalizeTheme(q.theme)]++);
+    const rows = Object.keys(totals).map(k => {
+      const correct = state.themeScores[k] || 0;
+      const total = totals[k];
+      const pct = Math.round((correct / total) * 100);
+      return `<div class="row align-items-center mb-2">
+        <div class="col-4 text-capitalize fw-semibold">${k}</div>
+        <div class="col-8">
+          <div class="bar"><span style="width:${pct}%"></span></div>
+          <div class="text-end small text-muted">${correct}/${total}</div>
+        </div>
+      </div>`;
+    }).join('');
+    el.innerHTML = rows;
+  }
+  
+  function renderGauss() {
+    const el = document.getElementById('gaussChart');
+    if (!el) return;
+    const scoreRatio = state.score / TOTAL_QUESTIONS;
+    const topPercent = Math.max(1, Math.min(9, Math.round(1 + (1 - scoreRatio) * 8)));
+    const markerX = 50 + (scoreRatio * 400); // Position on curve
+    
+    el.innerHTML = `<svg width="520" height="120" viewBox="0 0 520 120" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10,100 Q260,20 510,100" fill="rgba(34,197,94,0.1)" stroke="#22c55e" stroke-width="2"/>
+      <line x1="${markerX}" y1="25" x2="${markerX}" y2="100" stroke="#ef4444" stroke-width="3"/>
+      <circle cx="${markerX}" cy="22" r="4" fill="#ef4444"/>
+      <text x="${markerX}" y="15" text-anchor="middle" font-size="12" font-weight="600" fill="#ef4444">TOP ${topPercent}%</text>
+    </svg>`;
+  }
+  
   function showPaywallWithReassurance() {
     // Add reassurance elements to paywall modal
     const modal = document.getElementById('paywallModal');
@@ -1248,23 +1374,47 @@
   }
   
   function maybeEncourageIntelligent(isCorrect, elapsedMs){
+    // Intelligent popup distribution: max 3 per test, well spaced
     const completedCount = state.completed.filter(Boolean).length;
-    let variant = null;
-    if (isCorrect && state.streak === 3) variant = { title:'Série de 3 ✅', msg:'Belle régularité, continuez !' };
-    if (isCorrect && state.streak === 5) variant = { title:'Streak x5 🔥', msg:'Vous êtes dans une excellente dynamique.' };
-    const fast = elapsedMs < 7000;
-    if (isCorrect && fast) variant = { title:'Rapide et juste ⚡', msg:'Plus rapide que 80% des utilisateurs sur cet item.' };
-    if (!variant && completedCount % 3 === 0) {
-      const v = PRAISE_VARIANTS[(completedCount/3)%PRAISE_VARIANTS.length | 0];
-      variant = v;
+    const minGapBetweenPopups = 6; // At least 6 questions between popups
+    
+    // Don't show if already shown 3 popups or too close to last one
+    if (state.popupsShown >= 3 || (completedCount - state.lastPopupAt) < minGapBetweenPopups) {
+      return;
     }
+    
+    let variant = null;
+    
+    // High-priority triggers (always show if conditions met)
+    if (isCorrect && state.streak === 5) {
+      variant = { title:'Streak parfait x5 🔥', msg:'Vous êtes dans une excellente dynamique !' };
+    } else if (isCorrect && elapsedMs < 5000) {
+      variant = { title:'Éclair de génie ⚡', msg:'Plus rapide que 85% des utilisateurs sur cette question !' };
+    } else if (isCorrect && state.streak === 3) {
+      variant = { title:'Série de 3 ✅', msg:'Belle régularité, vous maîtrisez bien !' };
+    }
+    
+    // Medium-priority: strategic milestones (show if no recent popup)
+    else if (completedCount === Math.floor(TOTAL_QUESTIONS * 0.25)) {
+      variant = { title:'Premier quart ! 🎯', msg:'Excellent démarrage, continuez sur cette lancée !' };
+    } else if (completedCount === Math.floor(TOTAL_QUESTIONS * 0.5)) {
+      variant = { title:'Mi-parcours ! 🏃‍♂️', msg:'Vous tenez un bon rythme, c\'est parfait !' };
+    } else if (completedCount === Math.floor(TOTAL_QUESTIONS * 0.75)) {
+      variant = { title:'Dernière ligne droite ! 🏁', msg:'Plus que quelques questions, vous y êtes presque !' };
+    }
+    
     if (!variant) return;
+    
+    // Show popup and update tracking
+    state.popupsShown++;
+    state.lastPopupAt = completedCount;
+    
     const modal = new bootstrap.Modal(document.getElementById('praiseModal'));
     document.getElementById('praiseTitle').textContent = variant.title;
     document.getElementById('praiseMsg').textContent = variant.msg;
     modal.show();
     makeConfetti(document.querySelector('#praiseModal .modal-content'));
-    setTimeout(() => modal.hide(), 1700);
+    setTimeout(() => modal.hide(), 2000);
   }
 })();
 
