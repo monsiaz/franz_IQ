@@ -471,6 +471,8 @@
     el.innerHTML = `<div class=\"d-flex justify-content-center\"><svg width=\"260\" height=\"220\" viewBox=\"0 0 260 220\" xmlns=\"http://www.w3.org/2000/svg\">${grid}${axes}${poly}</svg></div>`;
     const iqScore = 80 + Math.round((state.score / TOTAL_QUESTIONS) * 40);
     const blurLabel = document.getElementById('radarScoreBlur'); if (blurLabel) blurLabel.textContent = `IQ ${iqScore}`;
+    const top = Math.max(1, Math.min(99, 100 - Math.round((state.score / TOTAL_QUESTIONS) * 100)));
+    const topEl = document.getElementById('radarTopPercent'); if (topEl) topEl.textContent = `TOP ${top}%`;
   }
 
   // Intercept next on last to show paywall/results
