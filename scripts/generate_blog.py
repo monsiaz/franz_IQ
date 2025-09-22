@@ -59,20 +59,68 @@ BRAIN_MASCOT_AD = (
     "geometric scaffolding echoes (subtle). Works as blog hero at 1600x900."
 )
 
+CATEGORY_MOTIFS = {
+    "culture-g": [
+        "timeline of abstract nodes", "vintage notebook grid", "portrait silhouette minimal", "light scientific diagram"
+    ],
+    "tests-qi": [
+        "raven-like 3x3 matrix tiles", "triangle square circle sequence", "isometric cube net", "stopwatch outline"
+    ],
+    "comparatifs": [
+        "balanced scale", "split composition left vs right", "arrows in opposite directions", "checkmarks vs crosses"
+    ],
+    "methodes": [
+        "blueprint diagram", "flowchart arrows", "compass and ruler silhouettes", "gear outline minimal"
+    ],
+}
+
+
+def _infer_topic_tokens(title: str) -> List[str]:
+    t = title.lower()
+    tokens: List[str] = []
+    if "flynn" in t:
+        tokens += ["ascending steps", "upward arrow motif", "population silhouettes tiny"]
+    if "raven" in t:
+        tokens += ["3x3 matrix with one missing cell"]
+    if "wais" in t:
+        tokens += ["two-part brain halves comparison"]
+    if "chronométré" in t or "chrono" in t or "temps" in t:
+        tokens += ["stopwatch outline"]
+    if "adaptatif" in t or "adaptive" in t:
+        tokens += ["branching arrows"]
+    if "en ligne" in t or "online" in t:
+        tokens += ["browser window frame minimal"]
+    if "accessibil" in t:
+        tokens += ["high-contrast eye icon"]
+    if "pct" in t or "%" in t or "percentile" in t:
+        tokens += ["gaussian curve silhouette"]
+    return tokens
+
 
 def build_image_prompt(title: str, meta_description: str, category: str, client: OpenAI) -> str:
     if client is None:
-        return f"Black & white hand-drawn friendly brain-on-legs mascot, abstract shapes about {title}. No text."
+        motif = CATEGORY_MOTIFS.get(category, CATEGORY_MOTIFS["tests-qi"])[:2]
+        extra = ", ".join(_infer_topic_tokens(title)[:2])
+        return (
+            f"Black & white hand-drawn hero. Brain-on-legs mascot + {', '.join(motif)} {extra}. "
+            f"No text. Minimal rough lines, folk graphic vibe. 1600x900 composition."
+        )
     system = (
-        "You help design concise prompts for black & white, hand-drawn hero illustrations. "
-        "Style: minimal, rough lines, friendly, modern folk/tribal. No text or letters."
+        "You design concise topic-aware prompts for black & white, hand-drawn hero illustrations. "
+        "Style: minimal, rough lines, friendly, modern folk/tribal. Absolutely no text/letters/numbers."
     )
+    motifs = ", ".join(CATEGORY_MOTIFS.get(category, CATEGORY_MOTIFS["tests-qi"]))
+    heur = ", ".join(_infer_topic_tokens(title))
     user = (
         f"Topic: {title}\n"
         f"Category: {category}\n"
         f"Meta: {meta_description}\n\n"
         f"Art direction: {BRAIN_MASCOT_AD}\n"
-        "Return only the final, concise prompt in English or French."
+        f"Category motifs to use tastefully: {motifs}.\n"
+        f"Heuristic tokens from title: {heur}.\n"
+        "Rules: black & white only; include the friendly brain-on-legs only if it serves the topic; if it distracts, omit it; "
+        "compose with 1–2 symbolic objects strongly tied to the subject; no words, letters or digits anywhere; keep clean negative space; hero fits 1600x900.\n"
+        "Return ONLY the final concise prompt text."
     )
     for attempt in range(4):
         try:
@@ -89,7 +137,11 @@ def build_image_prompt(title: str, meta_description: str, category: str, client:
             if attempt == 3:
                 break
             time.sleep(2 ** attempt)
-    return f"Minimalist B&W hand-drawn brain-on-legs mascot, abstract nods to {title}. No text."
+    motif = CATEGORY_MOTIFS.get(category, CATEGORY_MOTIFS["tests-qi"])[:2]
+    extra = ", ".join(_infer_topic_tokens(title)[:2])
+    return (
+        f"Minimalist B&W hand-drawn hero related to {title}. {', '.join(motif)} {extra}. No text."
+    )
 
 
 def generate_featured_image(file_base: str, title: str, meta: str, category: str, out_dir: Path, client: OpenAI) -> str:
@@ -254,8 +306,8 @@ def main():
         slug = seo.get("slug") or slugify(title)
         fname = f"{i:03d}-{slug}.html"
         (out_dir / fname).write_text(html, encoding="utf-8")
-        # image generation
-        img_name = generate_featured_image(slug, seo.get("meta_description") or title, category, category, out_dir, client) if client else ""
+        # image generation (fix argument order: title, meta, category)
+        img_name = generate_featured_image(slug, title, seo.get("meta_description") or title, category, out_dir, client) if client else ""
         index.append({
             "file": fname,
             "h1": seo.get("h1") or title,
