@@ -964,6 +964,13 @@
   }
 
   // Generic small helpers for option thumbnails
+  function svgLShape(rot){
+    const unit=8; const color='#0ea5e9';
+    const block=(x,y)=>`<rect x="${x}" y="${y}" width="${unit}" height="${unit}" fill="${color}" stroke="#0f172a"/>`;
+    let s='';
+    [[0,0],[0,unit],[0,2*unit],[unit,2*unit]].forEach(([x,y])=> s+=block(8+x,8+y));
+    return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 14 14)">${s}</g></svg>`;
+  }
   function svgArrow(dir){
     const rot = dir==='up'? -90 : dir==='down'? 90 : dir==='left'? 180 : 0;
     return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 14 14)"><path d="M6 14 L20 14" stroke="#111" stroke-width="3"/><path d="M16 10 L20 14 L16 18" fill="none" stroke="#111" stroke-width="3"/></g></svg>`;
@@ -1285,6 +1292,7 @@
     }
     
     if (token.startsWith('bar-')) return svgBarChoice(parseInt(token.split('-')[1],10));
+    if (token.startsWith('l-shape-')) { const deg=parseInt(token.split('-')[2],10)||0; return svgLShape(deg); }
     if (token.startsWith('arrow-')) return svgArrow(token.split('-')[1]);
     if (token.startsWith('holes-')) return svgHoles(token.split('-')[1]);
     if (token.startsWith('piece-')) return svgTetrisPiece(token.split('-')[1]);
