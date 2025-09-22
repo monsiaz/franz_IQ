@@ -1267,6 +1267,8 @@
     if (media.type === 'bars') return svgBars(media.values||[]);
     if (media.type === 'tetrahedron-pattern') return svgTetraPattern(media.variant);
     if (media.type === 'flow-diagram') return svgFlowDiagram(media.values||[]);
+    if (media.type === 'shape-sequence') return svgShapeSequence(media.variant||'geometric');
+    if (media.type === 'rotation-preview') return svgTransformation('rotate-90');
     return '';
   }
 
