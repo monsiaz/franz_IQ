@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import List, Dict
 
 """
-Minimal blog generator for FranzIQ.
+Minimal blog generator for FranzIQ, with a strong persona-driven editorial voice.
 - Reads a CSV with columns: title, category
 - Uses OpenAI via environment variable OPENAI_API_KEY (never commit .env)
 - Writes HTML to blog/articles and updates blog/articles/index.json
@@ -20,6 +20,7 @@ Environment (optional):
   MODEL_ARTICLE: default gpt-4o-mini
   MODEL_SEO: default gpt-4o-mini
   OUT_DIR: default ./blog/articles
+  BLOG_PERSONA_NAME: override persona name (default: Dr. Émile Hartmann)
 """
 
 try:
@@ -41,10 +42,33 @@ def tidy_html(html: str) -> str:
 
 
 def gen_article_html(client, model: str, title: str, category: str) -> str:
+    persona_name = os.getenv("BLOG_PERSONA_NAME", "Dr. Émile Hartmann")
+    PERSONA = (
+        f"Persona: {persona_name}, inventeur contemporain de tests de QI visuels et mobiles, psychométricien exigeant. "
+        "Convictions: 1) clarté visuelle universelle (peu de texte, biais culturels minimisés), 2) rigueur psychométrique (validité, fidélité, IRT quand pertinent), "
+        "3) accessibilité WCAG par design (contraste, rythme, alternatives), 4) transparence sur les limites (un test est une estimation), 5) éthique (anti clickbait, anti surpromesse). "
+        "Axe éditorial: démystifier les tests de QI, expliquer les règles visuelles et les choix de scoring, relier UX moderne et mesure fiable."
+    )
+
+    CATEGORY_NORMS = (
+        "Règles par catégorie: "
+        "tests-qi → sections pratiques (stratégies, erreurs fréquentes, exemples pas à pas); "
+        "comparatifs → critères clairs (validité, fidélité, UX, coût, durée) + AU PLUS UN tableau utile; "
+        "culture-g → repères historiques, idées reçues vs faits; "
+        "methodes → procédure concrète (étapes, inputs/outputs, risques)."
+    )
+
     prompt = (
-        "Tu es un rédacteur pour FranzIQ. Génère un article HTML FR (sans <html> ni <body>), 800-1200 mots, pédagogique, concret, sans placeholder. "
-        "Structure: intro courte, 3-5 sections en <h2>, éventuellement <h3> utiles, une dernière section qui ouvre légèrement sans le mot 'Conclusion'. "
-        "Mise en forme: <p> courts, <strong> pour points clés, pas de blockquote, pas de callout. Sujet: " + title + " (catégorie: " + category + ")."
+        PERSONA + "\n" + CATEGORY_NORMS + "\n" +
+        "Tu écris en HTML FR (sans <html> ni <body>), 1200–1800 mots, ton précis, engagé et sourcé (sans références formelles). "
+        "Évite tout placeholder. Structure OBLIGATOIRE: \n"
+        "- Introduction (80–120 mots, sans <h2>).\n"
+        "- 4 à 6 sections en <h2> très concrètes et spécifiques au sujet.\n"
+        "- <h3> seulement si cela apporte une valeur pratique (exemples, repères).\n"
+        "- Une dernière section en <h2> qui ouvre légèrement SANS le mot 'Conclusion'.\n"
+        "Mise en forme: <p> courts avec une ligne vide entre eux; utilise <strong> pour les points clés; aucun blockquote ni encadré; pas de tiret cadratin. "
+        "Option: AU PLUS UN <table> si la comparaison l'exige (catégorie comparatifs). "
+        f"Sujet: {title}. Catégorie: {category}. Parle avec la voix du persona, assume ses convictions, et illustre avec des exemples visuels adaptés aux tests de QI modernes."
     )
     if client is None:
         return f"<p><strong>{title}</strong></p><p>Brouillon en attente de génération.</p>"
