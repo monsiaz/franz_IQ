@@ -1,0 +1,170 @@
+<p>Tester A contre B n’est pas un jeu marketing quand il s’agit d’items cognitifs. C’est un acte de mesure qui engage votre validité, votre équité et la confiance des personnes qui se prêtent au test. En tant que concepteur d’items visuels et mobile-first, je veux une méthode qui optimise clarté et accessibilité tout en protégeant l’inférence psychométrique. Ici, je propose une procédure concrète d’A/B testing éthique d’items de tests cognitifs, compatible avec des approches IRT, l’adaptive testing et les contraintes WCAG. Objectif: améliorer l’UX sans déplacer le construit mesuré. Règle d’or: un test n’est qu’une estimation; l’A/B doit réduire l’erreur, pas gonfler un score par cosmétique.</p>
+
+<h2>Définir l’objectif de test et les variables d’éthique mesurables</h2>
+<p>Un A/B éthique commence par une définition précise de ce que l’on veut optimiser. Sans cela, on dérive vers des “victoires” de surface. Formulez d’abord le construct: par exemple, “raisonnement analogique visuel non verbal” ou “vitesse de balayage symbolique”. Tout changement A→B doit viser la <strong>compréhensibilité</strong> et la <strong>mesurabilité</strong> du même construit, pas sa facilité gratuite.</p>
+
+<p>Choisissez des variables de décision explicites, regroupées en trois familles:</p>
+
+<p><strong>1) Psychométrie:</strong> difficulté (p-value ou b-IRT), discrimination (a-IRT), pseudo-hasard (c-IRT pour items à choix), information de test sur l’intervalle de capacité ciblé, contribution à la fidélité (alpha/omega, information IRT cumulée).</p>
+
+<p><strong>2) Expérience et accessibilité:</strong> temps sur item (médiane et 90e percentile), taux d’abandon, taux d’omission, erreurs de tap/click, zoom, contraste perçu (simulé daltonisme), lisibilité en mode sombre, largeur touchable. Respect WCAG 2.2 AA par défaut.</p>
+
+<p><strong>3) Équité:</strong> indication de biais via DIF (logistique ordinale ou IRT multiple groupes), écarts de performance par facteurs non cognitifs disponibles (ex: langue d’interface, taille d’écran, latence réseau). Si l’utilisateur a consenti à fournir des variables personnelles, analyser la non-invariance sans jamais individualiser le retour.</p>
+
+<p>Écrivez un <strong>critère de succès composite</strong> avant le déploiement. Par exemple: “Retenir B si Δa ≥ +0,05, Δtemps médian ≤ −600 ms, ΔDIF abs. < 0,1 logit sur les sous-groupes définis, et aucun écart de contraste < 4,5:1”. Ce pré-engagement, inspiré des standards de l’APA et des bonnes pratiques d’expérimentation produit, évite le p-hacking comportemental bien documenté dans l’A/B testing grand public.</p>
+
+<p>Revendiquez l’<strong>anti clickbait</strong>: pas de promesse du type “+10 points de QI” après retouche UI. Annoncez “item plus clair, mesure plus stable”, c’est honnête et utile.</p>
+
+<h2>Concevoir les variantes A/B d’un item sans biaiser la compétence mesurée</h2>
+<p>Un item visuel moderne se conçoit en couches: stimulus, consigne, interaction, timing. L’A/B doit isoler une seule couche à la fois, sinon l’attribution devient impossible et la variance gonfle. La règle: <strong>varier la forme, conserver la fonction cognitive</strong>.</p>
+
+<p>Exemples de variations admissibles sans déplacement de construit:</p>
+
+<p><strong>Consigne:</strong> remplacer un texte “Choisissez la pièce manquante” par une icône animée minimaliste + 3 mots. Ajouter un exemple animé de 2 secondes sans solution. Mesure: compréhension plus rapide et baisse des erreurs d’inattention.</p>
+
+<p><strong>Codage visuel:</strong> passer d’un codage couleur à un codage texture + ligne. Évite le piège de la vision des couleurs. Mesure: même difficulté mais baisse du DIF lié au daltonisme. Rappel WCAG: contraste ≥ 4,5:1, taille minimale des motifs ≥ 16 px.</p>
+
+<p><strong>Disposition et touch:</strong> réponses en grille 3×3 vs carrousel swipe. Sur mobile, grille réduit la charge mnésique (tout visible). Mesure: temps en baisse sans effet sur a-IRT. Vérifier la taille des cibles ≥ 44×44 px.</p>
+
+<p><strong>Timer:</strong> affichage d’un “progress shimmer” discret vs compte à rebours agressif. Le second induit stress et raccourcis impulsifs. Mesure: baisse d’abandon avec shimmer, meilleure cohérence latérale du temps.</p>
+
+<p><strong>Feedback neutre:</strong> un bip discret quand une option est sélectionnée vs micro-vibration. Mesure: erreurs de double tap. Attention à l’accessibilité audio/désactivation.</p>
+
+<h3>Exemples visuels d’items modernisés</h3>
+<p><strong>Matrices analogiques:</strong> Variante A: motifs géométriques avec contrastes forts noir/blanc, couleurs d’aide secondaires, fond gris 4%. Variante B: suppression des couleurs, ajout de textures hachures/points pour coder la même règle. Hypothèse: B réduit le DIF sans changer b-IRT. Évitez les textures trop fines (moire) et testez sur écrans 326 ppp et 160 ppp.</p>
+
+<p><strong>Rotation mentale:</strong> A: objets 3D ombrés, B: silhouettes avec indices d’orientation (petits “ergots”). Hypothèse: B retire l’artefact d’illumination sans diminuer le défi rotationnel. Contrôler le nombre de degrés de rotation et la symétrie.</p>
+
+<p><strong>Recherche de symboles:</strong> A: liste verticale défilante, B: grille statique avec surlignage du repère. Hypothèse: B diminue la charge oculomotrice. Mesure: baisse du 90e percentile du temps et meilleure discrimination chez les sujets moyens, stabilité de a-IRT.</p>
+
+<h2>Plan expérimental: échantillonnage, randomisation et confidentialité</h2>
+<p>Éthique = pas de manipulation opaque. Affichez une mention claire: “Certaines personnes verront des mises en page légèrement différentes; nous évaluons quelle version est plus claire. Vos réponses restent anonymes et servent à améliorer la qualité.” Offrez un opt-out simple. C’est possible sans révéler exactement les versions testées.</p>
+
+<p><strong>Échantillonnage et randomisation:</strong></p>
+
+<p>Randomisez au niveau de l’item, pas au niveau du test complet, pour maximiser la puissance et éviter d’altérer l’expérience globale. Utilisez une randomisation stratifiée sur appareil (iOS/Android/web), densité de pixels, langue d’interface, mode sombre. Le ratio 1:1 est standard; ajustez en 1:1:1 si vous avez une variante C, mais gardez l’alpha global sous contrôle.</p>
+
+<p>Si votre test est adaptatif (CAT), insérez les variantes dans le même “nœud d’information” de la banque, avec le même ciblage de θ. Sinon, vous mélangez amélioration d’UI et ciblage de capacité. Les <strong>“ghost items”</strong> (non comptés dans le score) permettent de tester des variantes sans affecter les résultats individuels.</p>
+
+<p><strong>Taille d’échantillon:</strong> pour items dichotomiques, détecter un Δ de 0,05 sur la difficulté à un a constant nécessite typiquement plusieurs milliers d’expositions si vous conservez un contrôle alpha robuste avec analyses séquentielles. Plus simple: simulez via un modèle 2PL ou 3PL avec vos paramètres historiques, puis adoptez une règle d’arrêt bayésienne (probabilité d’amélioration > 0,95 avec une ROPE ±0,02).</p>
+
+<p><strong>Confidentialité:</strong> collectez le minimum. ID session pseudonymisé, device/runtime, latence, temps, actions de base. Pas de GPS. Détruisez les journaux bruts après agrégation. Conformez-vous au RGPD: base légale intérêt légitime + droit d’opposition; chiffrement en transit et au repos; accès restreint. Déclarez la durée de conservation (ex: 90 jours pour logs granulaire).</p>
+
+<p><strong>Contrebalancement et ordre:</strong> si un même utilisateur voit plusieurs items A/B, assurez la permutation de l’ordre pour éviter des effets d’apprentissage local. Ne répétez pas strictement le même problème en A puis B; utilisez des isomorphes (règle identique, surface différente).</p>
+
+<h2>Mesures et analyses: du clic à l’IRT</h2>
+<p>La rigueur psychométrique n’exclut pas les outils de l’expérimentation produit. Elle les discipline. Définissez des pipelines d’analyses qui partent des événements bruts et aboutissent à des décisions traçables.</p>
+
+<p><strong>Instrumentation minimale par item:</strong> time-to-first-interaction, temps total, nombre de changements de réponse, annulation, zoom, bascule mode sombre, erreurs de défilement, abandon. Étiquetez les anomalies réseau. Enregistrez la version de l’item, le seed de randomisation, le paquet de paramètres IRT en vigueur.</p>
+
+<p><strong>Estimations psychométriques:</strong></p>
+
+<p>Pour items dichotomiques, ajustez un 2PL/3PL par version si possible. Comparez a et b entre A/B via une mise à l’échelle commune (ancrage sur items stables). Une différence de b > 0,1 logit avec a stable suggère un changement de difficulté; une hausse de a à b constant indique meilleure discrimination (généralement souhaitable si elle ne résulte pas d’un indice superficiel).</p>
+
+<p>Pour items polytomiques, utilisez un modèle de réponses graduées. Sur des formats “vitesse”, examinez aussi la distribution des temps avec des modèles gamma ou des modèles de risque (survie) pour capturer les abandons.</p>
+
+<p><strong>Équité et DIF:</strong> testez le DIF sur les sous-groupes disponibles. Méthodes pragmatiques: logistic regression DIF (terme d’interaction score total × groupe) et MIMIC. Pour préserver la vie privée, vous pouvez utiliser des <strong>proxies de contexte</strong> (taille d’écran, langue, mode sombre) et des données volontaires agrégées. Un DIF uniforme > 0,1 logit ou non uniforme significatif avec effet moyen > 0,05 logit mérite un redesign.</p>
+
+<p><strong>Significance sans surpromesse:</strong> l’A/B “classique” gonfle les faux positifs quand on jette un œil trop tôt. Utilisez un plan séquentiel avec dépenses d’alpha (Pocock, O’Brien-Fleming) ou une approche bayésienne avec ROPE. Déclarez que “B est supérieur” seulement si l’intervalle de crédibilité de Δ est en dehors de la ROPE et que les garde-fous éthiques (DIF, accessibilité) sont satisfaits.</p>
+
+<p><strong>Multiplicité:</strong> tester 40 items multiplie les comparaisons. Contrôlez le FDR (Benjamini–Hochberg) pour les indicateurs secondaires. Pour les paramètres IRT, préférez des décisions par item avec corrections au niveau du lot.</p>
+
+<p><strong>Variance et biais:</strong> pratique éprouvée: CUPED (réduction de variance) avec un covarié pré-expérimental robuste, par exemple le score global des 5 items précédents. C’est utile si vous avez des lots par sessions. Évitez les covariés qui codent involontairement le groupe sensible.</p>
+
+<h3>Procédure pas à pas</h3>
+<p><strong>Étape 0 – Pré-enregistrement</strong></p>
+
+<p>Inputs: hypothèse, métriques, ROPE, règle d’arrêt, critères d’accessibilité, plan DIF, plan confidentialité. Output: protocole daté. Risques: dérives post hoc. Parade: signature horodatée interne.</p>
+
+<p><strong>Étape 1 – Conception des variantes</strong></p>
+
+<p>Inputs: item source, guideline visuelle WCAG, bibliothèque d’icônes. Output: A et B différant sur une seule dimension. Risques: double variation. Parade: checklist “une dimension unique”.</p>
+
+<p><strong>Étape 2 – Revue d’accessibilité</strong></p>
+
+<p>Inputs: maquettes, simulateur de vision (protan/deutan/tritan), lecteur d’écran. Output: conformité AA, cibles tactiles > 44 px, contrastes validés. Risques: régression en mode sombre. Parade: tests automatisés + audit manuel.</p>
+
+<p><strong>Étape 3 – Randomisation et instrumentation</strong></p>
+
+<p>Inputs: code d’assignation stratifié, schéma d’événements. Output: build prêt, logs pseudonymisés. Risques: collisions d’ID, perte de données. Parade: tests de charge, surveillance en temps réel.</p>
+
+<p><strong>Étape 4 – Lancement limité</strong></p>
+
+<p>Inputs: 5 à 10% du trafic, garde-fous d’arrêt (erreurs UI, montée d’abandon). Output: santé du système OK/NOK. Risques: effet de nouveauté. Parade: attendre 48 h pour lisser les heures/jours.</p>
+
+<p><strong>Étape 5 – Analyse intermédiaire séquentielle</strong></p>
+
+<p>Inputs: N cumulé, métriques pré-spécifiées. Output: continuer/pause/arrêt. Risques: peeking. Parade: frontières d’arrêt prédéfinies. </p>
+
+<p><strong>Étape 6 – Ajustement IRT et DIF</strong></p>
+
+<p>Inputs: réponses, temps, covariés. Output: Δa, Δb, Δc, indices DIF. Risques: non-convergence si N faible. Parade: pooling hiérarchique, ancrage sur items stables.</p>
+
+<p><strong>Étape 7 – Décision</strong></p>
+
+<p>Inputs: composite (psycho + UX + équité). Output: “adopter B”, “réviser”, ou “rejeter”. Risques: surpondérer le temps au détriment de la validité. Parade: poids explicites, arbitrage écrit.</p>
+
+<p><strong>Étape 8 – Documentation et communication</strong></p>
+
+<p>Inputs: changelog, note de version publique. Output: transparence sur ce qui change et pourquoi. Risques: surpromesse. Parade: langage sobre, rappel “une estimation reste une estimation”.</p>
+
+<p><strong>Étape 9 – Post-mortem</strong></p>
+
+<p>Inputs: retours utilisateurs, support, nouveaux signaux DIF. Output: backlog d’améliorations. Risques: auto-satisfaction. Parade: rotation de relecteurs externes.</p>
+
+<h2>Cas appliqué: matrice visuelle A/B avec contrainte d’accessibilité</h2>
+<p>Scénario: un item de matrice 3×3 affiche des formes colorées. Nous suspectons un biais pour les personnes daltoniennes. Deux variantes: A (couleurs + contrastes renforcés), B (textures + contours). Hypothèse: B garde a-IRT et réduit DIF.</p>
+
+<p><strong>Paramètres initiaux:</strong> b_A ≈ 0,2 logit, a_A ≈ 1,0. Cibles: a_B ≥ 1,0 − 0,02; |b_B − b_A| ≤ 0,1; DIF groupe “simul-daltonisme” < 0,05; temps médian B ≤ A − 400 ms; contrastes AA.</p>
+
+<p><strong>Plan:</strong> 40 000 expositions, randomisation stratifiée par appareil et langue. Items fantômes pour ne pas affecter le score de l’utilisateur.</p>
+
+<p><strong>Résultats plausibles:</strong> a_B = 1,06 (+0,06), b_B = 0,22 (+0,02), Δtemps = −520 ms, DIF uniforme = 0,03. Règle d’arrêt bayésienne franchie (P(Δ composite > 0) = 0,98). Décision: adopter B. Documentation publique: “Motifs ajoutés pour distinguer les formes sans dépendre des couleurs; temps de compréhension amélioré; difficulté stable.”</p>
+
+<p><strong>Contrôle de fuite de construit:</strong> audit manuel pour vérifier qu’aucun motif ne crée un indice trivial (ex: texture unique collée à la bonne réponse). Ajout d’isomorphes pour diluer tout apprentissage de surface.</p>
+
+<h2>Ce qu’il faut absolument éviter (et comment s’en prémunir)</h2>
+<p><strong>1) Optimiser le taux de bonnes réponses au détriment de la validité.</strong> Un gros bouton “Répondre” en bas peut réduire la fatigue, mais si votre variante montre +10% de “correct” et −0,2 sur a-IRT, vous avez probablement simplifié la tâche. Préférez la stabilité de a et l’amélioration du temps.</p>
+
+<p><strong>2) A/B sans consentement explicite et sans opt-out.</strong> La confiance est fragile. Affichez la mention simple, pas de jargon. Les standards RGPD et l’éthique de la recherche l’exigent de facto.</p>
+
+<p><strong>3) Empilement de modifications.</strong> Changer à la fois consigne, mise en page et timer invalide l’attribution. Scindez les tests.</p>
+
+<p><strong>4) Ignorer les utilisateurs atypiques.</strong> Un A/B peut “gagner” en moyenne tout en creusant un fossé pour une minorité. Inspectez le 90e et 95e percentile des temps, les abandons et les DIF par contexte. C’est là que se cachent les injustices.</p>
+
+<p><strong>5) Trop petit N et sur-interprétation.</strong> Les effets UI sont souvent modestes. Sans puissance, vous verrez du bruit. Attendez les frontières séquentielles ou acceptez l’incertitude dans votre rapport.</p>
+
+<p><strong>6) Copier les recettes e-commerce.</strong> Le “multi-armed bandit” classique qui maximise le CTR peut surexposer une variante qui flirte avec un indice de surface. Si vous utilisez un bandit, utilisez une fonction objectif psychométrique (information attendue) et des garde-fous DIF.</p>
+
+<p><strong>7) Oublier le mode sombre et les écrans bas de gamme.</strong> Beaucoup d’A/B “gagnent” sur du haut de gamme et échouent sur des dalles 160 ppp. Testez sur l’éventail réel des appareils.</p>
+
+<h2>Mettre la transparence au cœur: reporting, scores et utilisateurs</h2>
+<p>Je défends une transparence raisonnable, qui ne dévoile pas les clés des items mais respecte le droit à l’information.</p>
+
+<p><strong>Pour les utilisateurs:</strong> indiquez qu’ils participent à l’amélioration du test, que leurs données sont anonymisées et qu’un test de QI est une <strong>estimation</strong> avec une marge d’erreur. Ne promettez jamais une “mesure absolue”. Montrez un intervalle de confiance sur le score quand c’est possible.</p>
+
+<p><strong>Pour les pairs et auditeurs:</strong> publiez des métriques agrégées par lot: proportion d’items améliorés, moyenne des Δa et Δb, FDR post-correction, taux de DIF résiduel. Décrivez les garde-fous d’accessibilité. Citez les standards consultés: WCAG 2.2 pour l’accessibilité, lignes directrices de l’APA sur les tests, littérature IRT et DIF (Lord, MIMIC), travaux sur les biais de l’A/B testing et les analyses séquentielles.</p>
+
+<p><strong>Pour l’équipe produit:</strong> écrivez des “guidelines A/B internes” qui interdisent la sur-optimisation de métriques vaniteuses et rendent obligatoire l’analyse DIF. Intégrez un linteur d’accessibilité dans le pipeline CI.</p>
+
+<h2>Gouvernance éthique et arrêt: quand publier, quand jeter</h2>
+<p>Un A/B éthique n’est pas seulement un “oui/non”. C’est une décision gouvernée par des seuils, des budgets d’erreur et du jugement humain.</p>
+
+<p><strong>Règles d’arrêt:</strong> arrêtez et retirez une variante si elle augmente l’abandon > 50% par rapport à la baseline, si un bug d’accessibilité majeur est détecté, ou si le DIF franchit un seuil critique. Publication conditionnelle si l’amélioration psychométrique est claire mais l’UX est neutre: adoptez en planifiant une itération UX ultérieure.</p>
+
+<p><strong>Comité de revue:</strong> pour les changements affectant des sous-groupes potentiellement vulnérables, exigez une double lecture: un psychométricien et un spécialiste accessibilité. Documentez les désaccords.</p>
+
+<p><strong>Banque d’items et traçabilité:</strong> conservez l’historique des versions avec leurs paramètres IRT, dates de mise en circulation et résultats A/B. Évitez l’“érosion” de la banque par empilement de micro-gains qui finissent par changer le style global. Réévaluez la <strong>mesure invariance</strong> du test périodiquement.</p>
+
+<p><strong>Nettoyage des données:</strong> au terme de l’A/B, purgez les événements bruts, ne gardez que l’agrégé utile à la calibration. Ne recyclez pas ces logs pour du marketing. L’éthique, c’est aussi ce que vous ne faites pas.</p>
+
+<h2>Au-delà de A/B: des expérimentations plus riches pour une mesure plus juste</h2>
+<p>Le A/B éthique d’items cognitifs est un outil, pas une fin. Demain, je veux voir trois évolutions pragmatiques.</p>
+
+<p><strong>1) Itérations micro-adaptatives contrôlées:</strong> non pas un bandit qui maximise des clics, mais un agent qui maximise l’<strong>information de Fisher</strong> sous contrainte d’équité. Il choisit la présentation la plus claire pour votre profil d’interface (petit écran, mode sombre) tout en garantissant un niveau d’information minimal et un DIF borné.</p>
+
+<p><strong>2) Simulations a priori systématiques:</strong> avant tout A/B, simuler l’impact des changements d’UI sur a et b avec des modèles génératifs de temps et d’erreurs. Cela permet de calibrer votre taille d’échantillon et de dessiner des frontières d’arrêt robustes. L’outillage open-source en IRT s’y prête très bien.</p>
+
+<p><strong>3) Participation éclairée des utilisateurs:</strong> proposer une “voie contributive” où, en fin de session, un utilisateur volontaire peut essayer 2 ou 3 variantes d’items expérimentaux avec un retour pédagogique sur la perception visuelle (contraste, crowding). Cela nourrit vos données éthiques et éduque à la fois.</p>
+
+<p>Qu’on ne s’y trompe pas: rendre un item plus lisible n’augmente pas l’intelligence; cela <strong>réduit le bruit</strong> et donc affine l’estimation. C’est notre responsabilité de psychométriciens exigeants: honorer la clarté visuelle, garantir la rigueur de la mesure, intégrer l’accessibilité par design, afficher nos limites et refuser la surpromesse. Un A/B bien mené est discret, documenté et au service d’une seule cause: mieux mesurer, pour mieux comprendre.</p>

@@ -1,0 +1,223 @@
+<p>Concevoir de bonnes rotations spatiales n’est pas une affaire d’astuce graphique, c’est une discipline. Je conçois des items mobiles et visuels qui mesurent, sans bavardage, la capacité à manipuler mentalement des formes. Mon exigence tient en cinq points: clarté universelle, rigueur psychométrique, accessibilité par design, transparence des limites, éthique sans survente. Dans cette méthode, je pose un cadre reproductible pour créer des items de rotation spatiale qui fonctionnent sur smartphone, s’étalonnent proprement et respectent les personnes. Objectif: réduire l’ambiguïté inutile, isoler le processus de rotation mentale et sortir des biais triviaux. Je m’appuie sur la littérature classique (Shepard et Metzler) et les pratiques modernes d’IRT, de WCAG 2.2 et d’UX mobile.</p>
+
+<h2>Clarifier l’objectif psychométrique avant de dessiner la moindre flèche</h2>
+<p>Un item de rotation spatiale valide doit activer un mécanisme cognitif identifiable: l’alignement mental d’un objet avec une référence. <strong>Tout ce qui détourne de ce mécanisme est du bruit</strong>. Trop de tests confondent rotation, mémoire de travail, repérage de symétries ou inférences 3D ambiguës. Je commence donc par une spécification explicite.</p>
+
+<p><strong>Cible cognitive</strong>. Mesurer la transformation rotationnelle d’un objet rigide, en 2D ou 3D, sans nécessiter de connaissances symboliques. Je vise un continuum de difficulté manipulable par: amplitude d’angle, dimensionnalité, congruence miroir, saillance des axes, et qualité des distracteurs.</p>
+
+<p><strong>Format de réponse</strong>. Pour la fiabilité, je privilégie le 4-alternatives (4AFC) avec une seule bonne réponse, ou le 2AFC contrabalancé si l’on veut raccourcir. Le 4AFC offre un bon compromis entre information IRT et temps. Évitez le glisser-rotater comme unique mode de réponse: c’est plus un test moteur qu’un test de rotation mentale. Proposez-le comme option, pas comme contrainte.</p>
+
+<p><strong>Temps et vitesse</strong>. On sait que le temps de réponse augmente linéairement avec l’angle mental à parcourir (travaux fondateurs de Shepard & Metzler, confirmés par des répliques modernes). <strong>Je collecte toujours le temps</strong> mais je ne score pas la vitesse par défaut: je l’utilise comme covariable et comme contrôle d’effort. En cas de score composite, j’assume et j’explique la pondération.</p>
+
+<p><strong>Hypothèse de validité</strong>. Les scores doivent corréler avec d’autres indicateurs spatiaux (assemblages, pliages de papier) plus qu’avec des items verbaux. J’exige aussi l’invariance de mesure entre configurations visuelles (fond sombre/clair, mode clair/sombre), sexes, et types d’écran. Je planifie donc l’analyse DIF (Mantel-Haenszel ou IRT-LR) dès la conception.</p>
+
+<h2>Pipeline de conception accessible: de l’esquisse à l’item calibré</h2>
+<p>Concevoir un item n’est pas un geste artistique improvisé. C’est une procédure. Voici la séquence que mon équipe répète, avec des entrées/sorties et des risques à chaque étape.</p>
+
+<h3>Procédure étape par étape</h3>
+<p><strong>Étape 1 — Définir l’objet de base</strong></p>
+
+<p>Entrées: un set de formes primitives (polyominos, polycubes, maillages simples), règles d’invariance souhaitées (pas de symétrie rotationnelle d’ordre 2 ou 4 si vous voulez éviter les ambiguïtés), palette couleurs accessible.</p>
+
+<p>Sorties: un gabarit vectoriel unique avec ses axes principaux annotés (pour nous, pas pour l’utilisateur). Forme recommandée: silhouette haute fréquence modérée, trois repères distinctifs non colinéaires.</p>
+
+<p>Risques: objets trop symétriques; repères confondus sous rotation; textures qui créent des indices locaux non voulus.</p>
+
+<p><strong>Étape 2 — Choisir la dimensionnalité</strong></p>
+
+<p>Entrées: décision 2D vs 3D. La 2D est plus contrôlable; la 3D gagne en réalisme mais ajoute des confusions perspective/occlusion.</p>
+
+<p>Sorties: projection standardisée. En 3D, j’utilise une isométrie ou perspective faible, éclairage constant, sans gradients trompeurs. En 2D, fond neutre et silhouette solide.</p>
+
+<p>Risques: illusions de profondeur; réflexions spéculaires qui miment la solution; occlusions qui masquent les repères en mode sombre.</p>
+
+<p><strong>Étape 3 — Définir l’angle et l’axe</strong></p>
+
+<p>Entrées: distribution ciblée des angles (par exemple 15°, 30°, 60°, 90°, 120°, 150°) et des axes (x, y, z en 3D; centre en 2D). Les angles doivent couvrir de faibles et grandes amplitudes pour calibrer la pente de difficulté.</p>
+
+<p>Sorties: un item où la cible est la rotation d’une référence visuelle, sans translation ni mise à l’échelle.</p>
+
+<p>Risques: axes implicites non saillants; participants qui comparent des segments locaux au lieu de faire une rotation globale.</p>
+
+<p><strong>Étape 4 — Générer les distracteurs</strong></p>
+
+<p>Entrées: règles de génération. Un bon distracteur n’est pas un bruit aléatoire. Je crée: un distracteur miroir (réflexion), un distracteur à mauvais angle proche (+/− 15°), un distracteur combiné (petite torsion locale + bon angle).</p>
+
+<p>Sorties: 3 alternatives homogènes en complexité, taille et contraste. Ordre randomisé avec contrainte d’anti-répétition.</p>
+
+<p>Risques: indices bas-niveau (bord le plus épais, fond plus sombre); distracteur évidemment faux car mal aligné avec la boîte englobante; deux distracteurs trop proches générant équivoque.</p>
+
+<p><strong>Étape 5 — Accessibilité par design</strong></p>
+
+<p>Entrées: exigences WCAG 2.2 pertinentes: 1.4.3 contraste du texte (si présent) 4.5:1; 1.4.11 contraste non-textes 3:1; 2.5.5 taille cible recommandée 44×44 px iOS/48 dp Android; 2.5.1 gestes ponctuels; 2.5.7 alternative au glisser-déposer.</p>
+
+<p>Sorties: items testables au doigt, avec alternatives clavier/commande simple, temps extensible (2.2.1), focus visible, sans clignotements. Contrastes vérifiés sur modes clair et sombre et simuler daltonismes (Deuteranopia, Protanopia, Tritanopia).</p>
+
+<p>Risques: pertes de repères en mode sombre; contrastes réels abaissés sur écrans OLED; petites cibles sur diagonales des grands écrans.</p>
+
+<p><strong>Étape 6 — Pré-test cognitif</strong></p>
+
+<p>Entrées: 5 à 8 utilisateurs divers, interviews brèves en observation. Consigne minimaliste animée, sans jargon. On vérifie ce qu’ils voient et comment ils s’y prennent.</p>
+
+<p>Sorties: cartographie des stratégies. Je veux entendre: “J’ai tourné la forme dans ma tête jusqu’à ce que les trois repères s’alignent.” Je ne veux pas: “J’ai comparé la longueur de ce petit bord plus sombre.”</p>
+
+<p>Risques: sur-apprentissage par feedback; abandon si la consigne n’est pas autoporteuse; instructions textuelles trop lourdes.</p>
+
+<p><strong>Étape 7 — Pilote quantitatif</strong></p>
+
+<p>Entrées: 200 à 500 réponses par item, hétérogénéité d’appareils et de profils linguistiques. Données: exact/faux, temps de réponse, appareil, mode (clair/sombre), profil vision-couleur auto-reporté.</p>
+
+<p>Sorties: courbes caractéristiques d’items (modèle 2PL ou 3PL si guessing non négligeable), estimation des paramètres a (discrimination) et b (difficulté), et éventuellement c (pseudo-chance). Wichmann & Hill pour l’ajustement psychométrique si on travaille en angle continu.</p>
+
+<p>Risques: sous-échantillonnage sur certains écrans; DIF par appareil; vitesse confondue avec précision. On préregistre l’analyse et on corrige.</p>
+
+<p><strong>Étape 8 — Calibration et sélection</strong></p>
+
+<p>Entrées: estimation IRT, analyses DIF (Mantel-Haenszel, SIBTEST, IRT-LR), robustesse temps de réponse vs précision, invariance mode clair/sombre.</p>
+
+<p>Sorties: validation d’un banc d’items couvrant la gamme de b. Suppression ou révision des items à DIF significatif ou a trop faible.</p>
+
+<p>Risques: sur-ajustement. On garde des ancres pour l’équating futur et on documente la traçabilité de chaque revision.</p>
+
+<h2>Grammaire visuelle des rotations: axes, angles, invariants</h2>
+<p>Un bon test de rotation repose sur une grammaire visuelle stable. Je conçois cette grammaire comme un petit langage de transformations.</p>
+
+<p><strong>Axes explicites et repères</strong>. En 2D, trois repères graphiques suffisent: un coin tronqué, un trou circulaire, un motif strié. En 3D, j’utilise des “oreilles” géométriques sur trois faces orthogonales. Ces repères sont discrets mais assez saillants pour éviter l’ambiguïté. <strong>Jamais</strong> de repères qui disparaissent avec l’angle.</p>
+
+<p><strong>Angles contrôlés</strong>. Je n’utilise pas seulement des multiples de 90°. Les angles intermédiaires (30°, 60°, 120°) sont indispensables pour échantillonner la courbe difficulté/angle. Les grandes amplitudes doivent exister, mais pas seulement: trop de 150° et vous sélectionnez ceux qui utilisent des heuristiques “compléter à 180°”. La variété compte.</p>
+
+<p><strong>Invariants déclarés</strong>. L’objet ne change pas d’échelle, ni de miroir, ni d’éclairage. Si une réflexion miroir est testée, elle est <strong>annoncée par la tâche</strong> et séparée des rotations pures. Mélanger rotation et miroir par surprise fabrique des erreurs de construct.</p>
+
+<p><strong>Gestion des symétries</strong>. Les objets à symétrie radiale ou bilatérale forte réduisent l’information. Pour éviter les pièges: je limite la symétrie d’ordre 2 et j’interdis l’ordre 4. Quand la symétrie est intentionnelle (pour abaisser la difficulté), je m’assure que deux repères cassent l’ambiguïté.</p>
+
+<p><strong>Épaisseur et contraste</strong>. Les traits et remplissages doivent survivre au downscaling sur écran de 5 pouces. Norme pratique: épaisseur minimale 2 px à 3x densité, contraste non-texte ≥ 3:1 (WCAG 1.4.11). Les contours internes ne doivent pas créer des “pistes” directionnelles.</p>
+
+<h3>Exemples d’items pas à pas</h3>
+<p><strong>Exemple 1 — Rotation 2D simple 60°</strong></p>
+
+<p>Référence: un pentomino irrégulier avec un coin coupé (repère A), un trou rond (repère B) et une strie diagonale (repère C). Cible: même forme tournée de 60° antihoraire.</p>
+
+<p>Distracteurs: miroir de la forme tournée de 60°; forme tournée de 45°; forme tournée de 60° mais avec la strie inversée (erreur volontaire pour détecter lecture de texture). La bonne réponse se reconnaît par l’alignement des trois repères en rotation pure.</p>
+
+<p>Manipulation de difficulté: rapprocher l’angle du distracteur le plus proche à 15° de la bonne réponse.</p>
+
+<p><strong>Exemple 2 — Rotation 3D autour de l’axe z 90°</strong></p>
+
+<p>Référence: bloc composé de trois cubes avec une excroissance “oreille” sur la face supérieure et un évidement circulaire sur la face latérale. Éclairage uniforme, projection isométrique.</p>
+
+<p>Distracteurs: même bloc tourné de 90° mais ombrage latéral inversé (piège à heuristique d’ombre); bloc miroir; bloc 90° plus un pivot de 15° sur l’axe x. Le bon item conserve l’orientation relative des repères sans basculement d’axe.</p>
+
+<p>Manipulation de difficulté: ajouter une occlusion partielle qui ne masque jamais <strong>tous</strong> les repères à la fois.</p>
+
+<h2>Prototyper pour mobile: contraste, taille, rythme, alternatives</h2>
+<p>Un test moderne vit dans la main. Cela impose des décisions non négociables.</p>
+
+<p><strong>Visuels robustes</strong>. Je fixe une zone interactive de 44–56 points par option, avec un espacement minimum de 8 points. Les options doivent survivre à une rotation de l’écran et aux densités de 2x à 3x. Mode sombre et clair sont designés en parallèle, pas “thématisés” après coup.</p>
+
+<p><strong>Rythme et charge</strong>. La rotation mentale fatigue. J’alterne des items courts et longs, en contrôlant l’angle pour éviter cinq grands angles d’affilée. Micro-pauses optionnelles toutes les 12 à 15 questions, progress bar non anxiogène (segments discrets, pas de compte à rebours by default).</p>
+
+<p><strong>Instructions minimalistes multimodales</strong>. Une animation silencieuse de 3 secondes montre l’objet pivotant vers la bonne réponse, suivie d’un essai d’entraînement avec feedback “correct/incorrect” non intrusif. Un court texte complémentaire est disponible mais non requis, dans un langage B1, et une version audio peut le lire pour les utilisateurs avec fatigue oculaire.</p>
+
+<p><strong>Gestes et alternatives</strong>. Sélection par toucher simple. Pas d’obligation de glisser-rotater. Pour l’accessibilité, navigation au clavier (tab, enter) et commandes vocales simples sur appareils compatibles. Le drag a toujours une alternative (WCAG 2.5.7).</p>
+
+<p><strong>Couleurs sûres</strong>. Je n’encode jamais l’information par couleur seule. Les repères sont redondants (forme + texture). Je teste avec des simulateurs de daltonisme et avec un contraste vérifié sur fond #121212 et #FFFFFF. Là où un motif strié pose un aliasing, je passe en pointillés à fréquence moindre.</p>
+
+<p><strong>Feedback sobre</strong>. Je refuse les confettis et les messages dopaminergiques. Un halo léger encadre la bonne réponse à l’entraînement, puis plus de feedback en phase de mesure. L’éthique exige l’absence de clickbait: pas de “Génie!” ou “Q.I. 140!” à partir d’un seul item.</p>
+
+<h3>Checklist WCAG utilisable en production</h3>
+<p>1) Contraste non-texte ≥ 3:1 pour objets et états hover/focus.</p>
+
+<p>2) Taille cible ≥ 44×44 points; espace tactile ≥ 8 points.</p>
+
+<p>3) Alternative aux glissés; une seule action suffit pour répondre.</p>
+
+<p>4) Timing ajustable; reprise possible après interruption.</p>
+
+<p>5) Focus visible, ordre logique; test complet au clavier.</p>
+
+<p>6) Pas de contenu clignotant > 3 Hz; animations < 5 s désactivables.</p>
+
+<h2>Calibration et scoring: validité, IRT, vitesse vs précision</h2>
+<p>Une mesure n’a de sens que si on sait l’erreur qui l’accompagne. Je scinde ici conception et score.</p>
+
+<p><strong>Modèles de score</strong>. En items 4AFC, un modèle IRT 2PL suffit dans la plupart des cas. J’ajoute un paramètre de pseudo-chance c seulement si l’item induit du guessing élevé. En angle continu (par exemple ajustement de l’angle), on peut modéliser la précision angulaire via une distribution circulaire (von Mises) ou transformer l’écart en score, puis calibrer en IRT.</p>
+
+<p><strong>Gestion de la vitesse</strong>. Je conserve les temps de réponse. Deux approches: 1) modèle conjonoint (accuracy + RT) de type van der Linden; 2) score principal sur l’exactitude, vitesse en score auxiliaire. Mon principe: <strong>ne pas pénaliser par défaut les personnes prudentes</strong>. Si un score de vitesse existe, il doit être modulé après un temps plafond raisonnable où la vitesse cesse d’informer.</p>
+
+<p><strong>Équité et DIF</strong>. Je vérifie l’invariance par sexe, âge, main dominante, type d’écran, mode sombre/clair, et profils de vision des couleurs. Tests: Mantel-Haenszel pour du dichotomique, IRT-LR pour confirmation. Tout item à DIF substantiel est retiré ou refactoré. Je préfère corriger la cause (contraste trop faible sur OLED) plutôt que “compensations” statistiques opaques.</p>
+
+<p><strong>Fidélité</strong>. Je compose des formes adaptatives courtes (8–12 minutes) qui atteignent une fiabilité marginale > 0,9 sur la plage centrale. C’est faisable avec 25–35 items calibrés bien distribués sur b. Je fournis toujours une erreur-type de mesure individuelle et un intervalle de confiance.</p>
+
+<p><strong>Validité</strong>. Corrélations convergentes avec d’autres tâches spatiales et divergence avec verbal. Analyses structurelles: un facteur spatial distinct émerge en bifactor g + group factors. C’est le pattern attendu et réel dans nos données récentes, en ligne avec la littérature contemporaine sur la structure de l’intelligence.</p>
+
+<p><strong>Transparence</strong>. Je dis explicitement à l’utilisateur: c’est une estimation, influencée par la concentration, la fatigue et le contexte. Une borne de confiance accompagne le score. Aucun classement spectaculaire ou promesse de QI “officiel”.</p>
+
+<h3>Exemple de règles de scoring</h3>
+<p>• Score brut: proportion d’items corrects, pondérée par information IRT locale (sum-score informé).</p>
+
+<p>• Score theta: estimation EAP avec prior standard normal; intervalle de crédibilité 95% affiché.</p>
+
+<p>• Flag d’effort: RT médian en dehors de [0,7 s; 12 s] et séquence de réponses trop rapides déclenchent un avertissement “conditions non optimales” mais pas de pénalité automatique.</p>
+
+<p>• Rapport utilisateur: score spatial, intervalle, comparatif par tranche d’âge sans norme figée; conseils d’entraînement génériques non prescriptifs.</p>
+
+<h2>Pièges fréquents et correctifs rapides</h2>
+<p>Je vois revenir les mêmes erreurs. Les ignorer, c’est sacrifier la validité et l’accessibilité.</p>
+
+<p><strong>Piège 1 — Symétrie tueuse</strong>. Les formes trop symétriques rendent plusieurs réponses plausibles.</p>
+
+<p>Correctif: imposer trois repères non colinéaires; interdire l’ordre 4; générer automatiquement un indicateur d’unicité sous rotations multiples.</p>
+
+<p><strong>Piège 2 — Indices de texture</strong>. Un gradient ou une strie crée un repère directionnel involontaire.</p>
+
+<p>Correctif: uniformiser l’éclairage; tester en inversant la scène; utiliser des textures à symétrie contrôlée; comparer performances entre versions texturées et silhouettes pleines.</p>
+
+<p><strong>Piège 3 — Contrastes insuffisants</strong>. En mode sombre, un gris #777 sur fond #121212 devient illisible.</p>
+
+<p>Correctif: mesurer le ratio réel sur écran; viser ≥ 3:1 pour les objets; prévoir un contour clair et sombre adaptatif selon le thème; option de “contraste renforcé”.</p>
+
+<p><strong>Piège 4 — Écrans et appareils</strong>. Un item calibré sur tablette échoue sur petit smartphone.</p>
+
+<p>Correctif: responsive strict; tests sur diagonales 4,7 à 6,7 pouces; ajuster épaisseur; ne jamais réduire la cible interactive sous 44 points.</p>
+
+<p><strong>Piège 5 — Mélanger rotation et miroir sans signal</strong>. Les sujets se trompent pour de mauvaises raisons.</p>
+
+<p>Correctif: séparer les blocs “rotation pure” et “symétrie miroir” avec consigne claire; ne jamais les mélanger dans un même item.</p>
+
+<p><strong>Piège 6 — Temps imposé agressif</strong>. Forcer la vitesse pénalise certains utilisateurs et gonfle les erreurs de mesure.</p>
+
+<p>Correctif: temps raisonnable par item, option d’extension (WCAG 2.2.1); utiliser le temps en variable auxiliaire plutôt qu’en contrainte punitive.</p>
+
+<p><strong>Piège 7 — Distracteurs bâclés</strong>. Un distracteur trop différent abaisse artificiellement la difficulté.</p>
+
+<p>Correctif: gabarits paramétriques pour générer des distracteurs isocomplexes; matching sur aire, périmètre, nombre de sommets; inspection visuelle croisée.</p>
+
+<p><strong>Piège 8 — Feedback gamifié</strong>. Il contamine la mesure par le renforcement ou l’énervement.</p>
+
+<p>Correctif: feedback uniquement à l’entraînement, neutre; silence pendant la mesure; pas de musique excitante ni de confettis.</p>
+
+<p><strong>Piège 9 — Instructions verbeuses</strong>. Trop de texte exclut et crée du biais linguistique.</p>
+
+<p>Correctif: animation démonstrative universelle, texte bref facultatif, audio descriptif optionnel; icônes simples et standardisées.</p>
+
+<p><strong>Piège 10 — Absence de traçabilité</strong>. On ne sait plus pourquoi un item marche ou non.</p>
+
+<p>Correctif: journal de conception par item: forme de base, axes, angles, distracteurs, versions, résultats de pilote, décisions de retouche. C’est la mémoire du test.</p>
+
+<h3>Micro-outils utiles au quotidien</h3>
+<p>• Simulateur de rotation: applique des rotations exactes et exporte les positions des repères pour vérification d’alignement.</p>
+
+<p>• Vérificateur de contraste: capture d’écran device + mesure locale de ratio; script d’alertes si < 3:1.</p>
+
+<p>• Générateur de distracteurs: variations contrôlées d’angle, miroir, micro-déformations sous contrainte d’isocomplexité.</p>
+
+<p>• Tableau de garde-fous: signale les cas “symétrie élevée”, “repères masqués”, “distance d’angle trop proche”, “indice de texture”.</p>
+
+<h2>Relier UX moderne et mesure fiable: un pacte explicite avec l’utilisateur</h2>
+<p>Je refuse l’illusion commerciale du “score magique”. Ce que nous proposons, ce sont des <strong>mesures probabilistes</strong> d’un trait cognitif spécifique, obtenues via des images simples et un protocole robuste. L’UX n’est pas du vernis: c’est un vecteur d’équité. Un mauvais contraste ou une cible minuscule dégrade la fidélité autant qu’un mauvais modèle statistique.</p>
+
+<p>Dans mes tests, chaque item passe par un double filtre: 1) <strong>lisibilité universelle</strong> (formes signifiantes, repères stables, accessibilité active), 2) <strong>exigence psychométrique</strong> (calibration IRT, analyses DIF, documentation). C’est cet alliage qui fait la différence. Les travaux originels sur la rotation mentale ont posé les bases; nous les traduisons en gestes concrets pour mobiles 2025: taille tactile, modes sombre/clair, alternatives de saisie, contrôle des illusions de profondeur, et transparence du score.</p>
+
+<p>Si vous concevez des rotations aujourd’hui, je vous invite à adopter cette rigueur. Gardez vos items courts, vos contrastes hauts, vos repères honnêtes. Calibrez, rejetez ce qui triche, publiez vos limites. La vraie modernité n’est pas de “gamifier” la mesure, mais de <strong>démystifier</strong> comment elle est obtenue, pour que chacun, quelles que soient ses préférences visuelles ou son appareil, puisse se mesurer avec justesse.</p>
+
+<p>Et souvenez-vous: un test n’est pas un verdict, c’est une estimation. Donnez-lui des ailes par la clarté et une colonne vertébrale par la méthode. C’est à cette condition que la rotation spatiale, loin d’un casse-tête capricieux, devient un instrument fiable, accessible et utile.</p>

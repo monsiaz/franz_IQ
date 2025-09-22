@@ -1,0 +1,294 @@
+<p>Randomiser des versions sans casser la difficulté n’est ni un tour de magie ni une roulette russe. C’est un protocole. Je conçois des tests de QI visuels et mobiles dont la clarté prime, mais la clarté n’excuse pas la mollesse psychométrique. Ici, je partage une méthode concrète pour générer des versions multiples qui restent équivalentes en difficulté, respectent l’accessibilité, et gardent une trace reproductible de chaque choix. Vous verrez des règles visuelles, des paramètres contrôlés, de l’ancrage psychométrique et des contrôles d’exposition. Un test n’est qu’une estimation, jamais une essence. L’éthique impose la sobriété des promesses et la transparence des limites.</p>
+
+<h2>Définir des familles d’items paramétrables (la grammaire visuelle)</h2>
+<p>On ne randomise pas un item isolé, on randomise une <strong>famille d’items</strong> partageant la même structure logique. L’erreur classique consiste à permuter des couleurs et espérer une difficulté constante. La difficulté naît de la contrainte cognitive, pas du vernis.</p>
+
+<p>Je pars d’une <strong>grammaire visuelle</strong> compacte, indépendante du langage et robuste aux biais culturels courants :</p>
+
+<ul>
+  <li>Transformations géométriques élémentaires : rotation, symétrie, translation, mise à l’échelle.</li>
+  <li>Progressions discrètes : nombre d’éléments, angles, segments manquants, densité de tramage.</li>
+  <li>Relations topologiques : inclusion, continuité, connexité, alternance.</li>
+  <li>Règles de composition : XOR visuel (présence exclusive), superposition additive, inversion.</li>
+  <li>Invariants de forme : nombre de sommets, axes de symétrie, parité.</li>
+</ul>
+
+<p>Chaque famille est définie par :</p>
+
+<ul>
+  <li><strong>Une règle cible</strong> (ex. « la forme en bas à droite est la somme exclusive des deux précédentes »).</li>
+  <li><strong>Un vecteur de paramètres</strong> (ex. angle de rotation, ratio d’échelle, nombre d’éléments, contraste, espacement).</li>
+  <li><strong>Des contraintes d’accessibilité</strong> (contraste ≥ 4.5:1, palettes daltéran-friendly, taille minimale ≥ 24 px, tempo minimal entre écrans).</li>
+  <li><strong>Des plages “iso-difficulté”</strong> calibrées empiriquement par IRT/CTT (intervalle des paramètres où la difficulté reste stable dans ±0,1 logit).</li>
+</ul>
+
+<p>Exemple de famille « matrice 3×3 à règle double » :</p>
+
+<ul>
+  <li>Règle 1 (ligne) : progression d’angle +30° par cellule.</li>
+  <li>Règle 2 (colonne) : alternance présence/absence d’un point intérieur.</li>
+  <li>Paramètres : angle de départ A∈{0°, 15°, 30°}, taille du point t∈[2,3 px], contraste C∈[5:1, 9:1], espacement e∈[12,16 px].</li>
+  <li>Invariants iso-difficulté vérifiés : nombre d’éléments, degré de clarté de la règle, absence d’alignements ambigus.</li>
+</ul>
+
+<p>Rappel historique utile : Raven a montré que les matrices progressives peuvent être universelles si la règle est visible et univoque. Mais l’universalité se gagne par la <strong>rigueur du langage visuel</strong>, pas par l’abstraction gratuite (Raven; Carpenter et al. sur les règles latentes; Embretson & Reise pour l’IRT).</p>
+
+<h2>Procédure de randomisation contrôlée : de la graine au rendu</h2>
+<p>Randomiser, c’est produire de la variation <strong>déterministe</strong> à partir d’une graine, sous contraintes. Je distingue cinq étapes, chacune auditable.</p>
+
+<h3>Étape 1 : Inputs</h3>
+<ul>
+  <li><strong>Seed</strong> (entier 64 bits) par session, convertible en sous-seeds par item (hash stable).</li>
+  <li><strong>Banque de familles d’items</strong> avec paramètres admissibles + plages iso-difficulté.</li>
+  <li><strong>Plan de test</strong> : cibles d’information par niveau de capacité, répartition des contenus, durée.</li>
+  <li><strong>Contraintes d’accessibilité et de device</strong> : densité de pixels, taille minimale, contraste, palettes adaptées.</li>
+</ul>
+
+<h3>Étape 2 : Échantillonnage paramétré</h3>
+<ul>
+  <li>Génération pseudo-aléatoire des paramètres <strong>dans les sous-plages iso-difficulté</strong>, pas dans toute la plage.</li>
+  <li>Rejet automatique des combinaisons violant des contraintes (espacement trop serré, angle too-close to 0°, contraste insuffisant).</li>
+  <li>Permutation des positions des options (si QCM) avec <strong>exclusion des permutations ambiguës</strong> (ex. réponses correctes systématiquement à droite).</li>
+</ul>
+
+<h3>Étape 3 : Rendu</h3>
+<ul>
+  <li>Moteur vectoriel (SVG/Canvas) pour la netteté sur mobile.</li>
+  <li><strong>Adaptation responsive</strong> en conservant les ratios critiques (espacement relatif constant).</li>
+  <li>Interpolation de couleurs dans un espace perceptuel (OKLCH) avec palettes sûres pour les daltonismes courants (deutéranopie, protanopie, tritanopie).</li>
+</ul>
+
+<h3>Étape 4 : Vérifications automatiques</h3>
+<ul>
+  <li>Test d’unicité de solution (solver logique interne ou brute force sur règles).</li>
+  <li>Score de clarté visuelle : vérification d’un seuil minimal d’angle, d’espacement et de contraste (règles inspirées ISO 9241-112 et WCAG 2.2).</li>
+  <li>Anti-leak : signature hash de l’item pour détecter les clones quasi-identiques en circulation.</li>
+</ul>
+
+<h3>Étape 5 : Outputs</h3>
+<ul>
+  <li>Item instancié (JSON + assets) avec trace des paramètres et de la seed.</li>
+  <li>Étiquette psychométrique provisoire (difficulté prévue + incertitude).</li>
+  <li>Journal d’assemblage pour audit a posteriori.</li>
+</ul>
+
+<p><strong>Risques et parades</strong> :</p>
+
+<ul>
+  <li>Bruit inutile : randomisation de paramètres non pertinents pour la règle. Solution : n’autoriser que les paramètres validés iso-difficulté.</li>
+  <li>Variation de layout entre devices. Solution : design per-pixel avec unités relatives, min/max clippés, tests automatiques multi-densités.</li>
+  <li>Seed collision humaine (sessions proches). Solution : combinez ID session + timestamp + sel serveur, puis hash.</li>
+</ul>
+
+<h2>Calibrer et préserver la difficulté : CTT, IRT et ancrage</h2>
+<p>Sans calibration, on devine. Deviner, c’est trahir le candidat. Je recommande l’approche suivante :</p>
+
+<h3>1) Prétest et calibrations initiales</h3>
+<ul>
+  <li>Collecte sur échantillon diversifié, tailles suffisantes (≥ 300–500 réponses par item pour une 2PL raisonnable, plus pour 3PL).</li>
+  <li><strong>CTT</strong> : proportions de réussite p, discriminations (point-biserial). Élagage des items trop faciles/difficiles hors de la cible.</li>
+  <li><strong>IRT 2PL</strong> pour items dichotomiques visuels : estimation a (discrimination) et b (difficulté). 3PL uniquement si plausibilité d’un pseudo-hasard systématique, sinon inutilement instable.</li>
+  <li>Pour items notés partiellement (ex. étapes), modèle <strong>partial credit</strong> (Masters) ou <strong>GPCM</strong>.</li>
+</ul>
+
+<h3>2) Définir des plages iso-difficulté</h3>
+<ul>
+  <li>Pour chaque famille, cartographier l’impact de chaque paramètre sur b : ex. b = f(angle minimal, densité, espacement).</li>
+  <li>Identifier des régions où Δb est négligeable (<strong>±0,1 logit</strong> comme repère pragmatique), constituant les sous-plages admissibles pour la randomisation.</li>
+  <li>Marquer les <strong>frontières dangereuses</strong> : angles proches de 0°, symétries accidentelles, recouvrements qui créent des illusions de contours (effet Gestalt).</li>
+</ul>
+
+<h3>3) Ancrage et équation des formes</h3>
+<ul>
+  <li>Placer des <strong>items ancres</strong> stables, présents dans toutes les versions ou échantillonnés avec forte fréquence, pour <strong>lier les échelles</strong> entre versions.</li>
+  <li>Procéder à une équation des formes (méthodes de moyenne/Haebara/Stocking-Lord) pour aligner les paramètres IRT sur un même métrique.</li>
+  <li>Vérifier l’invariance par sous-groupes (sexe, langue d’interface, type de device) pour détecter du <strong>DIF</strong>. Retrait ou reparamétrage des items problématiques.</li>
+</ul>
+
+<h3>4) Surveillance du drift</h3>
+<ul>
+  <li>Suivi en production : contrôle de b dans le temps (item drift) via fenêtres mobiles.</li>
+  <li>Si drift : isoler les paramètres visuels qui dérivent (ex. une mise à jour de rendu qui modifie le contraste réel) et recertifier.</li>
+</ul>
+
+<p>Références utiles : Lord & Novick pour la théorie classique, Embretson & Reise pour l’IRT moderne, Kolen & Brennan pour l’équation des formes, van der Linden pour l’assemblage optimal.</p>
+
+<h2>Transformations visuelles isodiff : ce qu’on peut changer sans tout fausser</h2>
+<p>La tentation est grande de tout permuter. Certaines transformations préservent quasi parfaitement la difficulté, d’autres la bouleversent. Voici mon guide pratique.</p>
+
+<h3>Transformations généralement sûres</h3>
+<ul>
+  <li><strong>Permutation des positions</strong> des alternatives en QCM, si l’espacement et la proximité relative sont constants.</li>
+  <li><strong>Rotation globale</strong> d’une scène lorsque la règle est rotation-invariante (et que les repères directionnels n’ajoutent pas d’indices accidentels).</li>
+  <li><strong>Mirroir horizontal/vertical</strong> pour des règles basées sur des relations binaires symétriques.</li>
+  <li><strong>Permutation de formes équi-diagnostiques</strong> (cercle ↔ carré) lorsque la règle ne dépend pas des propriétés spécifiques (ex. nombre de sommets) et que la lisibilité est équivalente.</li>
+  <li><strong>Changement de palette</strong> à contraste constant et palettes daltonisme-compatibles (ex. bleus/oranges distincts en protano/deutéranopie).</li>
+</ul>
+
+<h3>Transformations à risque (souvent à éviter ou à calibrer)</h3>
+<ul>
+  <li><strong>Réduction d’espacement</strong> : le crowding visuel augmente la difficulté, surtout sur mobile (cf. littérature de Pelli sur le crowding).</li>
+  <li><strong>Angles faibles</strong> : passer de 30° à 5° rend les progressions invisibles pour nombre d’utilisateurs.</li>
+  <li><strong>Augmentation de la densité</strong> (hachures fines) : pénalise disproportionnellement les écrans à faible luminance.</li>
+  <li><strong>Changements de taille</strong> sous 24 px : problèmes d’accessibilité et hausse de l’erreur oculomotrice.</li>
+  <li><strong>Polychromie</strong> excessive : génère des règles fantômes (groupements par couleur) non prévues.</li>
+</ul>
+
+<h3>Exemples pas à pas</h3>
+<p><strong>Exemple 1 : Matrice 3×3, double règle</strong></p>
+
+<ul>
+  <li>Règle de ligne : rotation +30° par cellule.</li>
+  <li>Règle de colonne : addition XOR de segments (segment présent si présent dans A ou B mais pas les deux).</li>
+  <li>Paramètres iso-diff : angle de départ A∈{0°,15°}; nombre de segments n∈{3,4}; épaisseur 2 px; espacement 14 px; contraste 7:1.</li>
+  <li>Transformations appliquées : rotation globale 90°, permutation de réponses, miroir horizontal.</li>
+</ul>
+
+<p>Résultat : b estimé varie de +0,02 logit (négligeable), a constant à ±0,05. La solution demeure unique après validation par solver.</p>
+
+<p><strong>Exemple 2 : Série ordonnée de formes</strong></p>
+
+<ul>
+  <li>Règle : progression du nombre de sommets 3→4→5, puis répétition modulo 3.</li>
+  <li>Paramètres iso-diff : taille 28–32 px; espacement 18–22 px; palette bicolore stable.</li>
+  <li>Transformation risquée testée : réduction d’espacement à 12 px → abandon, hausse de b de +0,25 logit détectée.</li>
+</ul>
+
+<p><strong>Exemple 3 : Complétion de motif</strong></p>
+
+<ul>
+  <li>Règle : alternance présence/absence d’un point aligné sur l’axe principal.</li>
+  <li>Changement autorisé : déplacement du point de ±2 px dans les deux axes (micro-jitter) n’affectant pas la lisibilité.</li>
+  <li>Changement interdit : rotation du motif qui brise l’alignement perçu, créant deux hypothèses concurrentes.</li>
+</ul>
+
+<p>Ces exemples proviennent de tests mobiles en production, avec instrumentation sur plus de 10 000 sessions et vérification d’invariance par device. Les principes s’appuient sur Raven, la psychologie de la Gestalt, et les standards d’ergonomie visuelle.</p>
+
+<h2>Assembler des versions : algorithmes, contraintes et exposition</h2>
+<p>Construire une version, c’est résoudre un problème d’optimisation sous contraintes. L’objectif : des versions différentes mais <strong>équivalentes en information</strong>, durée et couverture de contenu.</p>
+
+<h3>Contraintes typiques</h3>
+<ul>
+  <li><strong>Information cible</strong> sur l’intervalle de capacité visé (ex. θ ∈ [−1, +2]).</li>
+  <li><strong>Mix de familles</strong> (ex. 30 % matrices, 30 % progressions, 20 % topologie, 20 % alternances).</li>
+  <li><strong>Limites d’exposition</strong> par item/famille (protection de la banque).</li>
+  <li><strong>Durée maximale</strong> et variance de durée contrôlée.</li>
+  <li><strong>Règles d’accessibilité</strong> constantes (contraste, taille, rythmes).</li>
+</ul>
+
+<h3>Algorithmes d’assemblage</h3>
+<ul>
+  <li><strong>Heuristique gloutonne</strong> : rapide, bon en production si contrôles a posteriori (vérifier TIF et contenu).</li>
+  <li><strong>Shadow testing</strong> (van der Linden) : on maintient un test « ombre » optimal sous contraintes, et chaque sélection d’item met à jour l’ombre pour rester dans les cibles.</li>
+  <li><strong>Programmation linéaire mixte</strong> : formulation explicite des contraintes (ex. maximiser l’information, limiter l’exposition) et résolution par solveur. Recommandé pour des banques moyennes à grandes.</li>
+</ul>
+
+<h3>Contrôle de l’exposition et sécurité</h3>
+<ul>
+  <li><strong>Sympson–Hetter</strong> : contrôle probabiliste d’administration par item pour lisser l’exposition.</li>
+  <li><strong>Pool rotation</strong> : sous-banques tournantes, logs d’usage, retrait préventif des items sur-exposés.</li>
+  <li><strong>Détection de clones</strong> : hashing des rendus et recherche de near-duplicates par perceptual hashing.</li>
+</ul>
+
+<p>Critère final : les versions doivent avoir une <strong>fonction d’information</strong> de test quasi superposable. On accepte de petites différences, mais on surveille l’impact sur la précision d’estimation (SE(θ)). Un test plus « beau » n’est pas un test meilleur s’il mesure moins.</p>
+
+<h2>Contrôles qualité : simulations, logs et audits d’équité</h2>
+<p>Rien ne remplace une boucle de feedback instrumentée. Je pratique trois familles de contrôles : simulation avant déploiement, télémétrie en production, audit périodique.</p>
+
+<h3>Avant : simulations Monte Carlo</h3>
+<ul>
+  <li>Générer 100 000 faux candidats θ ~ N(0,1) et simuler leurs réponses par la banque calibrée.</li>
+  <li>Assembler 20 versions randomisées et comparer leurs <strong>distributions de scores attendus</strong>, SE(θ), durée simulée.</li>
+  <li>Tester la robustesse aux transformations visuelles en injectant du bruit réaliste (variation d’éclairage, densité de pixels).</li>
+</ul>
+
+<h3>Pendant : télémétrie responsable</h3>
+<ul>
+  <li><strong>Temps de réponse</strong> par item, taux d’abandon, erreurs fréquentes (cartographie des distracteurs).</li>
+  <li><strong>Signal d’accessibilité</strong> : changements d’orientation, zoom, tailles de police système, contraste élevé activé, type de device.</li>
+  <li>Détection de <strong>patterns suspects</strong> (ex. réponses trop rapides uniformes), sans stigmatiser. L’objectif est la qualité de mesure, pas la police.</li>
+</ul>
+
+<h3>Après : audits d’équité</h3>
+<ul>
+  <li>Tests de <strong>DIF</strong> par sous-groupes (device, daltonisme auto-rapporté, niveau d’éclairage via capteur, langue de l’UI). Méthodes : Mantel–Haenszel, IRT DIF, arbre de décision DIF.</li>
+  <li><strong>Études d’erreur fréquente</strong> : lorsqu’un distracteur explose, c’est souvent un indice d’ambiguïté visuelle. Revoir la règle ou l’espacement.</li>
+  <li><strong>Rapports transparents</strong> : publier les bornes d’erreur et l’étendue de validité revendiquée. Anti clickbait par principe.</li>
+</ul>
+
+<p>Sur le plan légal et éthique, on s’aligne sur les lignes directrices d’accessibilité (WCAG 2.2), les principes d’ergonomie ISO 9241, et l’esprit de l’EEOC lorsqu’un test influence des décisions. Un test visuel bien conçu minimise les biais culturels, mais il n’abolit pas la variabilité d’expérience visuelle et numérique. D’où l’importance de l’audit continu.</p>
+
+<h2>Méthode opérationnelle complète : étapes, inputs/outputs, risques</h2>
+<p>Je résume ici une procédure que j’applique sur des tests visuels modernes destinés au mobile.</p>
+
+<h3>Étape A : Conception de familles</h3>
+<ul>
+  <li>Input : corpus de règles visuelles justifiées (littérature Raven-like, Gestalt, contraintes mobiles).</li>
+  <li>Process : prototyper 5–10 familles avec règles simples, non-verbales, et contraintes d’accessibilité intégrées dès le départ.</li>
+  <li>Output : spécs formalisées des familles (règles, paramètres, contraintes, invariants).</li>
+  <li>Risques : règles trop similaires créant de la redondance et une mesure monotone. Parades : diversité structurelle (géométrie, topologie, logique binaire).</li>
+</ul>
+
+<h3>Étape B : Calibration initiale</h3>
+<ul>
+  <li>Input : 15–30 items prototypes par famille, n ≈ 500–1000 répondants diversifiés.</li>
+  <li>Process : scoring CTT, modélisation IRT, identification des plages iso-difficulté par paramètre.</li>
+  <li>Output : banque avec paramètres IRT, plages iso-diff, drapeaux d’ambiguïté visuelle.</li>
+  <li>Risques : sur-ajustement aux prétesteurs. Parade : échantillons multiples, cross-validation.</li>
+</ul>
+
+<h3>Étape C : Assemblage et randomisation</h3>
+<ul>
+  <li>Input : banque calibrée, plan de test, seed.</li>
+  <li>Process : sélection contrainte (shadow test ou MILP), tirage de paramètres dans les sous-plages iso-diff, vérifs automatiques (unicité, clarté, accessibilité).</li>
+  <li>Output : version instanciée, journal, TIF visée.</li>
+  <li>Risques : collisions visuelles non détectées (symétries inattendues). Parade : tests de symétrie automatisés et revue humaine par échantillonnage.</li>
+</ul>
+
+<h3>Étape D : Déploiement contrôlé</h3>
+<ul>
+  <li>Input : versions candidates.</li>
+  <li>Process : soft launch A/B, contrôle d’exposition (Sympson–Hetter), monitoring de b et a en ligne.</li>
+  <li>Output : approbation des versions, retrait des items dérivants.</li>
+  <li>Risques : dérive due à un update UI. Parade : verrouillage des paramètres critiques et tests de non-régression visuelle.</li>
+</ul>
+
+<h3>Étape E : Maintien et transparence</h3>
+<ul>
+  <li>Input : télémétrie, rapports d’audit.</li>
+  <li>Process : recertification trimestrielle, nettoyage de la banque, publication de notes de version (ce qui change, ce qui ne change pas).</li>
+  <li>Output : stabilité mesurée, confiance accrue, historique des révisions.</li>
+  <li>Risques : inflation de versions « marketing ». Parade : règle interne : pas de nouvelle version sans gain mesuré ou nécessité de sécurité.</li>
+</ul>
+
+<h2>Accessibilité par design : garder la difficulté, pas la pénibilité</h2>
+<p>La difficulté doit surgir de la <strong>règle mentale</strong>, non de la pénibilité visuelle. L’accessibilité n’est pas un supplément d’âme ; elle stabilise la mesure en réduisant le bruit.</p>
+
+<ul>
+  <li><strong>Contraste</strong> : min 4.5:1 pour les éléments informationnels, 7:1 recommandé. Conserver ce ratio lors des randomisations de palette.</li>
+  <li><strong>Taille minimale</strong> : 24 px pour les détails, 44 px pour les cibles tactiles. Ne jamais randomiser en dessous.</li>
+  <li><strong>Espacement</strong> : distance minimale entre formes pour éviter le crowding. Plage iso-diff validée, ex. 14–18 px selon densité d’écran.</li>
+  <li><strong>Palettes daltonisme-compatibles</strong> : éviter rouge-vert indistincts, privilégier luminance et texture comme porteurs d’information.</li>
+  <li><strong>Rythme</strong> : pas de timer agressif. On peut randomiser la position des chronos, jamais les délais de tolérance d’accessibilité.</li>
+</ul>
+
+<p>Je m’appuie sur WCAG 2.2, ISO 9241-112 et des tests réels de visibilité. En pratique, ces contraintes <strong>réduisent le DIF</strong> et améliorent la fidélité. Elles ne rendent pas les items « plus faciles » ; elles rendent la mesure plus propre.</p>
+
+<h2>Transparence et éthique : ce que la randomisation ne fait pas</h2>
+<p>Clarifions : randomiser ne « sécurise » pas magiquement un test, ni ne crée une infinité équivalente d’items. On crée des <strong>variantes contrôlées</strong> dans des familles dont la difficulté est stabilisée par la théorie et par les données. Les limites :</p>
+
+<ul>
+  <li><strong>Couverture cognitive</strong> : si la banque est pauvre, la randomisation recycle la même compétence sous mille visages.</li>
+  <li><strong>Fuites de contenu</strong> : des patterns peuvent circuler. L’exposition doit être gérée et les familles renouvelées.</li>
+  <li><strong>Invariance imparfaite</strong> : aucun modèle n’épuise la perception humaine. D’où la surveillance continue.</li>
+  <li><strong>Estimation, pas étiquette</strong> : un score est une estimation avec un intervalle d’erreur. Annoncez-le. Aucune randomisation n’abolit l’incertitude.</li>
+</ul>
+
+<p>Côté sources et bonnes pratiques : psychologie de la perception (Treisman, Pelli), psychométrie (Lord & Novick, Embretson & Reise), équating (Kolen & Brennan), assemblage (van der Linden), accessibilité (WCAG, ISO 9241). Je n’emploie pas ces références pour impressionner, mais pour ancrer des choix concrets.</p>
+
+<h2>Ouvrir le jeu sans perdre la mesure</h2>
+<p>La prochaine frontière est claire : <strong>génération à la volée</strong> d’items visuels isodiff sur l’appareil, avec ancrage dynamique et information cible pilotée en temps réel. On y arrive par petites couches : moteurs vectoriels certifiés, solveurs embarqués pour tester l’unicité, et liens IRT par ancrage léger. On peut aussi imaginer des <strong>modèles génératifs contraints</strong> : pas de créativité libre, mais des transformateurs qui explorent seulement l’espace des paramètres validés.</p>
+
+<p>J’encourage la publication d’un <strong>guide de transparence</strong> pour chaque test : quelles familles, quels invariants, quelles plages iso-diff, quelle précision attendue selon le temps disponible. Plus on explicite la mécanique, plus la communauté peut auditer, améliorer, corriger.</p>
+
+<p>Mon parti pris restera le même : clarté visuelle, rigueur psychométrique, accessibilité par défaut, et honnêteté. Randomiser, oui. Randomiser proprement, surtout. C’est ainsi qu’on gagne à la fois en UX moderne et en mesure fiable, sans clickbait et sans surpromesse. Si vous devez retenir une règle : <strong>variez les apparences, pas la contrainte cognitive</strong>. Le reste est affaire de méthode, de données et d’attention aux détails.</p>

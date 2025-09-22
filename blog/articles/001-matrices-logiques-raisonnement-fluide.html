@@ -1,0 +1,222 @@
+<p>Construire une matrice logique qui mesure réellement le raisonnement fluide n’est ni un exercice graphique ni un concours d’ingéniosité isolé. C’est une chorégraphie précise entre principes visuels universels, modélisation psychométrique et accessibilité par design. En tant que concepteur de tests de QI visuels sur mobile, je poursuis un objectif simple et exigeant: que chaque élément affiché serve le construit mesuré, sans bruit culturel, sans piège involontaire, sans promesses creuses. Voici une méthode concrète, reproductible et éthique pour bâtir des matrices qui testent le raisonnement, pas la familiarité avec un style ou un appareil.</p>
+
+<h2>Définir le construit et la grammaire d’items des matrices</h2>
+<p>Avant tout dessin, il faut définir <strong>le construit</strong> et <strong>la grammaire d’items</strong>. Les matrices visuelles évaluent principalement le raisonnement fluide (Gf), tel que formalisé de Spearman à Cattell et illustré par Raven. Elles s’appuient sur des régularités visuo-logiques que l’on peut décrire et paramétrer.</p>
+
+<p><strong>Concretement, définissez:</strong></p>
+
+<ul>
+<li><strong>Le construit ciblé</strong>: inférence de règles, intégration de dimensions, résistance à l’interférence. Ce n’est pas la vitesse de traitement, ni la mémoire de travail verbale.</li>
+<li><strong>Le modèle d’item</strong>: grille (p. ex., 3×3), cases peuplées d’éléments visuels, case manquante à compléter, options de réponse.</li>
+<li><strong>La grammaire des transformations</strong>: opérations autorisées et combinables, chacune sur une dimension <em>indépendante</em> (forme, nombre, orientation, taille, remplissage, position, opérateurs logiques).</li>
+<li><strong>Les contraintes d’indépendance</strong>: une règle ne doit pas “fuiter” sur une autre dimension, sinon l’item devient résoluble par un indice de surface.</li>
+</ul>
+
+<p><strong>Règles fondamentales, calibrables:</strong></p>
+
+<ul>
+<li><strong>Algébriques</strong>: addition/soustraction d’éléments (compter les barres; 1, 2, 3).</li>
+<li><strong>Géométriques</strong>: rotations (±90°), symétries, translations.</li>
+<li><strong>Topologiques</strong>: inclusion/exclusion, intersections (logique des ensembles).</li>
+<li><strong>Attributaires</strong>: alternance de remplissage (plein/vide), texture, épaisseur.</li>
+<li><strong>Logiques</strong>: ET, OU, XOR sur la présence d’éléments entre cases adjacentes.</li>
+</ul>
+
+<p>La grammaire doit être <strong>culturellement neutre</strong>: pas de lettres, pas de symboles religieux ou linguistiques, pas d’objets reconnaissables. Des formes géométriques, des barres, des points et des lignes suffisent. Cette simplicité ne bride pas la difficulté; elle la rend <strong>plus mesurable</strong>.</p>
+
+<h2>Conception visuelle universelle: règles minimales et vérifiables</h2>
+<p>Une matrice se lit en moins d’une seconde ou elle échoue déjà sur l’accessibilité. Nos principes s’alignent sur les WCAG 2.2 et l’ergonomie ISO 9241, adaptés aux tests cognitifs.</p>
+
+<p><strong>Principes visuels universels</strong>:</p>
+
+<ul>
+<li><strong>Contraste</strong>: ratio ≥ 7:1 pour les éléments décisifs; fond unifié (gris neutre) pour réduire la luminance perçue variable entre écrans.</li>
+<li><strong>Échelle</strong>: éléments ≥ 6 mm (ou 24 px sur mobile @3x) pour éviter l’aliasing; <strong>trait</strong> constant (≥ 2 px) pour empêcher la détection par épaisseur.</li>
+<li><strong>Couleur</strong>: non porteuse de règle à elle seule; si utilisée, double codage systématique (texture ou forme). Palette daltonienne sûre (eviter rouge/vert, bleu/violet proches).</li>
+<li><strong>Gabarit</strong>: grille explicitement délimitée; marges régulières; pas de décor. Les options doivent <strong>répliquer</strong> la case cible à l’échelle et au style.</li>
+<li><strong>Mouvement</strong>: aucun; pas d’animation ni de clignotement. Le mouvement interfère le processus de recherche de règles.</li>
+<li><strong>Touch targets</strong>: minimum 9 mm (44 px) pour chaque option; zones ample pour limiter les erreurs motrices.</li>
+</ul>
+
+<p><strong>Lisibilité structurelle</strong>:</p>
+
+<ul>
+<li><strong>Un élément = une dimension</strong>: une barre n’encode pas simultanément taille et direction si une autre règle manipule aussi ces attributs.</li>
+<li><strong>Équidistance</strong> des états: rotations à pas réguliers (0°, 90°, 180°, 270°), tailles en ratios constants (1×, 1.5×, 2×), nombres progressifs (1, 2, 3).</li>
+<li><strong>Redondance maîtrisée</strong>: si trois règles coexistent, deux signes indépendants maximum par case; au-delà, surcharge visuelle et diminution de la validité.</li>
+</ul>
+
+<p><strong>Compatibilité appareil</strong>:</p>
+
+<ul>
+<li>Rendu en vectoriel (SVG/Canvas) pour cohérence inter-écrans.</li>
+<li>Verrouillage d’orientation (portrait) et échelle responsive fixe (base 360×640) avec letterboxing plutôt que reflow qui déforme la grille.</li>
+<li>Mode sombre: <strong>désactivé</strong> pour la zone de test afin d’éviter des contrastes inversés non testés.</li>
+</ul>
+
+<p>Ces contraintes ne sont pas des caprices graphiques: elles réduisent la variance non pertinente et améliorent la fidélité, comme le montre la littérature sur les tests non verbaux (matrices de Raven) et les guides d’accessibilité du W3C.</p>
+
+<h2>Génération pas à pas d’une matrice robuste</h2>
+<p>Voici une procédure opérationnelle qui produit une matrice explicable, testable et calibrable.</p>
+
+<p><strong>Inputs</strong>:</p>
+
+<ul>
+<li>Spécification du construit (Gf; inférence de règles visuo-logiques).</li>
+<li>Budget attentionnel (durée visée, p. ex., 90 secondes/item pour non speedé).</li>
+<li>Paramètres graphiques (palette, tailles, grille).</li>
+<li>Catalogue de règles autorisées (transformations indépendantes).</li>
+</ul>
+
+<p><strong>Étapes</strong>:</p>
+
+<ol>
+<li><strong>Choisir la taille de la grille</strong> (souvent 3×3). Plus grand augmente la charge de recherche et la difficulté de façon non linéaire.</li>
+<li><strong>Échantillonner 1 à 3 règles</strong> dans la grammaire, en assurant l’indépendance des dimensions. Exemple: rotation + incrément de nombre + XOR de présence.</li>
+<li><strong>Instancier les états</strong> sur chaque ligne/colonne avec des progressions régulières. Vérifiez l’absence d’ambiguïté (une seule réponse possible si la règle est appliquée).</li>
+<li><strong>Générer les options</strong> (6 à 8). Une option correcte. Les distracteurs sont générés en violant <em>un seul</em> sous-aspect d’une règle à la fois.</li>
+<li><strong>Uniformiser la surface visuelle</strong>: chaque option a densité, épaisseur et position globales comparables; pas d’indices périphériques.</li>
+<li><strong>Contrôler la difficulté</strong> en paramétrant: nombre de règles; “distance” entre états; orthogonalité des indices; taille de la grille; complexité de la recherche (par ligne/colonne/diagonale).</li>
+<li><strong>Auto-tests algorithmiques</strong>: un solveur “bête et discipliné” (recherche de régularités prédéfinies) doit retrouver la solution; s’il échoue, l’item est mal formé.</li>
+<li><strong>Prétester</strong> sur un panel diversifié (N ≥ 60) pour détecter ambiguïtés, temps extrêmes, erreurs massives spécifiques à un distracteur.</li>
+<li><strong>Itérer</strong> en corrigeant les items problématiques, puis passer à l’étalonnage (section suivante).</li>
+</ol>
+
+<p><strong>Outputs</strong>:</p>
+
+<ul>
+<li>Un item documenté: règles, justification de l’unicité de solution, indice de difficulté attendu.</li>
+<li>Un lot d’options équilibrées, avec annotation des types d’erreurs visées.</li>
+<li>Un rapport de prétest: distribution des temps, taux de réussite, commentaires qualitatifs d’accessibilité.</li>
+</ul>
+
+<p><strong>Risques et parades</strong>:</p>
+
+<ul>
+<li><strong>Ambiguïté</strong> (deux solutions possibles): ajoutez une contrainte explicite (p. ex., la règle s’applique par colonne uniquement) en le faisant découler visuellement, pas textuellement.</li>
+<li><strong>Indice de surface</strong> (épaisseur, centrage): homogénéisez par gabarits; validez par détection automatique de features bas niveau (variance de contours).</li>
+<li><strong>Bruit de dispositif</strong> (petits écrans): downscaling minimum garanti; testez sur 4 diagonales d’écran typiques.</li>
+<li><strong>Surcharge</strong> (trop de règles): limitez à 2–3; au-delà, la mesure devient bruyante et dépendante de stratégies de balayage idiosyncratiques.</li>
+</ul>
+
+<h3>Exemples de patrons logiques testables</h3>
+<p><strong>Rotation + incrément</strong>: ligne 1: triangle 0°, 90°, 180°; ligne 2: triangle doublé (2 triangles superposés) avec mêmes angles; ligne 3: triangle triplé. La case manquante est le triangle triplé à 270°. Distracteurs: 270° mais double; 180° triple; 270° triple mais épaisseur erronée (piège éliminé dès la conception).</p>
+
+<p><strong>XOR de segments</strong>: chaque case résulte du XOR des segments horizontaux présents dans les deux précédentes de la ligne. Visuellement, on voit des barres s’allumer/s’éteindre. La solution est le XOR des deux cases au-dessus de la cible. Distracteurs: OR, AND, copie de la case supérieure.</p>
+
+<p><strong>Progression topologique</strong>: un cercle englobe un carré qui englobe un point. Par colonne, l’élément central change: vide, demi-remplissage, plein. La solution combine inclusion + remplissage final. Piège évité: éviter que la taille du cercle serve d’indice unique; la progression doit être cohérente et nécessaire.</p>
+
+<h2>Distracteurs, pièges et contrôle des biais</h2>
+<p>La moitié de la qualité d’une matrice réside dans ses <strong>distracteurs</strong>. Ils doivent être plausibles au regard de la grammaire, pas absurdes, et pointer vers des <strong>erreurs typiques</strong> de raisonnement.</p>
+
+<p><strong>Concevoir des distracteurs diagnostiques</strong>:</p>
+
+<ul>
+<li><strong>Violations minimales</strong>: modifiez un seul paramètre logique (p. ex., rotation correcte mais mauvais incrément de nombre).</li>
+<li><strong>Confusions ciblées</strong>: permuter ligne/colonne; inverser une progression (croissant vs décroissant); appliquer OR au lieu de XOR.</li>
+<li><strong>Équilibrage visuel</strong>: chaque distracteur doit avoir même “poids visuel” que la bonne réponse (densité, contraste).</li>
+<li><strong>Distribution d’erreurs</strong>: si un distracteur n’attire personne, il est inutile; s’il attire plus que la solution chez les hauts niveaux, il crée une ambiguïté.</li>
+</ul>
+
+<p><strong>Pièges involontaires fréquents</strong>:</p>
+
+<ul>
+<li><strong>Double encodage confus</strong>: taille et nombre varient en même temps sans séparation claire; l’un peut suffire à trouver la règle, l’autre contredit.</li>
+<li><strong>Illusions de Gestalt</strong>: alignements accidentels créant une structure non prévue (parallélisme conduisant à une “ligne implicite” trompeuse).</li>
+<li><strong>Anti-aliasing</strong>: un arrondi rend une option légèrement plus floue, donc facile à écarter.</li>
+<li><strong>Indices de bord</strong>: une option avec un micro-décalage de 1 px paraît “mal alignée”; les sujets experts l’éliminent à raison, mais pour de mauvaises raisons.</li>
+</ul>
+
+<p><strong>Biais culturels et linguistiques</strong>:</p>
+
+<ul>
+<li>Éviter symboles culturels; préférer primitives géométriques universelles.</li>
+<li>Ne pas insérer d’instructions textuelles complexes; un pictogramme “tap” suffit. Les matrices bien conçues sont <strong>auto-explicatives</strong>.</li>
+<li>Tester en DIF (voir plus bas) sur groupes linguistiques, âge, sexe, familiarité smartphone.</li>
+</ul>
+
+<p><strong>Biais d’appareil</strong> (construct-irrelevant variance):</p>
+
+<ul>
+<li>Temps d’affichage initial: précharger les assets; latence mesurée et loggée (pour exclure les RT anormaux induits par device).</li>
+<li>Zone tactile: erreurs de tap ne doivent pas être comptées comme erreurs cognitives; réactivation de confirmation optionnelle.</li>
+<li>Zoom et taille: permettre un zoom à 125–150% sans reflow; c’est une adaptation <strong>raisonnable</strong> qui n’altère pas le construit.</li>
+</ul>
+
+<h3>Checklist de validation visuelle rapide</h3>
+<ul>
+<li>Contraste mesuré ≥ 7:1 pour la case cible et les options.</li>
+<li>Épaisseur de trait uniforme; pas d’élément inférieur à 12 px sur le plus petit appareil supporté.</li>
+<li>Distances spatiales régulières, grilles alignées au pixel.</li>
+<li>Couleur toujours doublée par une forme ou une texture.</li>
+<li>Aucune animation; temps minimal entre écrans constant.</li>
+</ul>
+
+<p>Cette discipline visuelle, combinée à un design d’options diagnostic, renforce la fidélité du test et permet des analyses d’erreurs plus fines sans compromettre la neutralité culturelle.</p>
+
+<h2>Études psychométriques: fidélité, validité, IRT et DIF</h2>
+<p>Un item beau n’est pas un item bon. L’item bon est <strong>calibré</strong>. Voici la feuille de route psychométrique, alignée sur les standards ITC et la pratique IRT moderne.</p>
+
+<p><strong>Phase pilote</strong>:</p>
+
+<ul>
+<li><strong>N</strong> ≥ 200 pour une estimation initiale des difficultés; ≥ 500–1 000 si vous visez un calibrage IRT 2PL robuste et des analyses de sous-groupes.</li>
+<li>Collecter: réponse, temps de réponse, trajets de taps (optionnel), device, contraste effectif (si mesurable via profil), âge, langue.</li>
+<li>Éviter la condition speedée; laissez le temps raisonnable pour que la difficulté reflète la logique, pas la vitesse.</li>
+</ul>
+
+<p><strong>Analyses classiques</strong>:</p>
+
+<ul>
+<li><strong>Indice de difficulté</strong> (p): proportion de réponses correctes; ciblez un étalement 0.2–0.8 sur la banque.</li>
+<li><strong>Discrimination</strong> (r_pb, point-bisérial): ≥ 0.2 pour retenir; revisitez le design sous 0.15.</li>
+<li><strong>Fidélité</strong>: coefficient oméga total pour l’échelle; prudence avec l’alpha en présence de structure multidimensionnelle ou de temps limités.</li>
+</ul>
+
+<p><strong>IRT/Rasch</strong>:</p>
+
+<ul>
+<li><strong>Rasch dichotomique</strong>: bon point de départ pour s’assurer d’une hiérarchie claire des difficultés et d’une mesure invariante; examinez l’infit/outfit (0.7–1.3).</li>
+<li><strong>2PL</strong>: permet de modéliser les discriminations inégales entre items (attendues si la clarté visuelle varie légèrement).</li>
+<li><strong>Polytomique/Partial credit</strong>: possible si vos distracteurs sont ordonnés par “distance logique” (erreur à 1 règle vs 2 règles violées). Cette distance doit être définie <em>a priori</em>.</li>
+<li><strong>Information de test</strong>: assemblez des items pour maximiser l’information autour des niveaux de capacité ciblés; idéal pour adaptatif.</li>
+</ul>
+
+<p><strong>DIF (Differential Item Functioning)</strong>:</p>
+
+<ul>
+<li>Comparez items par groupes (langue, sexe, appareil) à capacité égale (IRT). Des méthodes comme Mantel-Haenszel ou logistic regression DIF sont pratiques.</li>
+<li>Seuils: |ΔMH| modéré à fort ou contraste de paramètres > 0.5 logit justifient révision ou retrait.</li>
+<li><strong>Diagnostiquez visuellement</strong> la cause: contraste insuffisant sur petits écrans, confusions de balayage, etc.</li>
+</ul>
+
+<p><strong>Validité</strong> (dans la réalité, c’est un faisceau de preuves):</p>
+
+<ul>
+<li><strong>Structure interne</strong>: un facteur dominant (Gf) attendu, avec éventuel second facteur de “recherche visuelle” si vous multipliez les règles par item.</li>
+<li><strong>Convergence</strong>: corrélation avec autres tests de matrices ou d’induction; ne surinterprétez pas la taille de corrélation hors échantillons comparables.</li>
+<li><strong>Relations avec variables externes</strong>: âge (courbe adolescente attendue), éducation (modérée), pratique (amélioration modeste sensible).</li>
+</ul>
+
+<p><strong>Rapports et transparence</strong>:</p>
+
+<ul>
+<li>Publiez la précision individuelle: <strong>erreur standard</strong> (SEM) et intervalle de confiance du score.</li>
+<li>Documentez les paramètres IRT agrégés et les décisions de suppression d’items (pourquoi tel item a été retiré).</li>
+<li>Évitez le sensationnalisme: une estimation reste une estimation; pas de “votre QI absolu est 137”.</li>
+</ul>
+
+<p>Ces pratiques sont alignées avec les recommandations de l’ITC sur l’adaptation de tests, l’ergonomie ISO sur la qualité d’usage et la tradition psychométrique (Rasch, Lord & Novick), adaptées au contexte mobile contemporain.</p>
+
+<h2>Vers des matrices plus justes et mobiles</h2>
+<p>La prochaine génération de matrices logiques, si elle veut rester pertinente, doit conjuguer trois exigences: <strong>clarté visuelle universelle</strong>, <strong>mesure fiable et transparente</strong>, <strong>accessibilité sans compromis</strong>. Ce n’est pas négociable.</p>
+
+<p>Concrètement, je pousse trois évolutions.</p>
+
+<ul>
+<li><strong>Génération procédurale contrôlée</strong>: au lieu de dessiner item par item, encodez la grammaire et laissez un moteur générer et filtrer selon des métriques visuelles et psychométriques. Vous obtenez des banques larges, donc moins d’exposition, meilleure adaptativité, et des calibrages plus stables.</li>
+<li><strong>Scorage responsable</strong>: limitez la part du temps de réponse dans le score ou modélisez-le séparément (modèles bivariés aptitude-vitesse). La vitesse est un trait connexe, pas la cible principale en matrices.</li>
+<li><strong>Accessibilité native</strong>: contrastes vérifiés, zooms sans reflow, rythmes non imposés, alternatives d’entrée (touch, clavier), consignation ouverte des limites (par ex., non adapté aux déficiences visuelles sévères car le construit lui-même est visuel).</li>
+</ul>
+
+<p>Enfin, il faut cesser de présenter un score de matrice comme un verdict sur l’intelligence d’une personne. Une matrice bien conçue est une <strong>estimation robuste d’un sous-ensemble du raisonnement</strong>, utile en recherche, en orientation, en clinique, si et seulement si elle est menée avec des règles visuelles universelles, des analyses psychométriques rigoureuses et une transparence totale. C’est ainsi que l’UX moderne rencontre la mesure fiable, et que le test respecte ceux qu’il évalue.</p>

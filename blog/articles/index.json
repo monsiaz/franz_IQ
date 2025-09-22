@@ -1,3 +1,402 @@
 [
+  {
+    "file": "001-comprendre-votre-score-de-qi.html",
+    "h1": "Comprendre votre score de QI",
+    "title_seo": "Comprendre votre score de QI",
+    "meta_description": "Découvrez comment analyser un score de QI, y compris les percentiles, l'écart-type et la fiabilité des tests.",
+    "slug": "comprendre-votre-score-de-qi",
+    "category": "tests-qi",
+    "featured_image": "comprendre-votre-score-de-qi.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "001-evolution-tests-qi-impact.html",
+    "h1": "L'évolution des tests de QI et leur impact",
+    "title_seo": "L'évolution des tests de QI et leur impact",
+    "meta_description": "Découvrez l'histoire des tests de QI, de Binet à l'ère mobile, en abordant leur évolution, leur méthodologie, et l'éthique de mesure.",
+    "slug": "evolution-tests-qi-impact",
+    "category": "culture-g",
+    "featured_image": "evolution-tests-qi-impact.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "001-matrices-logiques-raisonnement-fluide.html",
+    "h1": "Construire des Matrices Logiques pour le Raisonnement Fluide",
+    "title_seo": "Construire une matrice logique pour le raisonnement fluide",
+    "meta_description": "Découvrez comment concevoir des matrices logiques efficaces qui mesurent le raisonnement fluide sans biais culturel.",
+    "slug": "matrices-logiques-raisonnement-fluide",
+    "category": "methodes",
+    "featured_image": "matrices-logiques-raisonnement-fluide.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "001-comparatif-raven-wais.html",
+    "h1": "Comparatif des tests Raven et WAIS",
+    "title_seo": "Comparaison entre Raven et WAIS",
+    "meta_description": "Découvrez les différences entre les tests Raven et WAIS, leurs mesures, validité et applications pour mieux choisir l'outil adapté.",
+    "slug": "comparatif-raven-wais",
+    "category": "comparatifs",
+    "featured_image": "comparatif-raven-wais.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "002-comprendre-qi-verbal-performance-accessibilite.html",
+    "h1": "QI: Mesurer l'intelligence sans mystique",
+    "title_seo": "Comprendre le QI: Verbal, Performance et Accessibilité",
+    "meta_description": "Découvrez comment le QI verbal et le QI de performance mesurent des compétences. Explorez les principes d'accessibilité et de rigueur psychométrique.",
+    "slug": "comprendre-qi-verbal-performance-accessibilite",
+    "category": "culture-g",
+    "featured_image": "comprendre-qi-verbal-performance-accessibilite.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "002-optimiser-score-qi-visuel.html",
+    "h1": "Maximiser votre score de QI visuel: vitesse ou précision?",
+    "title_seo": "Optimiser votre score de QI visuel",
+    "meta_description": "Découvrez comment équilibrer vitesse et précision pour optimiser votre score de QI visuel avec des conseils pratiques et des stratégies.",
+    "slug": "optimiser-score-qi-visuel",
+    "category": "tests-qi",
+    "featured_image": "optimiser-score-qi-visuel.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "002-tests-rotation-spatiale.html",
+    "h1": "Créer des Tests Efficaces de Rotation Spatiale",
+    "title_seo": "Conception de Tests de Rotation Spatiale",
+    "meta_description": "Découvrez comment concevoir des tests de rotation spatiale rigoureux et accessibles, en respectant les exigences psychométriques et éthiques.",
+    "slug": "tests-rotation-spatiale",
+    "category": "methodes",
+    "featured_image": "tests-rotation-spatiale.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "002-comparatif-tests-qi-en-ligne-cliniques.html",
+    "h1": "Comparatif entre Tests de QI en Ligne et Batteries Cliniques",
+    "title_seo": "Comparatif Tests de QI: En Ligne vs Cliniques",
+    "meta_description": "Découvrez les différences clés entre les tests de QI en ligne bien conçus et les batteries cliniques. Analyse des critères de validité et d'accessibilité.",
+    "slug": "comparatif-tests-qi-en-ligne-cliniques",
+    "category": "comparatifs",
+    "featured_image": "comparatif-tests-qi-en-ligne-cliniques.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "003-strategies-tests-raisonnement-fluide.html",
+    "h1": "Stratégies en Cinq Étapes pour Maîtriser les Matrices Progressives",
+    "title_seo": "Stratégies pour Tests de Raisonnement Fluide",
+    "meta_description": "Découvrez une méthode en cinq étapes pour améliorer votre performance aux tests de raisonnement fluide avec des matrices progressives.",
+    "slug": "strategies-tests-raisonnement-fluide",
+    "category": "tests-qi",
+    "featured_image": "strategies-tests-raisonnement-fluide.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "003-creer-suites-numeriques-equilibrees.html",
+    "h1": "Méthode pour Concevoir des Suites Numériques",
+    "title_seo": "Créer des Suites Numériques Équilibrées",
+    "meta_description": "Découvrez une méthode concrète pour créer des suites numériques équilibrées, prêtes pour un test de QI mobile moderne.",
+    "slug": "creer-suites-numeriques-equilibrees",
+    "category": "methodes",
+    "featured_image": "creer-suites-numeriques-equilibrees.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "003-demystifier-effet-flynn-qis.html",
+    "h1": "Démystifier l'effet Flynn: Pourquoi les scores de QI augmentent",
+    "title_seo": "Comprendre l'effet Flynn et ses implications",
+    "meta_description": "Exploration de l'effet Flynn, la hausse des scores de QI au fil des décennies, ses causes multiples et son impact sur la psychométrie.",
+    "slug": "demystifier-effet-flynn-qis",
+    "category": "culture-g",
+    "featured_image": "demystifier-effet-flynn-qis.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "003-top-10-tests-qi-en-ligne-2025.html",
+    "h1": "Top 10 Tests de QI en Ligne: Comparatif 2025",
+    "title_seo": "Top 10 Tests de QI en Ligne en 2025",
+    "meta_description": "Découvrez les 10 meilleurs tests de QI en ligne en 2025, basés sur des critères de validité, fidélité et accessibilité.",
+    "slug": "top-10-tests-qi-en-ligne-2025",
+    "category": "comparatifs",
+    "featured_image": "top-10-tests-qi-en-ligne-2025.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "004-alignement-visuel-énonce-reponses-tests-qi.html",
+    "h1": "Alignement visuel/énoncé/réponses dans les tests de QI",
+    "title_seo": "Alignement visuel et cohérence des tests de QI",
+    "meta_description": "Découvrez une méthode pour garantir l'alignement visuel et la cohérence dans les tests de QI modernes, compatible avec les normes WCAG.",
+    "slug": "alignement-visuel-énonce-reponses-tests-qi",
+    "category": "methodes",
+    "featured_image": "alignement-visuel-énonce-reponses-tests-qi.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "004-chronometre-ou-adaptatif-test-visuel.html",
+    "h1": "Chronométré ou Adaptatif: Quel Test Visuel Choisir?",
+    "title_seo": "Chronométré ou Adaptatif: Quel Test Visuel Choisir?",
+    "meta_description": "Découvrez les avantages et inconvénients des tests chronométrés et adaptatifs pour des évaluations visuelles fiables et accessibles.",
+    "slug": "chronometre-ou-adaptatif-test-visuel",
+    "category": "comparatifs",
+    "featured_image": "chronometre-ou-adaptatif-test-visuel.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "004-entrainement-raisonnement-analogique-visuel.html",
+    "h1": "Entraînement au raisonnement analogique visuel",
+    "title_seo": "Développer les compétences en raisonnement analogique visuel",
+    "meta_description": "Découvrez comment mesurer votre intelligence fluide à travers des tests d'analogies visuelles et améliorez vos compétences avec des méthodes simples.",
+    "slug": "entrainement-raisonnement-analogique-visuel",
+    "category": "tests-qi",
+    "featured_image": "entrainement-raisonnement-analogique-visuel.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "004-tests-raisonnement-visuel-equitables.html",
+    "h1": "Construire des tests de raisonnement visuel équitables",
+    "title_seo": "Tests de raisonnement visuel: équité et biais",
+    "meta_description": "Découvrez comment concevoir des tests de raisonnement visuel équitables en abordant les biais culturels et en assurant une accessibilité optimale.",
+    "slug": "tests-raisonnement-visuel-equitables",
+    "category": "culture-g",
+    "featured_image": "tests-raisonnement-visuel-equitables.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "005-normer-un-test-guide-pratique.html",
+    "h1": "Normer un test: Guide pratique",
+    "title_seo": "Normer un test: Guide pratique",
+    "meta_description": "Apprenez à normer un test pour obtenir des résultats fiables et comparables grâce à des méthodes modernes et accessibles.",
+    "slug": "normer-un-test-guide-pratique",
+    "category": "methodes",
+    "featured_image": "normer-un-test-guide-pratique.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "005-qi-et-creativite.html",
+    "h1": "Démystifier le lien entre QI et créativité",
+    "title_seo": "QI et créativité : mythes et réalités",
+    "meta_description": "Explorez les relations entre QI et créativité, leurs corrélations et les mythes associés. Comprenez la dynamique de ces deux aspects de l'intelligence.",
+    "slug": "qi-et-creativite",
+    "category": "culture-g",
+    "featured_image": "qi-et-creativite.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "005-comparatif-applis-brain-training.html",
+    "h1": "Les meilleures applis pour entraîner vos compétences cognitives",
+    "title_seo": "Comparatif des meilleures applis de brain training",
+    "meta_description": "Découvrez notre comparatif rigoureux des appli de brain training. Validité, fidélité, UX et coût analysés.",
+    "slug": "comparatif-applis-brain-training",
+    "category": "comparatifs",
+    "featured_image": "comparatif-applis-brain-training.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "005-guide-rotation-mentale-rhythme.html",
+    "h1": "Comprendre la rotation mentale et le bon rythme",
+    "title_seo": "Guide sur la rotation mentale et gestion du tempo",
+    "meta_description": "Découvrez des stratégies efficaces pour maîtriser la rotation mentale en 2D et 3D, et améliorer vos performances visuelles.",
+    "slug": "guide-rotation-mentale-rhythme",
+    "category": "tests-qi",
+    "featured_image": "guide-rotation-mentale-rhythme.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "006-comprendre-qi-enfants-limites.html",
+    "h1": "Que peut-on déduire du QI d’un enfant ?",
+    "title_seo": "Comprendre le QI des enfants et ses limites",
+    "meta_description": "Découvrez les vérités et les idées reçues sur le QI des enfants, ses limites et son utilité dans l'évaluation cognitive.",
+    "slug": "comprendre-qi-enfants-limites",
+    "category": "culture-g",
+    "featured_image": "comprendre-qi-enfants-limites.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "006-ui-tests-qi-visuel.html",
+    "h1": "UI et Tests de QI Visuel: Clarté et Accessibilité",
+    "title_seo": "UI et Tests de QI Visuel: Clarté et Accessibilité",
+    "meta_description": "Découvrez comment le design UI impacte la validité et la fidélité des tests de QI visuel. Analyse des choix de design et recommandations pratiques.",
+    "slug": "ui-tests-qi-visuel",
+    "category": "comparatifs",
+    "featured_image": "ui-tests-qi-visuel.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "006-definir-un-percentile-attractif-et-honnete.html",
+    "h1": "Définir un percentile attractif et honnête",
+    "title_seo": "Présenter des percentiles avec intégrité",
+    "meta_description": "Apprenez à estimer et afficher un percentile attractif et éthique, en évitant les biais et en garantissant l'accessibilité.",
+    "slug": "definir-un-percentile-attractif-et-honnete",
+    "category": "methodes",
+    "featured_image": "definir-un-percentile-attractif-et-honnete.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "006-suites-numeriques-test-qi.html",
+    "h1": "Comprendre les suites numériques pour un meilleur QI",
+    "title_seo": "Guide sur les suites numériques et tests de QI",
+    "meta_description": "Apprenez à détecter des régularités dans les suites numériques et à optimiser vos performances aux tests de QI.",
+    "slug": "suites-numeriques-test-qi",
+    "category": "tests-qi",
+    "featured_image": "suites-numeriques-test-qi.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "007-gerer-stress-tests-chronometres.html",
+    "h1": "Techniques pour gérer le stress lors des tests chronométrés",
+    "title_seo": "Gérer le stress des tests chronométrés",
+    "meta_description": "Découvrez des stratégies éprouvées pour mieux gérer votre stress pendant les tests chronométrés, améliorant ainsi votre performance.",
+    "slug": "gerer-stress-tests-chronometres",
+    "category": "tests-qi",
+    "featured_image": "gerer-stress-tests-chronometres.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "007-choisir-algorithme-scoring-tests-psychometriques.html",
+    "h1": "Comparer les Algorithmes de Scoring dans les Tests Psychométriques",
+    "title_seo": "Choisir l'Algorithme de Scoring pour Tests Psychométriques",
+    "meta_description": "Découvrez comment choisir un algorithme de scoring adapté pour vos tests psychométriques afin d'assurer validité, fidélité et expérience utilisateur.",
+    "slug": "choisir-algorithme-scoring-tests-psychometriques",
+    "category": "comparatifs",
+    "featured_image": "choisir-algorithme-scoring-tests-psychometriques.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "007-qi-memoire-travail-cortex-prefrontal.html",
+    "h1": "QI, mémoire de travail et cortex préfrontal : décryptage scientifique",
+    "title_seo": "QI, mémoire de travail et cortex préfrontal : éclaircissements",
+    "meta_description": "Découvrez le lien entre QI et mémoire de travail à travers la science avec des exemples concrets sur l'importance du cortex préfrontal.",
+    "slug": "qi-memoire-travail-cortex-prefrontal",
+    "category": "culture-g",
+    "featured_image": "qi-memoire-travail-cortex-prefrontal.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "007-randomisation-tests-qi-visuels.html",
+    "h1": "Randomisation des Tests de QI Visuels : Une Méthode Rigoureuse",
+    "title_seo": "Randomisation des Tests de QI Visuels",
+    "meta_description": "Découvrez comment randomiser des tests de QI visuels sans compromettre la difficulté, tout en respectant les standards d'accessibilité.",
+    "slug": "randomisation-tests-qi-visuels",
+    "category": "methodes",
+    "featured_image": "randomisation-tests-qi-visuels.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "008-sentrainer-sans-apprendre-le-test.html",
+    "h1": "S'entraîner sans apprendre le test",
+    "title_seo": "S'entraîner sans apprendre le test : stratégies efficaces",
+    "meta_description": "Découvrez comment s'entraîner éthiquement pour améliorer vos aptitudes visuelles sans mémoriser des items. Suivez des stratégies pratiques et évitez les erreurs courantes.",
+    "slug": "sentrainer-sans-apprendre-le-test",
+    "category": "tests-qi",
+    "featured_image": "sentrainer-sans-apprendre-le-test.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "008-tests-qi-rapides.html",
+    "h1": "Tests de QI en 5 minutes: ce qu'il faut savoir",
+    "title_seo": "Tests de QI rapides: crédibilité et limites",
+    "meta_description": "Découvrez la crédibilité des tests de QI rapides, leurs validités et limites. Analyse des tests express en psychologie.",
+    "slug": "tests-qi-rapides",
+    "category": "comparatifs",
+    "featured_image": "tests-qi-rapides.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "008-le-qi-entre-mythe-et-realite.html",
+    "h1": "Le QI: ce qu'il prédit vraiment",
+    "title_seo": "Le QI: entre mythe et réalité",
+    "meta_description": "Découvrez les vérités derrière les idées reçues sur le QI et son impact sur le succès scolaire, professionnel et la santé.",
+    "slug": "le-qi-entre-mythe-et-realite",
+    "category": "culture-g",
+    "featured_image": "le-qi-entre-mythe-et-realite.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "008-latence- ressentie-tests-visuels.html",
+    "h1": "Réduire la latence ressentie dans les tests visuels",
+    "title_seo": "Latence ressentie et tests visuels: guide complet",
+    "meta_description": "Découvrez comment la latence ressentie impacte la validité des tests visuels et comment la mesurer et la réduire efficacement.",
+    "slug": "latence- ressentie-tests-visuels",
+    "category": "methodes",
+    "featured_image": "latence- ressentie-tests-visuels.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "009-tests-de-qi-modernes-formats.html",
+    "h1": "Tests de QI: Comprendre les formats modernes",
+    "title_seo": "Tests de QI modernes: les formats qui mesurent vraiment",
+    "meta_description": "Découvrez les formats visuels et interactifs des tests de QI modernes. Comment ils mesurent réellement l'intelligence et les erreurs à éviter.",
+    "slug": "tests-de-qi-modernes-formats",
+    "category": "tests-qi",
+    "featured_image": "tests-de-qi-modernes-formats.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "009-realiste-visuel-validite-psychometrique.html",
+    "h1": "Comprendre l'impact du réalisme visuel sur les tests psychométriques",
+    "title_seo": "Réalisme visuel et validité psychométrique",
+    "meta_description": "Cet article explore le lien entre réalisme visuel et validité psychométrique, mettant en lumière ses implications pour le design de tests.",
+    "slug": "realiste-visuel-validite-psychometrique",
+    "category": "comparatifs",
+    "featured_image": "realiste-visuel-validite-psychometrique.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "009-vitesse-traitement-qi.html",
+    "h1": "Vitesse de traitement et son influence sur le score de QI",
+    "title_seo": "Vitesse de traitement et QI: Comprendre l'impact",
+    "meta_description": "Explorez comment la vitesse de traitement affecte les scores de QI, avec des exemples, des recommandations d'accessibilité et des explications sur ses mécanismes.",
+    "slug": "vitesse-traitement-qi",
+    "category": "culture-g",
+    "featured_image": "vitesse-traitement-qi.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "009-tests-qi-visuels-clarte-contraste.html",
+    "h1": "Concevoir des Tests de QI Visuels selon les WCAG",
+    "title_seo": "Tests de QI Visuels: Clarté et Contraste",
+    "meta_description": "Découvrez comment concevoir des tests de QI visuels efficaces en respectant les normes WCAG pour garantir la clarté et la validité des mesures.",
+    "slug": "tests-qi-visuels-clarte-contraste",
+    "category": "methodes",
+    "featured_image": "tests-qi-visuels-clarte-contraste.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "010-demystification-items-qi.html",
+    "h1": "Clarté et Validité des Items de QI",
+    "title_seo": "Démystification des Items de QI",
+    "meta_description": "Découvrez les exigences pour construire des items de QI efficaces, alliant clarté, validité psychométrique et accessibilité.",
+    "slug": "demystification-items-qi",
+    "category": "tests-qi",
+    "featured_image": "demystification-items-qi.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "010-paywall-inscription-tests-visuels.html",
+    "h1": "Optimisation des Modèles d'Inscription et de Paywall pour Tests Visuels",
+    "title_seo": "Paywall et Inscription: Optimiser l'Expérience des Tests Visuels",
+    "meta_description": "Découvrez comment la conception des parcours d'inscription et de paywall impacte la validité des tests visuels. Analyse comparée des modèles.",
+    "slug": "paywall-inscription-tests-visuels",
+    "category": "comparatifs",
+    "featured_image": "paywall-inscription-tests-visuels.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "010-qi-sante-mentale-comprendre-liens.html",
+    "h1": "Relier QI et santé mentale",
+    "title_seo": "QI et santé mentale : comprendre les liens",
+    "meta_description": "Découvrez comment le QI et la santé mentale interagissent. Ce texte explore les tests de QI et leur lien avec les capacités cognitives et les troubles mentaux.",
+    "slug": "qi-sante-mentale-comprendre-liens",
+    "category": "culture-g",
+    "featured_image": "qi-sante-mentale-comprendre-liens.jpg",
+    "date": "aujourd'hui"
+  },
+  {
+    "file": "010-ab-testing-ethique-tests-cognitifs.html",
+    "h1": "A/B Testing Éthique d’Items Cognitifs",
+    "title_seo": "A/B Testing Éthique en Psychométrie",
+    "meta_description": "Découvrez comment mener un A/B testing éthique pour optimiser la clarté et l'accessibilité des tests cognitifs tout en préservant l'intégrité psychométrique.",
+    "slug": "ab-testing-ethique-tests-cognitifs",
+    "category": "methodes",
+    "featured_image": "ab-testing-ethique-tests-cognitifs.jpg",
+    "date": "aujourd'hui"
+  }
 ]
-
