@@ -1262,7 +1262,7 @@
   function renderMedia(media){
     if (!media) return '';
     if (typeof media === 'string') return media;
-    if (media.type === 'matrix') return svgMatrixMain();
+    if (media.type === 'matrix') return svgMatrixVariant(media.variant||'default');
     if (media.type === '3d-cube') return svgFlatCube(media.variant);
     if (media.type === 'bars') return svgBars(media.values||[]);
     if (media.type === 'tetrahedron-pattern') return svgTetraPattern(media.variant);
@@ -1270,6 +1270,30 @@
     if (media.type === 'shape-sequence') return svgShapeSequence(media.variant||'geometric');
     if (media.type === 'rotation-preview') return svgTransformation('rotate-90');
     return '';
+  }
+
+  // Matrix variants with color-aware visuals
+  function svgMatrixVariant(variant){
+    if (variant === 'rotation-color'){
+      // 3x3 grid: triangles rotate across columns, color changes across rows
+      const cell = 38, gap = 8; const colors=['#0ea5e9','#ef4444','#22c55e']; // blue, red, green
+      const rot = [0,90,180];
+      let svg='';
+      for (let r=0;r<3;r++){
+        for (let c=0;c<3;c++){
+          const x = c*(cell+gap), y = r*(cell+gap);
+          const fill = colors[r%colors.length];
+          const angle = rot[c%rot.length];
+          svg += `<g transform="translate(${x},${y}) rotate(${angle} ${cell/2} ${cell/2})">
+            <polygon points="${cell/2},6 6,${cell-6} ${cell-6},${cell-6}" fill="${fill}" stroke="#0f172a" opacity="0.9"/>
+          </g>`;
+        }
+      }
+      const w = 3*(cell+gap)-gap, h = 3*(cell+gap)-gap;
+      return `<div class="d-flex justify-content-center"><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg></div>`;
+    }
+    // Fallback to existing generic matrix
+    return svgMatrixMain();
   }
 
   function renderIcon(token){
