@@ -17,7 +17,7 @@ Usage:
   OPENAI_API_KEY=... python3 scripts/generate_blog.py articles.csv
 
 Environment (optional):
-  MODEL_ARTICLE: default gpt-4o-mini
+  MODEL_ARTICLE: default gpt-5-2025-08-07
   MODEL_SEO: default gpt-4o-mini
   OUT_DIR: default ./blog/articles
   BLOG_PERSONA_NAME: override persona name (default: Dr. Émile Hartmann)
@@ -104,7 +104,7 @@ def gen_seo(client, model: str, article_html: str) -> Dict:
 def main():
     import sys
     api_key = os.getenv("OPENAI_API_KEY")
-    model_article = os.getenv("MODEL_ARTICLE", "gpt-4o-mini")
+    model_article = os.getenv("MODEL_ARTICLE", "gpt-5-2025-08-07")
     model_seo = os.getenv("MODEL_SEO", "gpt-4o-mini")
     out_dir = Path(os.getenv("OUT_DIR", "./blog/articles")).resolve()
     out_dir.mkdir(parents=True, exist_ok=True)
