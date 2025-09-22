@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blog FranzIQ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/styles.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-white border-bottom">
+      <div class="container">
+        <a class="navbar-brand" href="../index.html">FranzIQ</a>
+        <a class="btn btn-success btn-sm ms-auto" href="../index.html#quiz">Commencer le test</a>
+      </div>
+    </nav>
+
+    <header class="py-5 blog-hero">
+      <div class="container">
+        <h1 class="h2 fw-extrabold mb-2">Blog FranzIQ</h1>
+        <p class="text-secondary mb-0">Analyses, guides et comparatifs sur les tests de QI.</p>
+      </div>
+    </header>
+
+    <main class="py-4">
+      <div class="container">
+        <div class="row g-3 mb-4">
+          <div class="col-12">
+            <ul class="nav nav-pills gap-2" id="cats">
+              <li class="nav-item"><a class="nav-link active" data-cat="all" href="#">Tous</a></li>
+              <li class="nav-item"><a class="nav-link" data-cat="culture-g" href="#">Culture G</a></li>
+              <li class="nav-item"><a class="nav-link" data-cat="tests-qi" href="#">Tests de QI</a></li>
+              <li class="nav-item"><a class="nav-link" data-cat="comparatifs" href="#">Comparatifs</a></li>
+              <li class="nav-item"><a class="nav-link" data-cat="methodes" href="#">Méthodes</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row g-4" id="articleGrid"></div>
+      </div>
+    </main>
+
+    <footer class="py-4 border-top small text-center text-secondary">
+      <div class="container">
+        <div>© <span id="year"></span> FranzIQ · Blog</div>
+      </div>
+    </footer>
+
+    <script>
+      const yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+      const grid = document.getElementById('articleGrid');
+      const cats = document.getElementById('cats');
+      let all = [];
+
+      fetch('./articles/index.json').then(r=>r.json()).then(data=>{ all = data || []; render('all'); });
+
+      cats.addEventListener('click', (e)=>{
+        const a = e.target.closest('a[data-cat]');
+        if (!a) return;
+        e.preventDefault();
+        cats.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));
+        a.classList.add('active');
+        render(a.dataset.cat);
+      });
+
+      function render(filter) {
+        const items = filter==='all' ? all : all.filter(x=> (x.category||'').toLowerCase()===filter);
+        grid.innerHTML = items.map(card).join('');
+      }
+
+      function card(post){
+        const img = post.featured_image ? `../articles/${post.featured_image}` : '../assets/hero-illustration.svg';
+        return `
+        <div class="col-12 col-md-6 col-lg-4">
+          <a class="text-decoration-none text-reset" href="./articles/${post.file}">
+            <div class="blog-card shadow-sm h-100">
+              <img src="${img}" alt="${post.h1||post.title_seo||''}" />
+              <div class="p-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="blog-chip">${(post.category||'').replace('-', ' ')}</span>
+                  <span class="blog-meta">${post.date||''}</span>
+                </div>
+                <h2 class="h5 fw-bold mb-1">${post.h1||post.title_seo||''}</h2>
+                <p class="blog-meta mb-0">${post.meta_description||''}</p>
+              </div>
+            </div>
+          </a>
+        </div>`;
+      }
+    </script>
+  </body>
+  </html>
+

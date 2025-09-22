@@ -207,6 +207,13 @@ html, body { font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, H
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
 
+/* Blog layout */
+.blog-hero { background: linear-gradient(135deg, rgba(45,212,191,.08), rgba(14,165,233,.08)); }
+.blog-card { border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; }
+.blog-card img { width: 100%; height: 180px; object-fit: cover; }
+.blog-chip { display:inline-block; padding:4px 10px; border-radius:999px; background:#eef2f7; font-size:.8rem; }
+.blog-meta { color: var(--text-secondary); font-size: .85rem; }
+
 .review-item {
   background: #fff !important;
   border-radius: 12px !important;

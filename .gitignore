@@ -5,3 +5,8 @@ dist/
 *.cache
 coverage/
 
+# Blog generator
+.env
+articles_html/
+blog_generated/
+
