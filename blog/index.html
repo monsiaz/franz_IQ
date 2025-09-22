@@ -54,7 +54,23 @@
       const cats = document.getElementById('cats');
       let all = [];
 
-      fetch('./articles/index.json').then(r=>r.json()).then(data=>{ all = (data||[]).sort((a,b)=> (b.date||'').localeCompare(a.date||'')); render('all'); });
+      function loadIndex(){
+        const primary = new URL('./articles/index.json', window.location.href).toString();
+        const fallback = (window.location.pathname.includes('/franz_IQ/blog/')) ? '/franz_IQ/blog/articles/index.json' : primary;
+        return fetch(primary, { cache: 'no-store' })
+          .then(r=> r.ok ? r.json() : Promise.reject())
+          .catch(()=> fetch(fallback, { cache: 'no-store' }).then(r=> r.ok ? r.json() : []));
+      }
+
+      loadIndex().then(data=>{
+        all = (Array.isArray(data) ? data : []).sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+        render('all');
+        if (!all.length) {
+          sections.innerHTML = '<div class="text-center text-muted py-5">Aucun article trouvé. Rechargez la page (Cmd+Shift+R) ou réessayez dans 1–2 minutes.</div>';
+        }
+      }).catch(()=>{
+        sections.innerHTML = '<div class="text-center text-muted py-5">Impossible de charger les articles pour le moment.</div>';
+      });
 
       cats.addEventListener('click', (e)=>{
         const a = e.target.closest('a[data-cat]');
