@@ -119,7 +119,7 @@
       }
 
       function card(post){
-        const img = post.featured_image ? `../articles/${post.featured_image}` : '../assets/hero-illustration.svg';
+        const img = post.featured_image ? `./articles/${post.featured_image}` : '../assets/hero-illustration.svg';
         return `
         <div class="col-12 col-md-6 col-lg-4">
           <a class="text-decoration-none text-reset" href="./articles/${post.file}">
