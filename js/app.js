@@ -1371,6 +1371,72 @@
       try { return !!renderIcon(token); } catch { return false; }
     };
 
+    // --- helpers to ensure diverse options ---
+    const parseShapeToken = (icon)=>{
+      if (!icon) return null;
+      const parts = icon.split('-');
+      return {
+        shape: parts[0],
+        size: parts.find(p=> p==='small'||p==='medium'||p==='large') || 'medium',
+        deg: (parts.find(p=> p.endsWith('deg'))||'0').replace('deg',''),
+        color: ['blue','red','green','yellow','orange'].find(c=> parts.includes(c)) || ''
+      };
+    };
+    const composeShapeToken = ({shape,size,deg,color})=>{
+      return [shape, size, color, `${deg}deg`].filter(Boolean).join('-');
+    };
+    const altFromBase = (base, idx)=>{
+      const p = parseShapeToken(base);
+      if (!p) return base;
+      const colors = ['', 'blue', 'red', 'green', 'orange'];
+      const degNum = parseInt(p.deg||'0',10);
+      const alt = { ...p };
+      if (p.shape==='triangle' || p.shape==='square') {
+        alt.deg = ((degNum + (idx*90)) % 360).toString();
+        alt.color = colors[(idx % colors.length)];
+      } else if (p.shape==='circle') {
+        alt.size = (p.size==='medium'? (idx%2? 'small':'large') : 'medium');
+        alt.color = colors[(idx % colors.length)];
+      } else {
+        alt.color = colors[(idx % colors.length)];
+      }
+      return composeShapeToken(alt);
+    };
+    const ensureOptionDiversity = (q)=>{
+      if (!Array.isArray(q.options) || q.options.length===0) return q;
+      const correct = q.options.find(o=> o.isCorrect);
+      const baseIcon = correct && correct.icon ? correct.icon : (q.options[0]?.icon || 'square-medium-0deg');
+      const seen = new Set();
+      q.options.forEach((o, i) => {
+        if (!o.icon || seen.has(o.icon)){
+          if (o.isCorrect) {
+            // keep correct; if duplicate, alter others instead
+            seen.add(o.icon||'');
+          } else {
+            // generate a different variant from the correct icon
+            let j = 1;
+            let candidate = altFromBase(baseIcon, i+j);
+            while (seen.has(candidate)) { j++; candidate = altFromBase(baseIcon, i+j); }
+            o.icon = candidate; o.text = '';
+          }
+        }
+        seen.add(o.icon||'');
+      });
+      return q;
+    };
+    const computeSequenceNext = (arr)=>{
+      const nums = (arr||[]).filter(v=> typeof v==='number');
+      if (nums.length<2) return NaN;
+      const d = nums[1]-nums[0];
+      const arith = nums.every((v,i)=> i===0 || (v-nums[i-1])===d);
+      if (arith) return nums[nums.length-1]+d;
+      const r = nums[0]!==0 ? nums[1]/nums[0] : NaN;
+      const geom = nums.every((v,i)=> i===0 || (nums[i-1]!==0 && Math.abs((v/nums[i-1])-r)<1e-9));
+      if (geom && Number.isFinite(r)) return nums[nums.length-1]*r;
+      // fallback: last + (last - prev)
+      return nums[nums.length-1] + (nums[nums.length-1]-nums[nums.length-2]);
+    };
+
     return (items||[]).map((q, idx)=>{
       const theme = (q.theme||'').toLowerCase();
       const isVisual = ['logique','formes','numerique'].includes(theme) && q.media && typeof q.media === 'object';
@@ -1398,7 +1464,16 @@
       }
       // Sequence-numbers numerique: prefer number- icons
       if (q.media && q.media.type === 'sequence-numbers' && Array.isArray(q.options)){
-        q.options = q.options.map(o=> ensureIconFromText({ ...o }));
+        // Compute expected and rebuild a plausible set
+        const expected = computeSequenceNext(q.media.values||[]);
+        if (isFinite(expected)){
+          const dif = Math.max(1, Math.abs((q.media.values?.[1]||0) - (q.media.values?.[0]||0))||1);
+          const distractors = [expected+dif, expected-dif, expected+2*dif].filter((v,i,arr)=> v>0 && v!==expected && arr.indexOf(v)===i);
+          const opts = [expected, ...distractors].slice(0,4);
+          q.options = opts.map((n,i)=> ({ text:'', icon:`number-${n}`, isCorrect:i===0 }));
+        } else {
+          q.options = q.options.map(o=> ensureIconFromText({ ...o }));
+        }
       }
       // For visual questions, remove stray textual labels
       if (isVisual && Array.isArray(q.options)){
@@ -1413,6 +1488,8 @@
           }
           return o;
         });
+        // Enforce diversity (avoid four times the same response)
+        q = ensureOptionDiversity(q);
       }
       return q;
     });
