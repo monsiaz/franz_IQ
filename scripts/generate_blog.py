@@ -19,6 +19,8 @@ Usage:
 Environment (optional):
   MODEL_ARTICLE: default gpt-5-2025-08-07
   MODEL_SEO: default gpt-4o-mini
+  MODEL_IMAGE_TEXT: default gpt-4o-mini
+  MODEL_IMAGE: default gpt-image-1
   OUT_DIR: default ./blog/articles
   BLOG_PERSONA_NAME: override persona name (default: Dr. Émile Hartmann)
 """
@@ -27,6 +29,13 @@ try:
     from openai import OpenAI
 except Exception:
     OpenAI = None  # allow running without the package for now
+
+# Optional pillow for post-processing images
+try:
+    from PIL import Image, ImageOps
+except Exception:
+    Image = None
+    ImageOps = None
 
 
 def slugify(value: str) -> str:
@@ -39,6 +48,90 @@ def tidy_html(html: str) -> str:
     html = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", html)
     html = re.sub(r"</p>\s*<p>", "</p>\n\n<p>", html)
     return html.strip()
+
+
+# --- Art Direction for featured images: FranzIQ mascot ---
+BRAIN_MASCOT_AD = (
+    "Minimalist black & white, hand-drawn look. A small friendly brain-on-legs mascot (no face text), "
+    "bold irregular lines, subtle roughness, contemporary folk/tribal graphic vibe. Avoid realism. "
+    "No text, no letters, no numbers, no logos. Clean negative space, center composition, "
+    "geometric scaffolding echoes (subtle). Works as blog hero at 1600x900."
+)
+
+
+def build_image_prompt(title: str, meta_description: str, category: str, client: OpenAI) -> str:
+    if client is None:
+        return f"Black & white hand-drawn friendly brain-on-legs mascot, abstract shapes about {title}. No text."
+    system = (
+        "You help design concise prompts for black & white, hand-drawn hero illustrations. "
+        "Style: minimal, rough lines, friendly, modern folk/tribal. No text or letters."
+    )
+    user = (
+        f"Topic: {title}\n"
+        f"Category: {category}\n"
+        f"Meta: {meta_description}\n\n"
+        f"Art direction: {BRAIN_MASCOT_AD}\n"
+        "Return only the final, concise prompt in English or French."
+    )
+    try:
+        resp = client.chat.completions.create(
+            model=os.getenv("MODEL_IMAGE_TEXT", "gpt-4o-mini"),
+            messages=[
+                {"role": "system", "content": system},
+                {"role": "user", "content": user},
+            ],
+            timeout=45,
+        )
+        return (resp.choices[0].message.content or "").strip()
+    except Exception:
+        return f"Minimalist B&W hand-drawn brain-on-legs mascot, abstract nods to {title}. No text."
+
+
+def generate_featured_image(file_base: str, title: str, meta: str, category: str, out_dir: Path, client: OpenAI) -> str:
+    """Generate a 1600x900 JPG; return filename or ''."""
+    prompt = build_image_prompt(title, meta, category, client)
+    try:
+        img = client.images.generate(
+            model=os.getenv("MODEL_IMAGE", "gpt-image-1"),
+            prompt=prompt,
+            n=1,
+            size="1536x1024",
+        )
+        first = img.data[0]
+        b64_json = getattr(first, "b64_json", None) or (first.get("b64_json") if isinstance(first, dict) else None)
+        target = out_dir / f"{file_base}.jpg"
+        if b64_json:
+            import base64 as _b
+            raw = _b.b64decode(b64_json)
+            target.write_bytes(raw)
+        else:
+            url = getattr(first, "url", None) or (first.get("url") if isinstance(first, dict) else None)
+            if not url:
+                return ""
+            import urllib.request as _u
+            _u.urlretrieve(url, target)
+        # post-process
+        if Image is not None:
+            try:
+                im = Image.open(target).convert("L")
+                im = ImageOps.autocontrast(im)
+                tw, th = 1600, 900
+                scale = tw / im.width
+                im = im.resize((tw, int(im.height * scale)))
+                if im.height >= th:
+                    top = (im.height - th) // 2
+                    im = im.crop((0, top, tw, top + th))
+                else:
+                    pad = Image.new("L", (tw, th), 255)
+                    pad.paste(im, (0, (th - im.height) // 2))
+                    im = pad
+                im = im.convert("RGB")
+                im.save(target, quality=90)
+            except Exception:
+                pass
+        return target.name
+    except Exception:
+        return ""
 
 
 def gen_article_html(client, model: str, title: str, category: str) -> str:
@@ -142,6 +235,8 @@ def main():
         slug = seo.get("slug") or slugify(title)
         fname = f"{i:03d}-{slug}.html"
         (out_dir / fname).write_text(html, encoding="utf-8")
+        # image generation
+        img_name = generate_featured_image(slug, seo.get("meta_description") or title, category, category, out_dir, client) if client else ""
         index.append({
             "file": fname,
             "h1": seo.get("h1") or title,
@@ -149,7 +244,7 @@ def main():
             "meta_description": seo.get("meta_description") or "",
             "slug": slug,
             "category": category,
-            "featured_image": seo.get("image_filename") or "",
+            "featured_image": img_name,
             "date": os.getenv("BLOG_DEFAULT_DATE", "aujourd'hui")
         })
 
