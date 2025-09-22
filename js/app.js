@@ -962,6 +962,63 @@
   function svgSmallPentagon() {
     return `<svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polygon points="12,3 20,9 16,20 8,20 4,9" fill="#e2e8f0" stroke="#111"/></svg>`;
   }
+
+  // Generic small helpers for option thumbnails
+  function svgArrow(dir){
+    const rot = dir==='up'? -90 : dir==='down'? 90 : dir==='left'? 180 : 0;
+    return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 14 14)"><path d="M6 14 L20 14" stroke="#111" stroke-width="3"/><path d="M16 10 L20 14 L16 18" fill="none" stroke="#111" stroke-width="3"/></g></svg>`;
+  }
+  function svgHoles(type){
+    let dots='';
+    const add=(x,y)=>{ dots += `<circle cx="${x}" cy="${y}" r="2" fill="#111"/>`; };
+    if (type==='symmetric'){ [8,20].forEach(x=>{[8,20].forEach(y=>add(x,y));}); }
+    else if (type==='single'){ add(14,14); }
+    else if (type==='random'){ [[7,10],[19,9],[14,18]].forEach(([x,y])=>add(x,y)); }
+    return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="4" width="20" height="20" rx="4" fill="#e2e8f0" stroke="#111"/>${dots}</svg>`;
+  }
+  function svgTetrisPiece(code){
+    const unit=6; const color='#0ea5e9';
+    const block=(x,y)=>`<rect x="${x}" y="${y}" width="${unit}" height="${unit}" fill="${color}" stroke="#0f172a"/>`;
+    let s='';
+    if (code==='l'){ [[0,0],[0,unit],[0,2*unit],[unit,2*unit]].forEach(([x,y])=> s+=block(8+x,8+y)); }
+    else if (code==='t'){ [[unit,0],[0,unit],[unit,unit],[2*unit,unit]].forEach(([x,y])=> s+=block(8+x,8+y)); }
+    else if (code==='z'){ [[0,0],[unit,0],[unit,unit],[2*unit,unit]].forEach(([x,y])=> s+=block(8+x,8+y)); }
+    else if (code==='o'){ [[0,0],[unit,0],[0,unit],[unit,unit]].forEach(([x,y])=> s+=block(10+x,10+y)); }
+    return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+  }
+  function svgTopViewVariant(code){
+    const config={a:[[8,8,12,4],[8,14,12,4]], b:[[6,10,16,4]], c:[[10,6,4,16]], d:[[6,6,16,16]]}[code]||[];
+    const rect=(x,y,w,h)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#e2e8f0" stroke="#111"/>`;
+    return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">${config.map(r=>rect(...r)).join('')}</svg>`;
+  }
+  function svgCubeConfig(code){
+    const face=(x,y,c)=>`<rect x="${x}" y="${y}" width="10" height="10" fill="${c}" stroke="#0f172a"/>`;
+    const schemes={a:['#93c5fd','#fca5a5','#86efac'],b:['#fca5a5','#86efac','#93c5fd'],c:['#86efac','#93c5fd','#fca5a5'],d:['#fde68a','#93c5fd','#86efac']};
+    const [c1,c2,c3]=schemes[code]||['#e5e7eb','#e5e7eb','#e5e7eb'];
+    return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">${face(4,8,c1)}${face(14,8,c2)}${face(9,3,c3)}</svg>`;
+  }
+  function svgTessellIcon(type){
+    let s='';
+    if (type==='hex'){ s='<polygon points="6,10 10,6 16,6 20,10 16,14 10,14" fill="#e2e8f0" stroke="#111"/><polygon points="12,18 16,14 22,14 26,18 22,22 16,22" fill="#e2e8f0" stroke="#111"/>'; }
+    else if (type==='triangle'){ s='<polygon points="8,22 14,10 20,22" fill="#e2e8f0" stroke="#111"/><polygon points="2,10 8,22 14,10" fill="#e2e8f0" stroke="#111"/>'; }
+    else if (type==='square'){ s='<rect x="4" y="4" width="8" height="8" fill="#e2e8f0" stroke="#111"/><rect x="12" y="12" width="8" height="8" fill="#e2e8f0" stroke="#111"/><rect x="20" y="4" width="8" height="8" fill="#e2e8f0" stroke="#111"/>'; }
+    else { s='<circle cx="10" cy="10" r="4" fill="#e2e8f0" stroke="#111"/><circle cx="20" cy="20" r="4" fill="#e2e8f0" stroke="#111"/>'; }
+    return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">${s}</svg>`;
+  }
+  function svgShadow(shape){
+    const color='#cbd5e1';
+    if (shape==='triangle') return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><polygon points="14,6 4,22 24,22" fill="${color}"/></svg>`;
+    if (shape==='square') return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="16" height="16" fill="${color}"/></svg>`;
+    if (shape==='circle') return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><circle cx="14" cy="14" r="8" fill="${color}"/></svg>`;
+    return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><path d="M6 6 L22 22 M6 22 L22 6" stroke="${color}" stroke-width="4"/></svg>`;
+  }
+  function svgOrigami(kind){
+    const fill='#e2e8f0';
+    if (kind==='bird') return `<svg width="28" height="28" viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg"><path d="M2 18 L12 6 L18 10 L26 8 L18 14 L22 20 L12 16 Z" fill="${fill}" stroke="#111"/></svg>`;
+    if (kind==='flower') return `<svg width="28" height="28" viewBox="0 0 28 28"><path d="M14 4 L18 10 L14 16 L10 10 Z" fill="${fill}" stroke="#111"/><circle cx="14" cy="10" r="2" fill="#94a3b8"/></svg>`;
+    if (kind==='boat') return `<svg width="28" height="28" viewBox="0 0 28 28"><path d="M4 18 L24 18 L20 22 L8 22 Z" fill="${fill}" stroke="#111"/><path d="M14 18 L14 8 L8 14 Z" fill="#cbd5e1" stroke="#111"/></svg>`;
+    return `<svg width="28" height="28" viewBox="0 0 28 28"><path d="M14 4 L16 10 L22 10 L17 14 L19 20 L14 16 L9 20 L11 14 L6 10 L12 10 Z" fill="${fill}" stroke="#111"/></svg>`;
+  }
   
   // New visual functions for better interactivity
   function svgNumberSequence(values) {
@@ -1228,6 +1285,14 @@
     }
     
     if (token.startsWith('bar-')) return svgBarChoice(parseInt(token.split('-')[1],10));
+    if (token.startsWith('arrow-')) return svgArrow(token.split('-')[1]);
+    if (token.startsWith('holes-')) return svgHoles(token.split('-')[1]);
+    if (token.startsWith('piece-')) return svgTetrisPiece(token.split('-')[1]);
+    if (token.startsWith('top-view-')) return svgTopViewVariant(token.split('-')[2]||'a');
+    if (token.startsWith('cube-config-')) return svgCubeConfig(token.split('-')[2]||'a');
+    if (token.startsWith('tessell-')) return svgTessellIcon(token.split('-')[1]);
+    if (token.startsWith('shadow-')) return svgShadow(token.split('-')[1]);
+    if (token.startsWith('origami-')) return svgOrigami(token.split('-')[1]);
     const parts = token.split('-');
     const shape = parts[0];
     const mapSize = { small:16, medium:22, large:28 };
