@@ -4,6 +4,7 @@ import csv
 import json
 import re
 import base64
+import time
 from pathlib import Path
 from typing import List, Dict
 
@@ -73,65 +74,73 @@ def build_image_prompt(title: str, meta_description: str, category: str, client:
         f"Art direction: {BRAIN_MASCOT_AD}\n"
         "Return only the final, concise prompt in English or French."
     )
-    try:
-        resp = client.chat.completions.create(
-            model=os.getenv("MODEL_IMAGE_TEXT", "gpt-4o-mini"),
-            messages=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-            timeout=45,
-        )
-        return (resp.choices[0].message.content or "").strip()
-    except Exception:
-        return f"Minimalist B&W hand-drawn brain-on-legs mascot, abstract nods to {title}. No text."
+    for attempt in range(4):
+        try:
+            resp = client.chat.completions.create(
+                model=os.getenv("MODEL_IMAGE_TEXT", "gpt-4o-mini"),
+                messages=[
+                    {"role": "system", "content": system},
+                    {"role": "user", "content": user},
+                ],
+                timeout=60 + attempt * 30,
+            )
+            return (resp.choices[0].message.content or "").strip()
+        except Exception:
+            if attempt == 3:
+                break
+            time.sleep(2 ** attempt)
+    return f"Minimalist B&W hand-drawn brain-on-legs mascot, abstract nods to {title}. No text."
 
 
 def generate_featured_image(file_base: str, title: str, meta: str, category: str, out_dir: Path, client: OpenAI) -> str:
     """Generate a 1600x900 JPG; return filename or ''."""
     prompt = build_image_prompt(title, meta, category, client)
-    try:
-        img = client.images.generate(
-            model=os.getenv("MODEL_IMAGE", "gpt-image-1"),
-            prompt=prompt,
-            n=1,
-            size="1536x1024",
-        )
-        first = img.data[0]
-        b64_json = getattr(first, "b64_json", None) or (first.get("b64_json") if isinstance(first, dict) else None)
-        target = out_dir / f"{file_base}.jpg"
-        if b64_json:
-            import base64 as _b
-            raw = _b.b64decode(b64_json)
-            target.write_bytes(raw)
-        else:
-            url = getattr(first, "url", None) or (first.get("url") if isinstance(first, dict) else None)
-            if not url:
+    for attempt in range(3):
+        try:
+            img = client.images.generate(
+                model=os.getenv("MODEL_IMAGE", "gpt-image-1"),
+                prompt=prompt,
+                n=1,
+                size="1536x1024",
+            )
+            first = img.data[0]
+            b64_json = getattr(first, "b64_json", None) or (first.get("b64_json") if isinstance(first, dict) else None)
+            target = out_dir / f"{file_base}.jpg"
+            if b64_json:
+                import base64 as _b
+                raw = _b.b64decode(b64_json)
+                target.write_bytes(raw)
+            else:
+                url = getattr(first, "url", None) or (first.get("url") if isinstance(first, dict) else None)
+                if not url:
+                    return ""
+                import urllib.request as _u
+                _u.urlretrieve(url, target)
+            # post-process
+            if Image is not None:
+                try:
+                    im = Image.open(target).convert("L")
+                    im = ImageOps.autocontrast(im)
+                    tw, th = 1600, 900
+                    scale = tw / im.width
+                    im = im.resize((tw, int(im.height * scale)))
+                    if im.height >= th:
+                        top = (im.height - th) // 2
+                        im = im.crop((0, top, tw, top + th))
+                    else:
+                        pad = Image.new("L", (tw, th), 255)
+                        pad.paste(im, (0, (th - im.height) // 2))
+                        im = pad
+                    im = im.convert("RGB")
+                    im.save(target, quality=90)
+                except Exception:
+                    pass
+            return target.name
+        except Exception:
+            if attempt == 2:
                 return ""
-            import urllib.request as _u
-            _u.urlretrieve(url, target)
-        # post-process
-        if Image is not None:
-            try:
-                im = Image.open(target).convert("L")
-                im = ImageOps.autocontrast(im)
-                tw, th = 1600, 900
-                scale = tw / im.width
-                im = im.resize((tw, int(im.height * scale)))
-                if im.height >= th:
-                    top = (im.height - th) // 2
-                    im = im.crop((0, top, tw, top + th))
-                else:
-                    pad = Image.new("L", (tw, th), 255)
-                    pad.paste(im, (0, (th - im.height) // 2))
-                    im = pad
-                im = im.convert("RGB")
-                im.save(target, quality=90)
-            except Exception:
-                pass
-        return target.name
-    except Exception:
-        return ""
+            time.sleep(2 ** attempt)
+    return ""
 
 
 def gen_article_html(client, model: str, title: str, category: str) -> str:
@@ -165,12 +174,19 @@ def gen_article_html(client, model: str, title: str, category: str) -> str:
     )
     if client is None:
         return f"<p><strong>{title}</strong></p><p>Brouillon en attente de génération.</p>"
-    resp = client.chat.completions.create(
-        model=model,
-        messages=[{"role": "user", "content": prompt}],
-        timeout=120,
-    )
-    return tidy_html(resp.choices[0].message.content or "")
+    last_err = None
+    for attempt in range(4):
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                timeout=180 + attempt * 60,
+            )
+            return tidy_html(resp.choices[0].message.content or "")
+        except Exception as err:
+            last_err = err
+            time.sleep(2 ** attempt)
+    raise last_err
 
 
 def gen_seo(client, model: str, article_html: str) -> Dict:
@@ -180,18 +196,21 @@ def gen_seo(client, model: str, article_html: str) -> Dict:
         "À partir de l'article HTML ci-dessous, fournis STRICTEMENT un JSON avec: title_seo (<=60), h1, meta_description (<=160), slug (minuscule, tirets), category (slug), featured_image (nom fichier conseillé). Pas de texte hors JSON.\n\nARTICLE:\n"
         + article_html[:12000]
     )
-    resp = client.chat.completions.create(
-        model=model,
-        messages=[{"role": "user", "content": prompt}],
-        timeout=60,
-    )
-    raw = (resp.choices[0].message.content or "").strip()
-    raw = raw.split("```json")[-1].split("```", 1)[0].strip() if raw.startswith("```json") else raw
-    try:
-        data = json.loads(raw)
-    except Exception:
-        data = {}
-    return data
+    for attempt in range(4):
+        try:
+            resp = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                timeout=90 + attempt * 30,
+            )
+            raw = (resp.choices[0].message.content or "").strip()
+            raw = raw.split("```json")[-1].split("```", 1)[0].strip() if raw.startswith("```json") else raw
+            data = json.loads(raw)
+            return data if isinstance(data, dict) else {}
+        except Exception:
+            if attempt == 3:
+                return {}
+            time.sleep(2 ** attempt)
 
 
 def main():
