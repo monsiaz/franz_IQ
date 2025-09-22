@@ -1351,12 +1351,48 @@
       if (!opt.text) opt.text = '';
       return opt;
     };
-    return (items||[]).map(q=>{
+    const parseNumberFromIcon = (icon)=>{
+      if (!icon) return NaN;
+      if (icon.startsWith('number-')) return parseFloat(icon.split('number-')[1]);
+      return NaN;
+    };
+    const computeFlowNext = (arr)=>{
+      const a = Number(arr?.[0]);
+      const b = Number(arr?.[1]);
+      if (!isFinite(a) || !isFinite(b)) return NaN;
+      const ratio = b / a;
+      if (Number.isInteger(ratio)) return b * ratio;
+      const diff = b - a;
+      return b + diff;
+    };
+    const recognized = (token)=>{
+      try { return !!renderIcon(token); } catch { return false; }
+    };
+
+    return (items||[]).map((q, idx)=>{
       const theme = (q.theme||'').toLowerCase();
       const isVisual = ['logique','formes','numerique'].includes(theme) && q.media && typeof q.media === 'object';
       // Flow-diagram: answers must be numeric icons
       if (q.media && q.media.type === 'flow-diagram' && Array.isArray(q.options)){
         q.options = q.options.map(o=> ensureIconFromText({ ...o }));
+        // Autofix correctness based on rule
+        const expected = computeFlowNext(q.media.values||[]);
+        if (isFinite(expected)){
+          const expectedToken = `number-${expected}`;
+          let fixed = false;
+          const anyMatches = q.options.some(o=> o.icon === expectedToken);
+          if (anyMatches){
+            q.options.forEach(o=> o.isCorrect = (o.icon === expectedToken));
+            fixed = true;
+          } else {
+            // replace first option to expected
+            if (q.options[0]){
+              q.options[0].icon = expectedToken; q.options[0].isCorrect = true;
+              for (let i=1;i<q.options.length;i++) q.options[i].isCorrect = false;
+              fixed = true;
+            }
+          }
+        }
       }
       // Sequence-numbers numerique: prefer number- icons
       if (q.media && q.media.type === 'sequence-numbers' && Array.isArray(q.options)){
@@ -1365,6 +1401,16 @@
       // For visual questions, remove stray textual labels
       if (isVisual && Array.isArray(q.options)){
         q.options = q.options.map(o=> ({ ...o, text: o.text && isNumericText(o.text) ? '' : (o.text||'') }));
+        // Ensure renderable icons; replace unknown tokens with safe fallbacks
+        q.options = q.options.map(o=>{
+          if (o.icon && !recognized(o.icon)){
+            // Fallbacks by theme
+            if (theme==='logique') o.icon = 'square-medium-0deg';
+            else if (theme==='formes') o.icon = 'triangle-medium-0deg';
+            else if (theme==='numerique') o.icon = 'number-0';
+          }
+          return o;
+        });
       }
       return q;
     });
