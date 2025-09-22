@@ -36,7 +36,7 @@
           </div>
         </div>
 
-        <div class="row g-4" id="articleGrid"></div>
+        <div id="sections"></div>
       </div>
     </main>
 
@@ -50,11 +50,11 @@
       const yearEl = document.getElementById('year');
       if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-      const grid = document.getElementById('articleGrid');
+      const sections = document.getElementById('sections');
       const cats = document.getElementById('cats');
       let all = [];
 
-      fetch('./articles/index.json').then(r=>r.json()).then(data=>{ all = data || []; render('all'); });
+      fetch('./articles/index.json').then(r=>r.json()).then(data=>{ all = (data||[]).sort((a,b)=> (b.date||'').localeCompare(a.date||'')); render('all'); });
 
       cats.addEventListener('click', (e)=>{
         const a = e.target.closest('a[data-cat]');
@@ -66,8 +66,40 @@
       });
 
       function render(filter) {
-        const items = filter==='all' ? all : all.filter(x=> (x.category||'').toLowerCase()===filter);
-        grid.innerHTML = items.map(card).join('');
+        const byCat = groupByCategory(filter);
+        sections.innerHTML = Object.keys(byCat).map(cat => section(cat, byCat[cat])).join('');
+      }
+
+      function groupByCategory(filter){
+        const groups = { };
+        const cats = ['culture-g','tests-qi','comparatifs','methodes'];
+        (filter==='all' ? all : all.filter(x=> (x.category||'').toLowerCase()===filter)).forEach(p=>{
+          const c = (p.category||'autres').toLowerCase();
+          if (!groups[c]) groups[c] = [];
+          groups[c].push(p);
+        });
+        // Ensure order
+        const ordered = {};
+        (filter==='all'? cats : [filter]).forEach(c=>{ if (groups[c]) ordered[c]=groups[c]; });
+        return filter==='all' ? ordered : groups;
+      }
+
+      function section(cat, posts){
+        const title = titleFor(cat);
+        const cards = (posts||[]).map(card).join('');
+        return `
+          <section class="mb-4">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <h2 class="h5 fw-extrabold mb-0">${title}</h2>
+              <span class="blog-meta">${posts.length} articles</span>
+            </div>
+            <div class="row g-4">${cards}</div>
+          </section>
+        `;
+      }
+
+      function titleFor(cat){
+        return cat==='tests-qi' ? 'Tests de QI' : cat==='comparatifs' ? 'Comparatifs' : cat==='methodes' ? 'Méthodes' : 'Culture G';
       }
 
       function card(post){
@@ -76,7 +108,7 @@
         <div class="col-12 col-md-6 col-lg-4">
           <a class="text-decoration-none text-reset" href="./articles/${post.file}">
             <div class="blog-card shadow-sm h-100">
-              <img src="${img}" alt="${post.h1||post.title_seo||''}" />
+              <img src="${img}" alt="${post.h1||post.title_seo||''}" onerror="this.src='../assets/hero-illustration.svg'" />
               <div class="p-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <span class="blog-chip">${(post.category||'').replace('-', ' ')}</span>
