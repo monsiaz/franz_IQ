@@ -1448,6 +1448,22 @@
       });
       return q;
     };
+    const coerceMatrixRotationColor = (q)=>{
+      if (!q.media || q.media.type!=='matrix' || !(q.media.variant||'').includes('rotation-color')) return q;
+      const base = 'triangle-medium-0deg-blue';
+      const candidates = [
+        base,
+        altFromBase(base,1),
+        altFromBase(base,2),
+        altFromBase(base,3)
+      ];
+      // preserve which one isCorrect; just swap icons to triangle variants
+      q.options = (q.options||[]).slice(0,4).map((o,i)=> ({...o, text:'', icon: candidates[i]}));
+      // keep exactly one correct (the first flagged correct keeps position)
+      const ix = Math.max(0, (q.options||[]).findIndex(o=> o.isCorrect));
+      q.options.forEach((o,i)=> o.isCorrect = (i=== (ix>=0? ix:0)));
+      return q;
+    };
     const computeSequenceNext = (arr)=>{
       const nums = (arr||[]).filter(v=> typeof v==='number');
       if (nums.length<2) return NaN;
@@ -1512,6 +1528,8 @@
           }
           return o;
         });
+        // Normalize matrix rotation+couleur answers to triangle variants for visual coherence
+        q = coerceMatrixRotationColor(q);
         // Enforce diversity (avoid four times the same response)
         q = ensureOptionDiversity(q);
       }
