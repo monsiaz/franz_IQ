@@ -168,11 +168,13 @@
     // Select random version (A, B, or C)
     const versions = ['version_a', 'version_b', 'version_c'];
     const randomVersion = versions[Math.floor(Math.random() * versions.length)];
-    const selectedQuestions = data[randomVersion];
+    let selectedQuestions = data[randomVersion];
     
     console.log(`Selected ${randomVersion} with ${selectedQuestions?.length || 0} questions`);
     
     if (Array.isArray(selectedQuestions) && selectedQuestions.length) {
+      // Validate/normalize visual coherence before using
+      selectedQuestions = validateQuestionsVisualCoherence(selectedQuestions);
       QUESTIONS = selectedQuestions; // Use selected version directly (already 20 questions)
       TOTAL_QUESTIONS = QUESTIONS.length;
       console.log('Total questions loaded:', TOTAL_QUESTIONS);
@@ -1265,6 +1267,34 @@
     }
     console.warn('Unknown icon token:', token);
     return '';
+  }
+
+  // Validate question coherence: media present for visual prompts and matching answer icon types
+  function validateQuestionsVisualCoherence(items){
+    const isNumericText = (t)=> typeof t === 'string' && /^\d+%?$/.test(t.trim());
+    const hasIconOnly = (opt)=> opt && typeof opt.icon === 'string' && opt.icon !== '' && (!opt.text || opt.text === '');
+    const ensureIconFromText = (opt)=>{
+      if (!opt.icon && isNumericText(opt.text)) opt.icon = `number-${opt.text}`;
+      if (!opt.text) opt.text = '';
+      return opt;
+    };
+    return (items||[]).map(q=>{
+      const theme = (q.theme||'').toLowerCase();
+      const isVisual = ['logique','formes','numerique'].includes(theme) && q.media && typeof q.media === 'object';
+      // Flow-diagram: answers must be numeric icons
+      if (q.media && q.media.type === 'flow-diagram' && Array.isArray(q.options)){
+        q.options = q.options.map(o=> ensureIconFromText({ ...o }));
+      }
+      // Sequence-numbers numerique: prefer number- icons
+      if (q.media && q.media.type === 'sequence-numbers' && Array.isArray(q.options)){
+        q.options = q.options.map(o=> ensureIconFromText({ ...o }));
+      }
+      // For visual questions, remove stray textual labels
+      if (isVisual && Array.isArray(q.options)){
+        q.options = q.options.map(o=> ({ ...o, text: o.text && isNumericText(o.text) ? '' : (o.text||'') }));
+      }
+      return q;
+    });
   }
 
   function svgFlatCube(variant){
