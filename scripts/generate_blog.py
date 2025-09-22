@@ -60,7 +60,7 @@ def gen_article_html(client, model: str, title: str, category: str) -> str:
 
     prompt = (
         PERSONA + "\n" + CATEGORY_NORMS + "\n" +
-        "Tu écris en HTML FR (sans <html> ni <body>), 1200–1800 mots, ton précis, engagé et sourcé (sans références formelles). "
+        "Tu écris en HTML FR (sans <html> ni <body>), aléatoirement entre 1500 et 2900 mots, ton précis, engagé et sourcé (sans références formelles). "
         "Évite tout placeholder. Structure OBLIGATOIRE: \n"
         "- Introduction (80–120 mots, sans <h2>).\n"
         "- 4 à 6 sections en <h2> très concrètes et spécifiques au sujet.\n"
@@ -117,8 +117,16 @@ def main():
 
     csv_path = Path(sys.argv[1]).resolve()
     rows: List[Dict[str, str]] = []
+    # Robust delimiter detection (supports ; , \t |)
     with open(csv_path, "r", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
+        sample = f.read(4096)
+        f.seek(0)
+        try:
+            dialect = csv.Sniffer().sniff(sample, delimiters=",;\t|")
+            delimiter = dialect.delimiter
+        except Exception:
+            delimiter = ";" if ";" in sample else ","
+        reader = csv.DictReader(f, delimiter=delimiter)
         for row in reader:
             title = (row.get("title") or row.get("Titre") or "").strip()
             category = (row.get("category") or row.get("Catégorie") or "Divers").strip()
