@@ -1291,6 +1291,9 @@
     if (media.type === 'flow-diagram') return svgFlowDiagram(media.values||[]);
     if (media.type === 'shape-sequence') return svgShapeSequence(media.variant||'geometric');
     if (media.type === 'rotation-preview') return svgTransformation('rotate-90');
+    // Fallback for any missing media to avoid empty space
+    if (q.theme === 'formes' || q.theme === 'logique') return svgMatrixVariant('default');
+    if (q.theme === 'numerique') return svgBars([5,10,15]);
     return '';
   }
 
