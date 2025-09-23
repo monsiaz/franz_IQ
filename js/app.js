@@ -93,7 +93,7 @@
       { text: '100', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: '101', icon: '', isCorrect: true, color: 'bg-answer' }
     ] },
-    { prompt: 'Quel est l'intrus ?', media: svgOddOneOut(), theme: 'formes', options: [
+    { prompt: 'Quel est l\'intrus ?', media: svgOddOneOut(), theme: 'formes', options: [
       { text: 'Rouge', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: 'Bleu', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: 'Carré', icon: '', isCorrect: true, color: 'bg-answer' },
