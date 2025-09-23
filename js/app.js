@@ -1476,6 +1476,15 @@
       // fallback: last + (last - prev)
       return nums[nums.length-1] + (nums[nums.length-1]-nums[nums.length-2]);
     };
+    const computeSidesFromPrompt = (prompt)=>{
+      if (!prompt) return NaN;
+      const p = (prompt||'').toLowerCase();
+      const map = { triangle:3, triang:3, '△':3, carre:4, carré:4, square:4, rectangle:4, pentagon:5, pentagone:5, hexagon:6, hexagone:6, octagon:8, octogone:8, cercle:0, circle:0 };
+      for (const k of Object.keys(map)){
+        if (p.includes(k)) return map[k];
+      }
+      return NaN;
+    };
 
     return (items||[]).map((q, idx)=>{
       const theme = (q.theme||'').toLowerCase();
@@ -1530,6 +1539,15 @@
         });
         // Normalize matrix rotation+couleur answers to triangle variants for visual coherence
         q = coerceMatrixRotationColor(q);
+        // If prompt asks "combien" et fait référence à une forme → réponses numériques (n côtés)
+        if ((/combien|côt|cote/.test((q.prompt||'').toLowerCase()) || (q.media && q.media.type==='shape-sides'))){
+          const expected = computeSidesFromPrompt(q.prompt||'');
+          if (isFinite(expected) && expected>0){
+            const distractors = [expected-1, expected+1, expected+2].filter((v,i,arr)=> v>0 && v!==expected && arr.indexOf(v)===i);
+            const opts = [expected, ...distractors].slice(0,4);
+            q.options = opts.map((n,i)=> ({ text:'', icon:`number-${n}`, isCorrect:i===0 }));
+          }
+        }
         // Enforce diversity (avoid four times the same response)
         q = ensureOptionDiversity(q);
       }
