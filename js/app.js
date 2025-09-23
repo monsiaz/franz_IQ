@@ -1573,6 +1573,16 @@
     const bootstrapModal = new bootstrap.Modal(modal);
     bootstrapModal.show();
   }
+
+  // Expose lightweight rendering helpers for external tools (builder)
+  window.IQRender = {
+    renderMedia,
+    renderIcon,
+    svgMatrixVariant,
+    svgNumberSequence,
+    svgBars,
+    svgFlowDiagram
+  };
   
   function maybeEncourageIntelligent(isCorrect, elapsedMs){
     // Intelligent popup distribution: max 3 per test, well spaced
