@@ -1331,7 +1331,7 @@
       const variant = media.variant || '';
       const values = media.values || [];
 
-      if (type === 'matrix') return svgMatrixVariant(variant);
+      if (type === 'matrix') return svgMatrixVariant(variant, Array.isArray(media.scene) ? media.scene : []);
       if (type === 'bars') return svgBars(values);
       if (type === 'flow-diagram') return svgFlowDiagram(values);
       if (type === 'sequence-numbers') return svgNumberSequence(values);
@@ -1405,6 +1405,20 @@
     const cell = 38, gap = 8;
     const w = 3*(cell+gap)-gap, h = 3*(cell+gap)-gap;
     let svg = '';
+    // Default scene if none provided: simple rotation pattern with a missing corner
+    if (!Array.isArray(scene) || scene.length === 0) {
+      scene = [
+        { shape: 'triangle', color: '#94a3b8', rotation: 0 },
+        { shape: 'triangle', color: '#94a3b8', rotation: 90 },
+        null,
+        { shape: 'triangle', color: '#94a3b8', rotation: 180 },
+        { shape: 'triangle', color: '#94a3b8', rotation: 270 },
+        { shape: 'triangle', color: '#94a3b8', rotation: 0 },
+        { shape: 'triangle', color: '#94a3b8', rotation: 90 },
+        { shape: 'triangle', color: '#94a3b8', rotation: 180 },
+        null
+      ];
+    }
 
     for (let r = 0; r < 3; r++) {
       for (let c = 0; c < 3; c++) {
