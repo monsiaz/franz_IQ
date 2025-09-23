@@ -158,38 +158,48 @@
     ] }
   ];
 
+  // --- State management ---
+  let questionsReady = false;
+  let questionsPromise = null;
+
   // Total basé sur la longueur réelle
   TOTAL_QUESTIONS = QUESTIONS.length;
 
   // Load external questions.json with random version selection
-  fetch('./js/questions.json').then(r=>r.ok?r.json():Promise.reject()).then(data=>{
-    console.log('Question data loaded:', data);
-    
-    // Select random version (A, B, or C)
-    const versions = ['version_a', 'version_b', 'version_c'];
-    const randomVersion = versions[Math.floor(Math.random() * versions.length)];
-    let selectedQuestions = data[randomVersion];
-    
-    console.log(`Selected ${randomVersion} with ${selectedQuestions?.length || 0} questions`);
-    
-    if (Array.isArray(selectedQuestions) && selectedQuestions.length) {
-      // Validate/normalize visual coherence before using, then auto-fix and filter
-      selectedQuestions = validateQuestionsVisualCoherence(selectedQuestions);
-      selectedQuestions = autoFixAndFilter(selectedQuestions);
-      QUESTIONS = selectedQuestions; // Use selected version directly (already 20 questions)
-      TOTAL_QUESTIONS = QUESTIONS.length;
-      console.log('Total questions loaded:', TOTAL_QUESTIONS);
-      
-      // Always reset state when new questions are loaded
-      state = initialState();
-      // Force re-render if quiz is already visible
-      if (!document.getElementById('hero').classList.contains('d-none')) {
-        renderPagination();
-        render();
-        renderThemeSidebar();
-      }
-    }
-  }).catch(e=>{console.error('Failed to load questions:', e);});
+  function loadQuestions() {
+    if (questionsPromise) return questionsPromise;
+
+    questionsPromise = fetch('./js/questions.json')
+      .then(r => r.ok ? r.json() : Promise.reject('Failed to fetch questions.json'))
+      .then(data => {
+        console.log('Question data loaded:', data);
+        const versions = ['version_a', 'version_b', 'version_c'];
+        const randomVersion = versions[Math.floor(Math.random() * versions.length)];
+        let selectedQuestions = data[randomVersion];
+        
+        console.log(`Selected ${randomVersion} with ${selectedQuestions?.length || 0} questions`);
+        
+        if (Array.isArray(selectedQuestions) && selectedQuestions.length) {
+          selectedQuestions = validateQuestionsVisualCoherence(selectedQuestions);
+          selectedQuestions = autoFixAndFilter(selectedQuestions);
+          QUESTIONS = selectedQuestions;
+          TOTAL_QUESTIONS = QUESTIONS.length;
+          questionsReady = true;
+          console.log('Total questions loaded and validated:', TOTAL_QUESTIONS);
+        } else {
+          console.error('Selected question version is empty or invalid.');
+          questionsReady = false;
+        }
+      })
+      .catch(e => {
+        console.error('Failed to load and process questions:', e);
+        questionsReady = false; // Keep fallback questions
+      });
+    return questionsPromise;
+  }
+
+  // Initial load
+  loadQuestions();
 
   // ===== Helpers to scale to 8 items per theme when needed =====
   function ensureEightPerTheme(items){
@@ -277,7 +287,10 @@
     stepTotal: document.getElementById('stepTotal'),
     scoreText: document.getElementById('scoreText'),
     percentile: document.getElementById('percentile'),
-    themeBadge: document.getElementById('themeBadge')
+    themeBadge: document.getElementById('themeBadge'),
+    modal: document.getElementById('praiseModal'),
+    modalTitle: document.getElementById('praiseTitle'),
+    modalMsg: document.getElementById('praiseMsg'),
   };
 
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -305,22 +318,30 @@
   }
   document.getElementById('btnRestart')?.addEventListener('click', () => {
     state = initialState();
-    state.subscribed = true; // keep access if already paid during session
-    showSection('quiz');
-    render();
-    renderThemeSidebar();
+    showSection('hero');
   });
 
   els.btnPrev.addEventListener('click', () => move(-1));
   els.btnNext.addEventListener('click', () => move(1));
 
   function startQuiz() {
-    state = initialState();
-    showSection('quiz');
-    renderPagination();
-    render();
-    renderThemeSidebar();
-    enableKeyboard();
+    if (!questionsReady) {
+      console.log('Questions not ready, waiting...');
+      loadQuestions().then(() => {
+        console.log('Questions now ready, starting quiz.');
+        state = initialState();
+        renderPagination();
+        render();
+        renderThemeSidebar();
+        showSection('quiz');
+      });
+    } else {
+      state = initialState();
+      renderPagination();
+      render();
+      renderThemeSidebar();
+      showSection('quiz');
+    }
   }
 
   function showSection(which) {
