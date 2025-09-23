@@ -776,7 +776,35 @@
       if (!token) return '';
       if (typeof token === 'string') {
         if (token.startsWith('<svg')) return token;
-        return `<div class="d-flex justify-content-center"><img src="${token}" alt="Option Icon" class="img-fluid" style="max-width: 24px;"></div>`;
+        // number-XX or number-XX%
+        const mNum = token.match(/^number-(.+)$/);
+        if (mNum) return svgNumberIcon(mNum[1]);
+        // bar-12
+        const mBar = token.match(/^bar-(\d+)$/);
+        if (mBar) return svgBarChoice(parseInt(mBar[1],10));
+        // shape-color-size-rotation e.g., triangle-green-small-90deg (order flexible)
+        const shapeMatch = token.match(/^(triangle|square|circle|pentagon|hexagon|octagon)(?:-([a-z]+))?(?:-(small|medium|large))?(?:-(\d+)deg)?$/);
+        if (shapeMatch) {
+          const shape = shapeMatch[1];
+          const colorName = shapeMatch[2] || 'slate';
+          const sizeWord = shapeMatch[3] || 'medium';
+          const rot = parseInt(shapeMatch[4]||'0',10);
+          const color = ({
+            red:'#ef4444', green:'#22c55e', blue:'#3b82f6', yellow:'#f59e0b', orange:'#fb923c', slate:'#94a3b8'
+          })[colorName] || '#94a3b8';
+          const sizeRatio = ({ small:0.55, medium:0.72, large:0.88 })[sizeWord] || 0.72;
+          const cell = 32;
+          const svg = drawShape({ shape, color, rotation: rot, sizeRatio }, cell);
+          return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+        }
+        // simple aliases (triangle, circle, square, pentagon)
+        if (['triangle','circle','square','pentagon','hexagon','octagon'].includes(token)) {
+          const cell = 32; const color = '#94a3b8';
+          const svg = drawShape({ shape: token, color, rotation: 0, sizeRatio: 0.72 }, cell);
+          return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">${svg}</svg>`;
+        }
+        // Fallback: do not try to load as image path (likely not a URL)
+        return '';
       }
       if (Array.isArray(token)) return svgBars(token);
       if (token.type === 'grid-hole') return svgPuzzle('grid-hole');
