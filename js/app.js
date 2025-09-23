@@ -93,7 +93,7 @@
       { text: '100', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: '101', icon: '', isCorrect: true, color: 'bg-answer' }
     ] },
-    { prompt: 'Quel est l’intrus ?', media: svgOddOneOut(), theme: 'formes', options: [
+    { prompt: 'Quel est l'intrus ?', media: svgOddOneOut(), theme: 'formes', options: [
       { text: 'Rouge', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: 'Bleu', icon: '', isCorrect: false, color: 'bg-answer' },
       { text: 'Carré', icon: '', isCorrect: true, color: 'bg-answer' },
@@ -1527,7 +1527,12 @@
       }
       // For visual questions, remove stray textual labels
       if (isVisual && Array.isArray(q.options)){
-        q.options = q.options.map(o=> ({ ...o, text: o.text && isNumericText(o.text) ? '' : (o.text||'') }));
+        // Preserve text for numeric/logical questions even with visuals (e.g., bar charts)
+        // Strip text only for purely abstract visual questions where text is a placeholder
+        const isPurelyVisual = q.theme === 'formes' || (q.media && ['matrix','rotation-preview','mirror-complex','cube-net'].includes(q.media.type));
+        if (isPurelyVisual){
+          q.options = q.options.map(o=> ({ ...o, text: '' }));
+        }
         // Ensure renderable icons; replace unknown tokens with safe fallbacks
         q.options = q.options.map(o=>{
           if (o.icon && !recognized(o.icon)){
