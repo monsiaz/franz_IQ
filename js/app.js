@@ -1811,6 +1811,53 @@
     makeConfetti(document.querySelector('#praiseModal .modal-content'));
     setTimeout(() => modal.hide(), 2000);
   }
+
+  // --- App initialization ---
+  function initializeApp() {
+    const startButtons = [
+      document.getElementById('btnStartHero'),
+      document.getElementById('btnStartTop')
+    ];
+
+    function setButtonsEnabled(enabled) {
+      startButtons.forEach(btn => {
+        if (btn) {
+          btn.disabled = !enabled;
+          btn.textContent = enabled ? 'Je commence maintenant' : 'Chargement...';
+        }
+      });
+    }
+
+    // Disable buttons on load
+    setButtonsEnabled(false);
+
+    // Attach listeners
+    startButtons.forEach(btn => btn?.addEventListener('click', startQuiz));
+    document.getElementById('btnNext')?.addEventListener('click', () => {
+      if (state.current < TOTAL_QUESTIONS - 1) {
+        state.current++;
+        render();
+      }
+    });
+    document.getElementById('btnPrev')?.addEventListener('click', () => {
+      if (state.current > 0) {
+        state.current--;
+        render();
+      }
+    });
+    document.getElementById('btnRestart')?.addEventListener('click', () => {
+      state = initialState();
+      showSection('hero');
+    });
+
+    // Load questions and then enable buttons
+    loadQuestions().finally(() => {
+      setButtonsEnabled(true);
+    });
+  }
+
+  // --- Event listeners ---
+  document.getElementById('btnStartHero').addEventListener('click', startQuiz);
 })();
 
 
