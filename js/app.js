@@ -173,8 +173,9 @@
     console.log(`Selected ${randomVersion} with ${selectedQuestions?.length || 0} questions`);
     
     if (Array.isArray(selectedQuestions) && selectedQuestions.length) {
-      // Validate/normalize visual coherence before using
+      // Validate/normalize visual coherence before using, then auto-fix and filter
       selectedQuestions = validateQuestionsVisualCoherence(selectedQuestions);
+      selectedQuestions = autoFixAndFilter(selectedQuestions);
       QUESTIONS = selectedQuestions; // Use selected version directly (already 20 questions)
       TOTAL_QUESTIONS = QUESTIONS.length;
       console.log('Total questions loaded:', TOTAL_QUESTIONS);
@@ -1553,6 +1554,30 @@
       }
       return q;
     });
+  }
+
+  // Final guard: ensure all questions are renderable and have exactly one correct option
+  function autoFixAndFilter(items){
+    const cleaned = [];
+    (items||[]).forEach((q, idx)=>{
+      try{
+        if (!q || !Array.isArray(q.options) || q.options.length<2) return;
+        // Must have exactly one correct answer
+        let correctCount = q.options.filter(o=> !!o.isCorrect).length;
+        if (correctCount !== 1){
+          q.options.forEach((o,i)=> o.isCorrect = i===0);
+          correctCount = 1;
+        }
+        // Ensure each option can render
+        q.options = q.options.map(o=>{
+          if (!o.icon && o.text && /^\d+%?$/.test(o.text)) o.icon = `number-${o.text}`;
+          if (!o.icon) o.icon = (q.theme==='numerique' ? 'number-0' : q.theme==='formes' ? 'triangle-medium-0deg' : 'square-medium-0deg');
+          return o;
+        });
+        cleaned.push(q);
+      }catch(e){ /* skip invalid */ }
+    });
+    return cleaned;
   }
 
   function svgFlatCube(variant){
