@@ -297,7 +297,42 @@ def main():
             if title:
                 rows.append({"title": title, "category": category})
 
-    index = []
+    # Optional slicing for parallel batches
+    batch_size = int(os.getenv("BATCH_SIZE", "0") or 0)
+    offset = int(os.getenv("OFFSET", "0") or 0)
+    if batch_size > 0:
+      rows = rows[offset:offset+batch_size]
+
+    # Progressive index writing with naive file lock to reduce race conditions
+    index_path = out_dir / "index.json"
+    lock_path = out_dir / "index.json.lock"
+
+    def _append_index(entry: Dict):
+      # acquire lock
+      for _ in range(50):
+        try:
+          fd = os.open(lock_path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+          os.close(fd)
+          break
+        except FileExistsError:
+          time.sleep(0.1)
+      try:
+        existing = []
+        if index_path.exists():
+          try:
+            existing = json.loads(index_path.read_text(encoding='utf-8'))
+          except Exception:
+            existing = []
+        # replace same file if exists
+        existing = [e for e in existing if e.get('file') != entry.get('file')]
+        existing.append(entry)
+        index_path.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding='utf-8')
+      finally:
+        try:
+          os.remove(lock_path)
+        except Exception:
+          pass
+
     for i, r in enumerate(rows, 1):
         title = r["title"]
         category = r["category"].lower().replace(" ", "-")
@@ -308,7 +343,7 @@ def main():
         (out_dir / fname).write_text(html, encoding="utf-8")
         # image generation (fix argument order: title, meta, category)
         img_name = generate_featured_image(slug, title, seo.get("meta_description") or title, category, out_dir, client) if client else ""
-        index.append({
+        entry = {
             "file": fname,
             "h1": seo.get("h1") or title,
             "title_seo": seo.get("title_seo") or title[:60],
@@ -317,11 +352,10 @@ def main():
             "category": category,
             "featured_image": img_name,
             "date": os.getenv("BLOG_DEFAULT_DATE", "aujourd'hui")
-        })
+        }
+        _append_index(entry)
 
-    # write index
-    (out_dir / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Generated {len(index)} articles → {out_dir}")
+    print(f"Generated {len(rows)} articles → {out_dir}")
 
 
 if __name__ == "__main__":
