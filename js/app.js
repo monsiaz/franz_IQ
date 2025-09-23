@@ -1345,27 +1345,52 @@
     } catch { return ''; }
   }
 
-  function svgMatrixVariant(variant){
-    if (variant === 'rotation-color'){
-      // 3x3 grid: triangles rotate across columns, color changes across rows
-      const cell = 38, gap = 8; const colors=['#0ea5e9','#ef4444','#22c55e']; // blue, red, green
-      const rot = [0,90,180];
-      let svg='';
-      for (let r=0;r<3;r++){
-        for (let c=0;c<3;c++){
-          const x = c*(cell+gap), y = r*(cell+gap);
-          const fill = colors[r%colors.length];
-          const angle = rot[c%rot.length];
-          svg += `<g transform="translate(${x},${y}) rotate(${angle} ${cell/2} ${cell/2})">
-            <polygon points="${cell/2},6 6,${cell-6} ${cell-6},${cell-6}" fill="${fill}" stroke="#0f172a" opacity="0.9"/>
-          </g>`;
+  function svgMatrixVariant(variant, scene = []){
+    const cell = 38, gap = 8;
+    const w = 3*(cell+gap)-gap, h = 3*(cell+gap)-gap;
+    let svg = '';
+
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        const x = c * (cell + gap), y = r * (cell + gap);
+        const idx = r * 3 + c;
+        const item = scene[idx];
+
+        if (item) {
+          svg += `<g transform="translate(${x},${y})">${drawShape(item, cell)}</g>`;
+        } else {
+          // Draw empty cell for the missing item
+          svg += `<rect x="${x}" y="${y}" width="${cell}" height="${cell}" rx="6" fill="#dbeafe" stroke="#3b82f6"/>`;
         }
       }
-      const w = 3*(cell+gap)-gap, h = 3*(cell+gap)-gap;
-      return `<div class="d-flex justify-content-center"><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg></div>`;
     }
-    // Fallback to existing generic matrix
-    return svgMatrixMain();
+    
+    return `<div class="d-flex justify-content-center"><svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">${svg}</svg></div>`;
+  }
+
+  // --- Core rendering functions ---
+  function drawShape({ shape, color, rotation = 0, sizeRatio = 0.8, deco }, cell) {
+    const size = cell * sizeRatio;
+    const cx = cell / 2;
+    const cy = cell / 2;
+    const angle = rotation * Math.PI / 180;
+
+    switch (shape) {
+      case 'circle':
+        return `<circle cx="${cx}" cy="${cy}" r="${size}" fill="${color}" stroke="#0f172a" stroke-width="2"/>`;
+      case 'square':
+        return `<rect x="${cx - size / 2}" y="${cy - size / 2}" width="${size}" height="${size}" fill="${color}" stroke="#0f172a" stroke-width="2"/>`;
+      case 'triangle':
+        return `<polygon points="${cx - size / 2},${cy - size / 2} ${cx},${cy + size / 2} ${cx + size / 2},${cy - size / 2}" fill="${color}" stroke="#0f172a" stroke-width="2"/>`;
+      case 'pentagon':
+        return `<polygon points="${cx - size / 2},${cy - size / 2} ${cx - size / 4},${cy + size / 4} ${cx + size / 4},${cy + size / 4} ${cx + size / 2},${cy - size / 2} ${cx - size / 4},${cy - size / 4}" fill="${color}" stroke="#0f172a" stroke-width="2"/>`;
+      case 'hexagon':
+        return `<polygon points="${cx - size / 2},${cy - size / 4} ${cx - size / 4},${cy + size / 4} ${cx + size / 4},${cy + size / 4} ${cx + size / 2},${cy - size / 4} ${cx + size / 4},${cy - size / 4}" fill="${color}" stroke="#0f172a" stroke-width="2"/>`;
+      case 'octagon':
+        return `<polygon points="${cx - size / 2},${cy - size / 4} ${cx - size / 4},${cy + size / 4} ${cx + size / 4},${cy + size / 4} ${cx + size / 2},${cy - size / 4} ${cx + size / 4},${cy - size / 4} ${cx - size / 4},${cy - size / 4}" fill="${color}" stroke="#0f172a" stroke-width="2"/>`;
+      default:
+        return `<rect x="${cx - size / 2}" y="${cy - size / 2}" width="${size}" height="${size}" fill="#e2e8f0" stroke="#0f172a" stroke-width="2"/>`;
+    }
   }
 
   function svgTetraPattern(variant){
