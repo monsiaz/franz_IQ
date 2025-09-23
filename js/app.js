@@ -700,89 +700,77 @@
 
   function renderMedia(media) {
     try {
-      if (!media) return '';
-      if (typeof media === 'string') {
-        if (media.startsWith('<svg')) return media;
-        return `<div class="d-flex justify-content-center"><img src="${media}" alt="Question Media" class="img-fluid"></div>`;
-      }
-      if (Array.isArray(media)) {
-        return svgBars(media);
-      }
-      if (media.type === 'grid-hole') return svgPuzzle('grid-hole');
-      if (media.type === 'sequence') return svgMotifSequence();
-      if (media.type === 'speed') return svgSpeedIcon();
-      if (media.type === 'triangle') return svgTriangleRef();
-      if (media.type === 'letters') return svgLettersSeq(media.sequence||[]);
-      if (media.type === 'door') return svgDoorOpen();
-      if (media.type === 'calendar') return svgCalendar(media.label||'');
-      if (media.type === 'odd-one-out') return svgOddOneOut();
-      if (media.type === 'clock') return svgClock(media.hour||0);
-      if (media.type === 'clock-range') return svgClockRange(media.startHour||0, media.endHour||0);
-      if (media.type === 'dots-grid') return svgDotsGrid(media.cols||3, media.rows||3);
-      if (media.type === 'matrix') return svgMatrixMain();
-      if (media.type === 'shapes') return svgShapes(!!media.curvyOnly);
-      if (media.type === 'mirror') return svgMirrorPrompt();
-      if (media.type === 'bars-prompt') return svgBarsPrompt(media.arr||[]);
-      if (media.type === 'dots-count-prompt') return svgDotsCountPrompt(media.n||6);
-      if (media.type === 'bars') return svgBars(media.values||[]);
-      if (media.type === 'tetrahedron-pattern') return svgTetraPattern(media.variant||'');
-      if (media.type === 'flow-diagram') return svgFlowDiagram(media.values||[]);
-      if (media.type === 'sequence-numbers') return svgNumberSequence(media.values||[]);
-      if (media.type === 'word-visual') return svgWordVisual(media.concept||'');
-      if (media.type === 'proportion') return svgProportion(media.values||[]);
-      if (media.type === 'equation-visual') return svgEquationVisual(media.values||[]);
-      if (media.type === 'percentage-visual') return svgPercentageVisual(media.values||[]);
-      if (media.type === 'symmetry') return svgSymmetry(media.variant||'');
-      if (media.type === 'transformation') return svgTransformation(media.variant||'');
-      if (media.type === 'paper-folding') return svgPaperFolding(media.variant||'');
-      if (media.type === 'isometric') return svgIsometric(media.variant||'');
-      if (media.type === '3d-assembly') return svg3DAssembly(media.variant||'');
-      if (media.type === 'analogy') return svgAnalogy(media.variant||'');
-      if (media.type === 'logic-grid') return svgLogicGrid(media.variant||'');
-      if (media.type === 'analogy-words') return svgAnalogyWords(media.values||[]);
-      if (media.type === 'word-group') return svgWordGroup(media.values||[]);
-      if (media.type === 'context-clues') return svgContextClues(media.context||'');
-      if (media.type === 'register-comparison') return svgRegisterComparison(media.values||[]);
-      if (media.type === 'etymology') return svgEtymology(media.concept||'');
-      if (media.type === 'pattern-grid') return svgPatternGrid(media.variant||'');
-      if (media.type === 'transformation-sequence') return svgTransformationSequence(media.variant||'');
-      if (media.type === 'word-nuance') return svgWordNuance(media.context||'');
-      if (media.type === 'shape-sides') return svgShapeSides(media.values||[]);
-      if (media.type === 'logic-deduction') return svgLogicDeduction(media.values||[]);
-      if (media.type === 'shape-sequence') return svgShapeSequence(media.variant||'');
-      if (media.type === 'puzzle') return svgPuzzle(media.kind||'');
+      if (!media || typeof media !== 'object') return '';
+      const type = media.type || '';
+      const variant = media.variant || '';
+      const values = media.values || [];
+
+      if (type === 'matrix') return svgMatrixVariant(variant);
+      if (type === 'bars') return svgBars(values);
+      if (type === 'flow-diagram') return svgFlowDiagram(values);
+      if (type === 'sequence-numbers') return svgNumberSequence(values);
+      if (type === 'word-visual') return svgWordVisual(values[0]);
+      if (type === 'proportion') return svgProportion(values);
+      if (type === 'equation-visual') return svgEquationVisual(values);
+      if (type === 'percentage-visual') return svgPercentageVisual(values);
+      if (type === 'symmetry') return svgSymmetry(variant);
+      if (type === 'transformation') return svgTransformation(variant);
+      if (type === 'paper-folding') return svgPaperFolding(variant);
+      if (type === 'isometric-view') return svgIsometric(variant);
+      if (type === '3d-assembly') return svg3DAssembly(variant);
+      if (type === 'analogy') return svgAnalogy(variant);
+      if (type === 'logic-grid') return svgLogicGrid(variant);
+      if (type === 'analogy-words') return svgAnalogyWords(values);
+      if (type === 'word-group') return svgWordGroup(values);
+      if (type === 'context-clues') return svgContextClues(values[0]);
+      if (type === 'register-comparison') return svgRegisterComparison(values);
+      if (type === 'etymology') return svgEtymology(values[0]);
+      if (type === 'pattern-grid') return svgPatternGrid(variant);
+      if (type === 'transformation-sequence') return svgTransformationSequence(variant);
+      if (type === 'word-nuance') return svgWordNuance(values[0]);
+      if (type === 'shape-sides') return svgShapeSides(values);
+      if (type === 'logic-deduction') return svgLogicDeduction(values);
+      if (type === 'shape-sequence') return svgShapeSequence(variant);
+      
+      // Fallback for any missing media to avoid empty space
+      if (media.theme === 'formes' || media.theme === 'logique') return svgMatrixVariant('default');
+      if (media.theme === 'numerique') return svgBars([5,10,15]);
+      
       return '';
-    } catch { return ''; }
+    } catch (e) {
+      console.error('Error rendering media:', media, e);
+      return '<div class="alert alert-danger">Erreur de rendu</div>';
+    }
   }
 
-  function renderIcon(icon) {
+  function renderIcon(token){
     try {
-      if (!icon) return '';
-      if (typeof icon === 'string') {
-        if (icon.startsWith('<svg')) return icon;
-        return `<div class="d-flex justify-content-center"><img src="${icon}" alt="Option Icon" class="img-fluid" style="max-width: 24px;"></div>`;
+      if (!token) return '';
+      if (typeof token === 'string') {
+        if (token.startsWith('<svg')) return token;
+        return `<div class="d-flex justify-content-center"><img src="${token}" alt="Option Icon" class="img-fluid" style="max-width: 24px;"></div>`;
       }
-      if (Array.isArray(icon)) return svgBars(icon);
-      if (icon.type === 'grid-hole') return svgPuzzle('grid-hole');
-      if (icon.type === 'sequence') return svgMotifSequence();
-      if (icon.type === 'speed') return svgSpeedIcon();
-      if (icon.type === 'triangle') return svgTriangleRef();
-      if (icon.type === 'letters') return svgLettersSeq(icon.sequence||[]);
-      if (icon.type === 'door') return svgDoorOpen();
-      if (icon.type === 'calendar') return svgCalendar(icon.label||'');
-      if (icon.type === 'odd-one-out') return svgOddOneOut();
-      if (icon.type === 'clock') return svgClock(icon.hour||0);
-      if (icon.type === 'clock-range') return svgClockRange(icon.startHour||0, icon.endHour||0);
-      if (icon.type === 'dots-grid') return svgDotsGrid(icon.cols||3, icon.rows||3);
-      if (icon.type === 'matrix') return svgMatrixMain();
-      if (icon.type === 'shapes') return svgShapes(!!icon.curvyOnly);
-      if (icon.type === 'mirror') return svgMirrorPrompt();
-      if (icon.type === 'bars-prompt') return svgBarsPrompt(icon.arr||[]);
-      if (icon.type === 'dots-count-prompt') return svgDotsCountPrompt(icon.n||6);
-      if (icon.type === 'bars') return svgBars(icon.values||[]);
-      if (icon.type === 'tetrahedron-pattern') return svgTetraPattern(icon.variant||'');
-      if (icon.type === 'flow-diagram') return svgFlowDiagram(icon.values||[]);
-      if (icon.type === 'puzzle') return svgPuzzle(icon.kind||'');
+      if (Array.isArray(token)) return svgBars(token);
+      if (token.type === 'grid-hole') return svgPuzzle('grid-hole');
+      if (token.type === 'sequence') return svgMotifSequence();
+      if (token.type === 'speed') return svgSpeedIcon();
+      if (token.type === 'triangle') return svgTriangleRef();
+      if (token.type === 'letters') return svgLettersSeq(token.sequence||[]);
+      if (token.type === 'door') return svgDoorOpen();
+      if (token.type === 'calendar') return svgCalendar(token.label||'');
+      if (token.type === 'odd-one-out') return svgOddOneOut();
+      if (token.type === 'clock') return svgClock(token.hour||0);
+      if (token.type === 'clock-range') return svgClockRange(token.startHour||0, token.endHour||0);
+      if (token.type === 'dots-grid') return svgDotsGrid(token.cols||3, token.rows||3);
+      if (token.type === 'matrix') return svgMatrixMain();
+      if (token.type === 'shapes') return svgShapes(!!token.curvyOnly);
+      if (token.type === 'mirror') return svgMirrorPrompt();
+      if (token.type === 'bars-prompt') return svgBarsPrompt(token.arr||[]);
+      if (token.type === 'dots-count-prompt') return svgDotsCountPrompt(token.n||6);
+      if (token.type === 'bars') return svgBars(token.values||[]);
+      if (token.type === 'tetrahedron-pattern') return svgTetraPattern(token.variant||'');
+      if (token.type === 'flow-diagram') return svgFlowDiagram(token.values||[]);
+      if (token.type === 'puzzle') return svgPuzzle(token.kind||'');
       return '';
     } catch { return ''; }
   }
@@ -1109,8 +1097,7 @@
       'concept-accept': '<circle cx="16" cy="16" r="8" fill="#22c55e" opacity="0.6"/><path d="M12 16 L15 19 L20 13" stroke="#fff" stroke-width="2" fill="none"/>',
       'concept-disdain': '<path d="M10 20 L22 12 M10 12 L22 20" stroke="#ef4444" stroke-width="2"/>'
     };
-    const iconSvg = icons[token] || '<rect x="8" y="8" width="16" height="16" fill="#e2e8f0"/>';
-    return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">${iconSvg}</svg>`;
+    return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">${icons[token]||''}</svg>`;
   }
   
   // Advanced visual functions for complex questions
@@ -1282,22 +1269,82 @@
   function normalizeTheme(t){ return t === 'spatial' ? 'formes' : (t || 'logique'); }
 
   function renderMedia(media){
-    if (!media) return '';
-    if (typeof media === 'string') return media;
-    if (media.type === 'matrix') return svgMatrixVariant(media.variant||'default');
-    if (media.type === '3d-cube') return svgFlatCube(media.variant);
-    if (media.type === 'bars') return svgBars(media.values||[]);
-    if (media.type === 'tetrahedron-pattern') return svgTetraPattern(media.variant);
-    if (media.type === 'flow-diagram') return svgFlowDiagram(media.values||[]);
-    if (media.type === 'shape-sequence') return svgShapeSequence(media.variant||'geometric');
-    if (media.type === 'rotation-preview') return svgTransformation('rotate-90');
-    // Fallback for any missing media to avoid empty space
-    if (q.theme === 'formes' || q.theme === 'logique') return svgMatrixVariant('default');
-    if (q.theme === 'numerique') return svgBars([5,10,15]);
-    return '';
+    try {
+      if (!media || typeof media !== 'object') return '';
+      const type = media.type || '';
+      const variant = media.variant || '';
+      const values = media.values || [];
+
+      if (type === 'matrix') return svgMatrixVariant(variant);
+      if (type === 'bars') return svgBars(values);
+      if (type === 'flow-diagram') return svgFlowDiagram(values);
+      if (type === 'sequence-numbers') return svgNumberSequence(values);
+      if (type === 'word-visual') return svgWordVisual(values[0]);
+      if (type === 'proportion') return svgProportion(values);
+      if (type === 'equation-visual') return svgEquationVisual(values);
+      if (type === 'percentage-visual') return svgPercentageVisual(values);
+      if (type === 'symmetry') return svgSymmetry(variant);
+      if (type === 'transformation') return svgTransformation(variant);
+      if (type === 'paper-folding') return svgPaperFolding(variant);
+      if (type === 'isometric-view') return svgIsometric(variant);
+      if (type === '3d-assembly') return svg3DAssembly(variant);
+      if (type === 'analogy') return svgAnalogy(variant);
+      if (type === 'logic-grid') return svgLogicGrid(variant);
+      if (type === 'analogy-words') return svgAnalogyWords(values);
+      if (type === 'word-group') return svgWordGroup(values);
+      if (type === 'context-clues') return svgContextClues(values[0]);
+      if (type === 'register-comparison') return svgRegisterComparison(values);
+      if (type === 'etymology') return svgEtymology(values[0]);
+      if (type === 'pattern-grid') return svgPatternGrid(variant);
+      if (type === 'transformation-sequence') return svgTransformationSequence(variant);
+      if (type === 'word-nuance') return svgWordNuance(values[0]);
+      if (type === 'shape-sides') return svgShapeSides(values);
+      if (type === 'logic-deduction') return svgLogicDeduction(values);
+      if (type === 'shape-sequence') return svgShapeSequence(variant);
+      
+      // Fallback for any missing media to avoid empty space
+      if (media.theme === 'formes' || media.theme === 'logique') return svgMatrixVariant('default');
+      if (media.theme === 'numerique') return svgBars([5,10,15]);
+      
+      return '';
+    } catch (e) {
+      console.error('Error rendering media:', media, e);
+      return '<div class="alert alert-danger">Erreur de rendu</div>';
+    }
   }
 
-  // Matrix variants with color-aware visuals
+  function renderIcon(token){
+    try {
+      if (!token) return '';
+      if (typeof token === 'string') {
+        if (token.startsWith('<svg')) return token;
+        return `<div class="d-flex justify-content-center"><img src="${token}" alt="Option Icon" class="img-fluid" style="max-width: 24px;"></div>`;
+      }
+      if (Array.isArray(token)) return svgBars(token);
+      if (token.type === 'grid-hole') return svgPuzzle('grid-hole');
+      if (token.type === 'sequence') return svgMotifSequence();
+      if (token.type === 'speed') return svgSpeedIcon();
+      if (token.type === 'triangle') return svgTriangleRef();
+      if (token.type === 'letters') return svgLettersSeq(token.sequence||[]);
+      if (token.type === 'door') return svgDoorOpen();
+      if (token.type === 'calendar') return svgCalendar(token.label||'');
+      if (token.type === 'odd-one-out') return svgOddOneOut();
+      if (token.type === 'clock') return svgClock(token.hour||0);
+      if (token.type === 'clock-range') return svgClockRange(token.startHour||0, token.endHour||0);
+      if (token.type === 'dots-grid') return svgDotsGrid(token.cols||3, token.rows||3);
+      if (token.type === 'matrix') return svgMatrixMain();
+      if (token.type === 'shapes') return svgShapes(!!token.curvyOnly);
+      if (token.type === 'mirror') return svgMirrorPrompt();
+      if (token.type === 'bars-prompt') return svgBarsPrompt(token.arr||[]);
+      if (token.type === 'dots-count-prompt') return svgDotsCountPrompt(token.n||6);
+      if (token.type === 'bars') return svgBars(token.values||[]);
+      if (token.type === 'tetrahedron-pattern') return svgTetraPattern(token.variant||'');
+      if (token.type === 'flow-diagram') return svgFlowDiagram(token.values||[]);
+      if (token.type === 'puzzle') return svgPuzzle(token.kind||'');
+      return '';
+    } catch { return ''; }
+  }
+
   function svgMatrixVariant(variant){
     if (variant === 'rotation-color'){
       // 3x3 grid: triangles rotate across columns, color changes across rows
@@ -1319,303 +1366,6 @@
     }
     // Fallback to existing generic matrix
     return svgMatrixMain();
-  }
-
-  function renderIcon(token){
-    if (!token) return '';
-    console.log('Rendering icon token:', token);
-    
-    // Handle simple shape names
-    if (token === 'circle') return svgSmallCircle();
-    if (token === 'triangle') return svgSmallTriangle();
-    if (token === 'square') return svgSmallSquare();
-    if (token === 'pentagon') return svgSmallPentagon();
-    
-    // Handle number icons
-    if (token.startsWith('number-')) {
-      const num = token.split('-')[1];
-      return svgNumberIcon(num);
-    }
-    
-    // Handle concept icons
-    if (token.startsWith('concept-') || token.startsWith('size-')) {
-      return svgConceptIcon(token);
-    }
-    
-    if (token.startsWith('bar-')) return svgBarChoice(parseInt(token.split('-')[1],10));
-    if (token.startsWith('l-shape-')) { const deg=parseInt(token.split('-')[2],10)||0; return svgLShape(deg); }
-    if (token.startsWith('arrow-')) return svgArrow(token.split('-')[1]);
-    if (token.startsWith('holes-')) return svgHoles(token.split('-')[1]);
-    if (token.startsWith('piece-')) return svgTetrisPiece(token.split('-')[1]);
-    if (token.startsWith('top-view-')) return svgTopViewVariant(token.split('-')[2]||'a');
-    if (token.startsWith('cube-config-')) return svgCubeConfig(token.split('-')[2]||'a');
-    if (token.startsWith('tessell-')) return svgTessellIcon(token.split('-')[1]);
-    if (token.startsWith('shadow-')) return svgShadow(token.split('-')[1]);
-    if (token.startsWith('origami-')) return svgOrigami(token.split('-')[1]);
-    const parts = token.split('-');
-    const shape = parts[0];
-    const mapSize = { small:16, medium:22, large:28 };
-    let size = mapSize.medium, rot = 0, color = '#e2e8f0', stroke = '#111', number = '';
-    parts.slice(1).forEach(p=>{
-      if (mapSize[p]) size = mapSize[p];
-      else if (p.endsWith('deg')) rot = parseInt(p,10);
-      else if (/^\d+$/.test(p)) number = p;
-      else {
-        const colors = { blue:'#0ea5e9', red:'#ef4444', green:'#22c55e', yellow:'#f59e0b', orange:'#fb923c' };
-        if (colors[p]) color = colors[p];
-      }
-    });
-    if (shape.startsWith('triangle')) {
-      let fill = color;
-      // Handle special triangle tokens with color and number
-      if (token.includes('-green-')) fill = '#22c55e';
-      if (token.includes('-blue-')) fill = '#0ea5e9';
-      if (token.includes('-red-')) fill = '#ef4444';
-      if (token.includes('-orange-')) fill = '#fb923c';
-      
-      let deco = '';
-      if (token.includes('grid')) deco = '<path d="M8 14 L24 14 M16 6 L16 22" stroke="#0f172a" stroke-width="0.6" opacity=".4"/>';
-      if (token.includes('dotted')) deco = '<circle cx="16" cy="14" r="1" fill="#0f172a" opacity=".5"/><circle cx="12" cy="18" r="1" fill="#0f172a" opacity=".5"/><circle cx="20" cy="18" r="1" fill="#0f172a" opacity=".5"/>';
-      if (token.includes('striped')) deco = '<path d="M10 20 L22 8" stroke="#0f172a" stroke-width="1" opacity=".5"/>';
-      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 16 16)"><polygon points="16,6 6,26 26,26" fill="${fill}" stroke="#111" opacity="0.8"/>${deco}</g>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
-    }
-    if (shape.startsWith('circle')) {
-      let fill = color;
-      if (token.includes('-blue-')) fill = '#0ea5e9';
-      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="${size/2}" fill="${fill}" stroke="#111" opacity="0.8"/>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
-    }
-    if (shape.startsWith('square')) {
-      let fill = color;
-      if (token.includes('-orange-')) fill = '#fb923c';
-      return `<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(${rot} 16 16)"><rect x="${16-size/2}" y="${16-size/2}" width="${size}" height="${size}" rx="4" fill="${fill}" stroke="${stroke}" opacity="0.8"/></g>${number?`<text x="16" y="20" text-anchor="middle" font-size="10" fill="#0f172a">${number}</text>`:''}</svg>`;
-    }
-    console.warn('Unknown icon token:', token);
-    return '';
-  }
-
-  // Validate question coherence: media present for visual prompts and matching answer icon types
-  function validateQuestionsVisualCoherence(items){
-    const isNumericText = (t)=> typeof t === 'string' && /^\d+%?$/.test(t.trim());
-    const hasIconOnly = (opt)=> opt && typeof opt.icon === 'string' && opt.icon !== '' && (!opt.text || opt.text === '');
-    const ensureIconFromText = (opt)=>{
-      if (!opt.icon && isNumericText(opt.text)) opt.icon = `number-${opt.text}`;
-      if (!opt.text) opt.text = '';
-      return opt;
-    };
-    const parseNumberFromIcon = (icon)=>{
-      if (!icon) return NaN;
-      if (icon.startsWith('number-')) return parseFloat(icon.split('number-')[1]);
-      return NaN;
-    };
-    const computeFlowNext = (arr)=>{
-      const a = Number(arr?.[0]);
-      const b = Number(arr?.[1]);
-      if (!isFinite(a) || !isFinite(b)) return NaN;
-      const ratio = b / a;
-      if (Number.isInteger(ratio)) return b * ratio;
-      const diff = b - a;
-      return b + diff;
-    };
-    const recognized = (token)=>{
-      try { return !!renderIcon(token); } catch { return false; }
-    };
-
-    // --- helpers to ensure diverse options ---
-    const parseShapeToken = (icon)=>{
-      if (!icon) return null;
-      const parts = icon.split('-');
-      return {
-        shape: parts[0],
-        size: parts.find(p=> p==='small'||p==='medium'||p==='large') || 'medium',
-        deg: (parts.find(p=> p.endsWith('deg'))||'0').replace('deg',''),
-        color: ['blue','red','green','yellow','orange'].find(c=> parts.includes(c)) || ''
-      };
-    };
-    const composeShapeToken = ({shape,size,deg,color})=>{
-      return [shape, size, color, `${deg}deg`].filter(Boolean).join('-');
-    };
-    const altFromBase = (base, idx)=>{
-      const p = parseShapeToken(base);
-      if (!p) return base;
-      const colors = ['', 'blue', 'red', 'green', 'orange'];
-      const degNum = parseInt(p.deg||'0',10);
-      const alt = { ...p };
-      if (p.shape==='triangle' || p.shape==='square') {
-        alt.deg = ((degNum + (idx*90)) % 360).toString();
-        alt.color = colors[(idx % colors.length)];
-      } else if (p.shape==='circle') {
-        alt.size = (p.size==='medium'? (idx%2? 'small':'large') : 'medium');
-        alt.color = colors[(idx % colors.length)];
-      } else {
-        alt.color = colors[(idx % colors.length)];
-      }
-      return composeShapeToken(alt);
-    };
-    const ensureOptionDiversity = (q)=>{
-      if (!Array.isArray(q.options) || q.options.length===0) return q;
-      const correct = q.options.find(o=> o.isCorrect);
-      const baseIcon = correct && correct.icon ? correct.icon : (q.options[0]?.icon || 'square-medium-0deg');
-      const seen = new Set();
-      q.options.forEach((o, i) => {
-        if (!o.icon || seen.has(o.icon)){
-          if (o.isCorrect) {
-            // keep correct; if duplicate, alter others instead
-            seen.add(o.icon||'');
-          } else {
-            // generate a different variant from the correct icon
-            let j = 1;
-            let candidate = altFromBase(baseIcon, i+j);
-            while (seen.has(candidate)) { j++; candidate = altFromBase(baseIcon, i+j); }
-            o.icon = candidate; o.text = '';
-          }
-        }
-        seen.add(o.icon||'');
-      });
-      return q;
-    };
-    const coerceMatrixRotationColor = (q)=>{
-      if (!q.media || q.media.type!=='matrix' || !(q.media.variant||'').includes('rotation-color')) return q;
-      const base = 'triangle-medium-0deg-blue';
-      const candidates = [
-        base,
-        altFromBase(base,1),
-        altFromBase(base,2),
-        altFromBase(base,3)
-      ];
-      // preserve which one isCorrect; just swap icons to triangle variants
-      q.options = (q.options||[]).slice(0,4).map((o,i)=> ({...o, text:'', icon: candidates[i]}));
-      // keep exactly one correct (the first flagged correct keeps position)
-      const ix = Math.max(0, (q.options||[]).findIndex(o=> o.isCorrect));
-      q.options.forEach((o,i)=> o.isCorrect = (i=== (ix>=0? ix:0)));
-      return q;
-    };
-    const computeSequenceNext = (arr)=>{
-      const nums = (arr||[]).filter(v=> typeof v==='number');
-      if (nums.length<2) return NaN;
-      const d = nums[1]-nums[0];
-      const arith = nums.every((v,i)=> i===0 || (v-nums[i-1])===d);
-      if (arith) return nums[nums.length-1]+d;
-      const r = nums[0]!==0 ? nums[1]/nums[0] : NaN;
-      const geom = nums.every((v,i)=> i===0 || (nums[i-1]!==0 && Math.abs((v/nums[i-1])-r)<1e-9));
-      if (geom && Number.isFinite(r)) return nums[nums.length-1]*r;
-      // fallback: last + (last - prev)
-      return nums[nums.length-1] + (nums[nums.length-1]-nums[nums.length-2]);
-    };
-    const computeSidesFromPrompt = (prompt)=>{
-      if (!prompt) return NaN;
-      const p = (prompt||'').toLowerCase();
-      const map = { triangle:3, triang:3, '△':3, carre:4, carré:4, square:4, rectangle:4, pentagon:5, pentagone:5, hexagon:6, hexagone:6, octagon:8, octogone:8, cercle:0, circle:0 };
-      for (const k of Object.keys(map)){
-        if (p.includes(k)) return map[k];
-      }
-      return NaN;
-    };
-
-    return (items||[]).map((q, idx)=>{
-      const theme = (q.theme||'').toLowerCase();
-      const isVisual = ['logique','formes','numerique'].includes(theme) && q.media && typeof q.media === 'object';
-      // Flow-diagram: answers must be numeric icons
-      if (q.media && q.media.type === 'flow-diagram' && Array.isArray(q.options)){
-        q.options = q.options.map(o=> ensureIconFromText({ ...o }));
-        // Autofix correctness based on rule
-        const expected = computeFlowNext(q.media.values||[]);
-        if (isFinite(expected)){
-          const expectedToken = `number-${expected}`;
-          let fixed = false;
-          const anyMatches = q.options.some(o=> o.icon === expectedToken);
-          if (anyMatches){
-            q.options.forEach(o=> o.isCorrect = (o.icon === expectedToken));
-            fixed = true;
-          } else {
-            // replace first option to expected
-            if (q.options[0]){
-              q.options[0].icon = expectedToken; q.options[0].isCorrect = true;
-              for (let i=1;i<q.options.length;i++) q.options[i].isCorrect = false;
-              fixed = true;
-            }
-          }
-        }
-      }
-      // Sequence-numbers numerique: prefer number- icons
-      if (q.media && q.media.type === 'sequence-numbers' && Array.isArray(q.options)){
-        // Compute expected and rebuild a plausible set
-        const expected = computeSequenceNext(q.media.values||[]);
-        if (isFinite(expected)){
-          const dif = Math.max(1, Math.abs((q.media.values?.[1]||0) - (q.media.values?.[0]||0))||1);
-          const distractors = [expected+dif, expected-dif, expected+2*dif].filter((v,i,arr)=> v>0 && v!==expected && arr.indexOf(v)===i);
-          const opts = [expected, ...distractors].slice(0,4);
-          q.options = opts.map((n,i)=> ({ text:'', icon:`number-${n}`, isCorrect:i===0 }));
-        } else {
-          q.options = q.options.map(o=> ensureIconFromText({ ...o }));
-        }
-      }
-      // For visual questions, remove stray textual labels
-      if (isVisual && Array.isArray(q.options)){
-        // Preserve text for numeric/logical questions even with visuals (e.g., bar charts)
-        // Strip text only for purely abstract visual questions where text is a placeholder
-        const isPurelyVisual = q.theme === 'formes' || (q.media && ['matrix','rotation-preview','mirror-complex','cube-net'].includes(q.media.type));
-        if (isPurelyVisual){
-          q.options = q.options.map(o=> ({ ...o, text: '' }));
-        }
-        // Ensure renderable icons; replace unknown tokens with safe fallbacks
-        q.options = q.options.map(o=>{
-          if (o.icon && !recognized(o.icon)){
-            // Fallbacks by theme
-            if (theme==='logique') o.icon = 'square-medium-0deg';
-            else if (theme==='formes') o.icon = 'triangle-medium-0deg';
-            else if (theme==='numerique') o.icon = 'number-0';
-          }
-          return o;
-        });
-        // Normalize matrix rotation+couleur answers to triangle variants for visual coherence
-        q = coerceMatrixRotationColor(q);
-        // If prompt asks "combien" et fait référence à une forme → réponses numériques (n côtés)
-        if ((/combien|côt|cote/.test((q.prompt||'').toLowerCase()) || (q.media && q.media.type==='shape-sides'))){
-          const expected = computeSidesFromPrompt(q.prompt||'');
-          if (isFinite(expected) && expected>0){
-            const distractors = [expected-1, expected+1, expected+2].filter((v,i,arr)=> v>0 && v!==expected && arr.indexOf(v)===i);
-            const opts = [expected, ...distractors].slice(0,4);
-            q.options = opts.map((n,i)=> ({ text:'', icon:`number-${n}`, isCorrect:i===0 }));
-          }
-        }
-        // Enforce diversity (avoid four times the same response)
-        q = ensureOptionDiversity(q);
-      }
-      return q;
-    });
-  }
-
-  // Final guard: ensure all questions are renderable and have exactly one correct option
-  function autoFixAndFilter(items){
-    const cleaned = [];
-    (items||[]).forEach((q, idx)=>{
-      try{
-        if (!q || !Array.isArray(q.options) || q.options.length<2) return;
-        // Must have exactly one correct answer
-        let correctCount = q.options.filter(o=> !!o.isCorrect).length;
-        if (correctCount !== 1){
-          q.options.forEach((o,i)=> o.isCorrect = i===0);
-          correctCount = 1;
-        }
-        // Ensure each option can render
-        q.options = q.options.map(o=>{
-          if (!o.icon && o.text && /^\d+%?$/.test(o.text)) o.icon = `number-${o.text}`;
-          if (!o.icon) o.icon = (q.theme==='numerique' ? 'number-0' : q.theme==='formes' ? 'triangle-medium-0deg' : 'square-medium-0deg');
-          return o;
-        });
-        cleaned.push(q);
-      }catch(e){ /* skip invalid */ }
-    });
-    return cleaned;
-  }
-
-  function svgFlatCube(variant){
-    const colors = { blue:'#0ea5e9', red:'#ef4444', green:'#22c55e' };
-    return `<div class="d-flex justify-content-center"><svg width="140" height="120" viewBox="0 0 140 120" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="70,10 110,30 70,50 30,30" fill="${colors.blue}" opacity=".8" stroke="#0f172a"/>
-      <polygon points="110,30 110,70 70,90 70,50" fill="${colors.red}" opacity=".8" stroke="#0f172a"/>
-      <polygon points="30,30 70,50 70,90 30,70" fill="${colors.green}" opacity=".8" stroke="#0f172a"/>
-    </svg></div>`;
   }
 
   function svgTetraPattern(variant){
