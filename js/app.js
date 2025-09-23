@@ -180,8 +180,20 @@
         console.log(`Selected ${randomVersion} with ${selectedQuestions?.length || 0} questions`);
         
         if (Array.isArray(selectedQuestions) && selectedQuestions.length) {
+          // Remove non-visual vocabulary items for a fully visual test
+          selectedQuestions = selectedQuestions.filter(q => normalizeTheme(q.theme) !== 'vocabulaire');
+
+          // Validate and normalize visuals/options
           selectedQuestions = validateQuestionsVisualCoherence(selectedQuestions);
           selectedQuestions = autoFixAndFilter(selectedQuestions);
+
+          // Enforce exactly 20 questions: trim extras or top up with generated visual items
+          if (selectedQuestions.length > 20) {
+            selectedQuestions = selectedQuestions.slice(0, 20);
+          } else if (selectedQuestions.length < 20) {
+            selectedQuestions = topUpToTwenty(selectedQuestions);
+          }
+
           QUESTIONS = selectedQuestions;
           TOTAL_QUESTIONS = QUESTIONS.length;
           questionsReady = true;
@@ -196,6 +208,22 @@
         questionsReady = false; // Keep fallback questions
       });
     return questionsPromise;
+  }
+
+  // Ensure exactly 20 items by generating additional visual items (no vocabulary)
+  function topUpToTwenty(items) {
+    const desired = 20;
+    const out = Array.isArray(items) ? items.slice() : [];
+    let i = 0;
+    while (out.length < desired) {
+      const which = i % 3; // 0: logique, 1: formes, 2: numerique
+      if (which === 0) out.push(genLogicVariant(i));
+      else if (which === 1) out.push(genFormesVariant(i));
+      else out.push(genNumeriqueVariant(i));
+      i++;
+      if (i > 200) break; // safety guard
+    }
+    return out.slice(0, desired);
   }
 
   // Initial load
